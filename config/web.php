@@ -16,10 +16,6 @@ $config = [
 		'cache' => [
 			'class' => 'yii\caching\FileCache',
 		],
-		'user' => [
-			'identityClass' => 'app\models\User',
-			'enableAutoLogin' => true,
-		],
 		'errorHandler' => [
 			'errorAction' => 'site/error',
 		],
@@ -51,6 +47,14 @@ $config = [
 	'modules' => [
 		'user' => [
 			'class' => 'dektrium\user\Module',
+			'enableRegistration' => false,
+			'enableAccountDelete' => false,
+			'emailChangeStrategy' => \dektrium\user\Module::STRATEGY_SECURE,
+			'confirmWithin' => 1209600, // confirm within 2 weeks
+			'recoverWithin' => 1209600,
+			'admins' => [
+				'admin',
+			]
 		],
 	],
 	'params' => $params,
