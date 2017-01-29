@@ -33,23 +33,31 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+	$items = [
+		['label' => 'Home', 'url' => ['/site/index']],
+		['label' => 'Profile', 'url' => ['/user/settings/profile']],
+		Yii::$app->user->isGuest ? (
+			['label' => 'Login', 'url' => ['/user/security/login']]
+		) : (
+			'<li>'
+			. Html::beginForm(['/user/security/logout'], 'post')
+			. Html::submitButton(
+				'Logout (' . Yii::$app->user->identity->username . ')',
+				['class' => 'btn btn-link logout']
+			)
+			. Html::endForm()
+			. '</li>'
+		)
+	];
+	if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAdmin) {
+		$adminItems = [
+			['label' => 'Users', 'url' => ['/user/admin/index']],
+		];
+		array_splice($items, count($items) - 1, 0, $adminItems);
+	}
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/user/security/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/user/security/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
+        'items' => $items,
     ]);
     NavBar::end();
     ?>
