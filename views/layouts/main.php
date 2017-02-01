@@ -51,9 +51,10 @@ AppAsset::register($this);
 	];
 	if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAdmin) {
 		$adminItems = [
+			['label' => 'Customers', 'url' => ['/customer/index']],
 			['label' => 'Users', 'url' => ['/user/admin/index']],
 		];
-		array_splice($items, count($items) - 1, 0, $adminItems);
+		array_splice($items, count($items) - 2, 0, $adminItems);
 	}
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
