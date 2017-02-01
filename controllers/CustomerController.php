@@ -5,9 +5,11 @@ namespace app\controllers;
 use Yii;
 use app\models\Customer;
 use app\models\CustomerSearch;
+use app\models\CustomersImportForm;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * CustomerController implements the CRUD actions for Customer model.
@@ -105,8 +107,26 @@ class CustomerController extends Controller
 
         return $this->redirect(['index']);
     }
+	
+	/**
+	 * Renders import customers page.
+	 * @return mixed
+	 */
+	public function actionImport() {
+		$model = new CustomersImportForm();
 
-    /**
+		if (Yii::$app->request->isPost) {
+			$model->file = UploadedFile::getInstance($model, 'file');
+			if ($model->import()) {
+				// file is uploaded successfully
+				return $this->redirect(['index']);
+			}
+		}
+
+		return $this->render('import', ['model' => $model]);
+	}
+
+	/**
      * Finds the Customer model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
