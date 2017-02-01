@@ -14,7 +14,7 @@ $config = [
 			'cookieValidationKey' => 'vhAlxUomdeaZU3IhHoMiWUOsNETOBg3F',
 		],
 		'cache' => [
-			'class' => 'yii\caching\FileCache',
+			'class' => YII_ENV == 'dev' ? 'yii\caching\DummyCache' : 'yii\caching\MemChache',
 		],
 		'errorHandler' => [
 			'errorAction' => 'site/error',
