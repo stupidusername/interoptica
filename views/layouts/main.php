@@ -35,7 +35,7 @@ AppAsset::register($this);
     ]);
 	$items = [
 		['label' => 'Home', 'url' => ['/site/index']],
-		['label' => 'Profile', 'url' => ['/user/settings/profile']],
+		['label' => 'Perfil', 'url' => ['/user/settings/profile']],
 		Yii::$app->user->isGuest ? (
 			['label' => 'Login', 'url' => ['/user/security/login']]
 		) : (
@@ -51,8 +51,8 @@ AppAsset::register($this);
 	];
 	if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAdmin) {
 		$adminItems = [
-			['label' => 'Customers', 'url' => ['/customer/index']],
-			['label' => 'Users', 'url' => ['/user/admin/index']],
+			['label' => 'Clientes', 'url' => ['/customer/index']],
+			['label' => 'Usuarios', 'url' => ['/user/admin/index']],
 		];
 		array_splice($items, count($items) - 2, 0, $adminItems);
 	}

@@ -20,6 +20,16 @@ class CustomersImportForm extends Model {
 				[['file'], 'file', 'skipOnEmpty' => false, 'extensions' => ['csv'], 'checkExtensionByMimeType' => false],
 		];
 	}
+	
+	/**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'file' => 'Archivo',
+        ];
+    }
 
 	/**
 	 * Prepares values for db insert

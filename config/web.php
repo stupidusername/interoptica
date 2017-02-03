@@ -6,6 +6,7 @@ $config = [
 	'id' => 'basic',
 	'name' => 'Interoptica',
 	'version' => '1.0.0',
+	'language' => 'es',
 	'basePath' => dirname(__DIR__),
 	'bootstrap' => ['log'],
 	'components' => [

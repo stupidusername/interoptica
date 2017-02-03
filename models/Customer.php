@@ -48,13 +48,13 @@ class Customer extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'gecom_id' => 'Gecom ID',
-            'name' => 'Name',
-            'tax_situation' => 'Tax Situation',
-            'address' => 'Address',
-            'zip_code' => 'Zip Code',
-            'locality' => 'Locality',
-            'phone_number' => 'Phone Number',
-            'doc_number' => 'Doc Number',
+            'name' => 'Nombre',
+            'tax_situation' => 'Situación Impositiva',
+            'address' => 'Dirección',
+            'zip_code' => 'Código Postal',
+            'locality' => 'Localidad',
+            'phone_number' => 'Teléfonos',
+            'doc_number' => 'Nro. de Documento',
         ];
     }
 }

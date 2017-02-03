@@ -7,8 +7,8 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\CustomersImportForm */
 /* @var $form yii\widgets\ActiveForm */
 
-$this->title = 'Import Customers';
-$this->params['breadcrumbs'][] = ['label' => 'Customers', 'url' => ['index']];
+$this->title = 'Importar Clientes';
+$this->params['breadcrumbs'][] = ['label' => 'Clientes', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="customer-import">
@@ -17,14 +17,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="customer-import-form">
 		
-		<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]) ?>
+		<?php $form = ActiveForm::begin(['enableClientValidation' => false, 'options' => ['enctype' => 'multipart/form-data']]) ?>
 
 			<?= $form->field($model, 'file')->fileInput() ?>
 
-
-
 			<div class="form-group">
-				<?= Html::submitButton('Import', ['class' => 'btn btn-success']) ?>
+				<?= Html::submitButton('Importar', ['class' => 'btn btn-success']) ?>
 			</div>
 
 		<?php ActiveForm::end() ?>
