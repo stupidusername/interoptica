@@ -13,6 +13,10 @@ $config = [
 			// !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
 			'cookieValidationKey' => 'vhAlxUomdeaZU3IhHoMiWUOsNETOBg3F',
 		],
+		'session' => [
+			'class' => 'yii\web\Session',
+			'timeout' => 1209600,
+		],
 		'cache' => [
 			'class' => YII_ENV == 'dev' ? 'yii\caching\DummyCache' : 'yii\caching\MemChache',
 		],
