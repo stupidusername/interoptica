@@ -48,6 +48,13 @@ $config = [
 		'assetManager' => [
 			'linkAssets' => true,
 		],
+		'view' => [
+			'theme' => [
+				'pathMap' => [
+					'@dektrium/user/views' => '@app/views/user'
+				],
+			],
+		],
 	],
 	'modules' => [
 		'user' => [
@@ -59,7 +66,11 @@ $config = [
 			'recoverWithin' => 1209600,
 			'admins' => [
 				'admin',
-			]
+			],
+			'modelMap' => [
+				'User' => 'app\models\User',
+				'Profile' => 'app\models\Profile',
+			],
 		],
 	],
 	'params' => $params,
