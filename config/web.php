@@ -72,7 +72,6 @@ $config = [
 				'Profile' => 'app\models\Profile',
 			],
 		],
-		'rbac' => 'dektrium\rbac\RbacWebModule',
 	],
 	'params' => $params,
 ];
