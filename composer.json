@@ -25,7 +25,8 @@
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0",
         "dektrium/yii2-user": "^0.9.12",
-		"ruskid/yii2-csv-importer": "dev-master"
+		"ruskid/yii2-csv-importer": "dev-master",
+        "yii2tech/ar-softdelete": "^1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
