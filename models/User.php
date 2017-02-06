@@ -3,11 +3,31 @@
 namespace app\models;
 
 use dektrium\user\models\User as BaseUser;
+use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
  * @property integer $gecom_id
  */
 class User extends BaseUser {
+
+	/** @inheritdoc */
+	public function behaviors() {
+		$behaviors = parent::behaviors();
+		$behaviors['softDeleteBehavior'] = [
+			'class' => SoftDeleteBehavior::className(),
+			'softDeleteAttributeValues' => [
+				'deleted' => true
+			],
+			'replaceRegularDelete' => true
+		];
+		return $behaviors;
+	}
+	
+	/** @inheritdoc */
+	public static function find()
+    {
+        return parent::find()->where(['or', ['deleted' => null], ['deleted' => 0]]);
+    }
 
 	/** @inheritdoc */
 	public function scenarios() {
@@ -35,4 +55,5 @@ class User extends BaseUser {
 		$attributeLabels['gecom_id'] = 'Gecom ID';
 		return $attributeLabels;
 	}
+
 }
