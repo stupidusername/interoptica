@@ -36,6 +36,11 @@ class ProductController extends Controller
                     'class' => AccessRule::className(),
                 ],
                 'rules' => [
+					[
+						'actions' => ['index', 'view'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
                     [
                         'allow' => true,
                         'roles' => ['admin'],
