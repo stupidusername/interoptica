@@ -51,6 +51,7 @@ AppAsset::register($this);
 	];
 	if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAdmin) {
 		$adminItems = [
+			['label' => 'Productos', 'url' => ['/product/index']],
 			['label' => 'Clientes', 'url' => ['/customer/index']],
 			['label' => 'Usuarios', 'url' => ['/user/admin/index']],
 		];
