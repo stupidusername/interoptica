@@ -32,7 +32,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'variant_id',
             'gecom_code',
             'gecom_desc',
-            'price',
+            [
+				'attribute' => 'price',
+				'format' => 'currency',
+			],
             'stock',
         ],
     ]) ?>
