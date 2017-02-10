@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
  * This is the model class for table "model".
@@ -11,6 +12,7 @@ use Yii;
  * @property string $gecom_code
  * @property string $name
  * @property integer $brand_id
+ * @property boolean $deleted
  *
  * @property Brand $brand
  * @property Variant[] $variants
@@ -23,6 +25,25 @@ class Model extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'model';
+    }
+	
+	/** @inheritdoc */
+	public function behaviors() {
+		return [
+			'softDeleteBehavior' => [
+				'class' => SoftDeleteBehavior::className(),
+				'softDeleteAttributeValues' => [
+					'deleted' => true
+				],
+				'replaceRegularDelete' => true
+			],
+		];
+	}
+	
+	/** @inheritdoc */
+	public static function find()
+    {
+        return parent::find()->where(['or', ['deleted' => null], ['deleted' => 0]]);
     }
 
     /**

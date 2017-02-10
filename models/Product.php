@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
  * This is the model class for table "product".
@@ -13,6 +14,7 @@ use Yii;
  * @property string $gecom_desc
  * @property string $price
  * @property integer $stock
+ * @property boolean $deleted
  *
  * @property OrderProduct[] $orderProducts
  * @property Order[] $orders
@@ -26,6 +28,25 @@ class Product extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'product';
+    }
+	
+	/** @inheritdoc */
+	public function behaviors() {
+		return [
+			'softDeleteBehavior' => [
+				'class' => SoftDeleteBehavior::className(),
+				'softDeleteAttributeValues' => [
+					'deleted' => true
+				],
+				'replaceRegularDelete' => true
+			],
+		];
+	}
+	
+	/** @inheritdoc */
+	public static function find()
+    {
+        return parent::find()->where(['or', ['deleted' => null], ['deleted' => 0]]);
     }
 
     /**
