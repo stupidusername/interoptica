@@ -4,30 +4,24 @@ namespace app\models;
 
 use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
- * This is the model class for table "customer".
+ * This is the model class for table "zone".
  *
  * @property integer $id
  * @property integer $gecom_id
  * @property string $name
- * @property integer $zone_id
- * @property string $tax_situation
- * @property string $address
- * @property string $zip_code
- * @property string $locality
- * @property string $phone_number
- * @property string $doc_number
  * @property boolean $deleted
  */
-class Customer extends \yii\db\ActiveRecord
+class Zone extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'customer';
+        return 'zone';
     }
 	
 	/** @inheritdoc */
@@ -49,17 +43,16 @@ class Customer extends \yii\db\ActiveRecord
         return parent::find()->where(['or', ['deleted' => null], ['deleted' => 0]]);
     }
 
-	/**
+    /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
             [['gecom_id'], 'integer'],
-			[['gecom_id'], 'unique'],
-            [['name', 'tax_situation', 'address', 'zip_code', 'locality', 'phone_number', 'doc_number'], 'string', 'max' => 255],
+            [['name'], 'string', 'max' => 255],
+            [['gecom_id'], 'unique'],
 			[['gecom_id', 'name'], 'required'],
-			[['zone_id'], 'exist', 'targetClass' => Zone::className(), 'targetAttribute' => 'id'],
         ];
     }
 
@@ -72,21 +65,23 @@ class Customer extends \yii\db\ActiveRecord
             'id' => 'ID',
             'gecom_id' => 'Gecom ID',
             'name' => 'Nombre',
-			'zone_id' => 'ID Zona',
-            'tax_situation' => 'Situación Impositiva',
-            'address' => 'Dirección',
-            'zip_code' => 'Código Postal',
-            'locality' => 'Localidad',
-            'phone_number' => 'Teléfonos',
-            'doc_number' => 'Nro. de Documento',
         ];
     }
 	
 	/**
+	 * Gets an id => name array.
+	 * return string[]
+	 */
+	public static function getIdNameArray() {
+		$zones = ArrayHelper::map(self::find()->select(['id', 'name'])->asArray()->all(), 'id', 'name');
+		return $zones;
+	}
+	
+	/**
      * @return \yii\db\ActiveQuery
      */
-    public function getZone()
+    public function getCustomers()
     {
-        return $this->hasOne(Zone::className(), ['id' => 'zone_id']);
+        return $this->hasMany(Customer::className(), ['zone_id' => 'id']);
     }
 }

@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\models\Zone;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Customer */
@@ -15,6 +16,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'gecom_id')->textInput() ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+	
+	<?= $form->field($model, 'zone_id')->dropDownList(Zone::getIdNameArray(), ['prompt' => 'Elegir zona', 'id' => 'zone_id']) ?>
 
     <?= $form->field($model, 'tax_situation')->textInput(['maxlength' => true]) ?>
 

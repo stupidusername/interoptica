@@ -18,8 +18,8 @@ class m170206_033144_create_order_product_table extends Migration
         ]);
 		
 		$this->addPrimaryKey('{{%pk_order_product}}', '{{%order_product}}', ['order_id', 'product_id']);
-		$this->addForeignKey('{{%fk_order_product}}', '{{%order_product}}', 'order_id', 'order', 'id');
-		$this->addForeignKey('{{%fk_product_order}}', '{{%order_product}}', 'product_id', 'product', 'id');
+		$this->addForeignKey('{{%fk_order_product}}', '{{%order_product}}', 'order_id', '{{%order}}', 'id');
+		$this->addForeignKey('{{%fk_product_order}}', '{{%order_product}}', 'product_id', '{{%product}}', 'id');
     }
 
     /**

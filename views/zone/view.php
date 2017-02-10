@@ -4,13 +4,14 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Customer */
+/* @var $model app\models\Zone */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Clientes', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Clientes', 'url' => ['/customer/index']];
+$this->params['breadcrumbs'][] = ['label' => 'Zonas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="customer-view">
+<div class="zone-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -31,16 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'gecom_id',
             'name',
-			[
-				'label' => 'Zona',
-				'value' => $model->zone ? $model->zone->name : '',
-			],
-            'tax_situation',
-            'address',
-            'zip_code',
-            'locality',
-            'phone_number',
-            'doc_number',
+            'deleted',
         ],
     ]) ?>
 
