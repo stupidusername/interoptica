@@ -20,9 +20,18 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property OrderProduct[] $orderProducts
  * @property Product[] $products
  * @property OrderStatus[] $orderStatuses
+ * @property OrderStatus $orderStatus
  */
 class Order extends \yii\db\ActiveRecord
 {
+	const SCENARIO_UPDATE = 'update';
+	
+	/**
+	 * The last order status saved
+	 * @var integer 
+	 */
+	public $status;
+	
     /**
      * @inheritdoc
      */
@@ -49,19 +58,60 @@ class Order extends \yii\db\ActiveRecord
     {
         return parent::find()->where(['or', ['deleted' => null], ['deleted' => 0]]);
     }
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function beforeSave($insert) {
+		if (parent::beforeSave($insert)) {
+			if ($insert) {
+				$this->user_id = Yii::$app->user->id;
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function afterSave($insert, $changedAttributes) {
+		if ($insert) {
+			$this->status = OrderStatus::STATUS_ENTERED;
+		}
+		$oldStatus = $this->orderStatus;
+		// Save order status if there was a change
+		if (!$oldStatus || $oldStatus->status != $this->status) {
+			$orderStatus = new OrderStatus();
+			$orderStatus->order_id = $this->id;
+			$orderStatus->status = $this->status;
+			$orderStatus->create_datetime = date('Y-m-d H:i:s');
+			$orderStatus->save(false);
+		}
+		parent::afterSave($insert, $changedAttributes);
+	}
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function afterFind() {
+		$this->status = $this->orderStatus ? $this->orderStatus->status : null;
+		parent::afterFind();
+	}
+	
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['user_id', 'customer_id'], 'integer'],
+            [['customer_id'], 'integer'],
             [['discount_percentage'], 'number'],
             [['comment'], 'string'],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
-			[['user_id', 'customer_id'], 'required'],
+			[['customer_id'], 'required'],
+			[['status'], 'required', 'on' => self::SCENARIO_UPDATE],
         ];
     }
 
@@ -76,6 +126,7 @@ class Order extends \yii\db\ActiveRecord
             'customer_id' => 'ID Cliente',
             'discount_percentage' => 'Porcentaje de Descuento',
             'comment' => 'Comentario',
+			'status' => 'Estado',
         ];
     }
 

@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "customer".
@@ -89,4 +90,13 @@ class Customer extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Zone::className(), ['id' => 'zone_id']);
     }
+	
+	/**
+	 * Gets an id => name array.
+	 * return string[]
+	 */
+	public static function getIdNameArray() {
+		$customers = ArrayHelper::map(self::find()->select(['id', 'name'])->asArray()->all(), 'id', 'name');
+		return $customers;
+	}
 }

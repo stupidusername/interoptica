@@ -16,6 +16,14 @@ use Yii;
  */
 class OrderStatus extends \yii\db\ActiveRecord
 {
+	const STATUS_ENTERED = 0;
+	const STATUS_COLLECT = 1;
+	const STATUS_PUT_TOGETHER = 2;
+	const STATUS_BILLING = 3;
+	const STATUS_PACKAGING = 4;
+	const STATUS_SENT = 5;
+	const STATUS_DELIVERED = 6;
+	
     /**
      * @inheritdoc
      */
@@ -49,6 +57,22 @@ class OrderStatus extends \yii\db\ActiveRecord
         ];
     }
 
+	/**
+	 * Status labels
+	 * @return string[]
+	 */
+	public static function statusLabels() {
+		return [
+			self::STATUS_ENTERED => 'Ingresado',
+			self::STATUS_COLLECT => 'Cobranzas',
+			self::STATUS_PUT_TOGETHER => 'Armado',
+			self::STATUS_BILLING => 'Facturación',
+			self::STATUS_PACKAGING => 'Embalaje',
+			self::STATUS_SENT => 'Enviado',
+			self::STATUS_DELIVERED => 'Entregado',
+		];
+	}
+	
     /**
      * @return \yii\db\ActiveQuery
      */
