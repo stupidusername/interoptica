@@ -106,6 +106,16 @@ class OrderController extends Controller
 
         return $this->redirect(['index']);
     }
+	
+	/**
+	 * Exports an existing Order model to txt.
+	 * @param type $id
+	 * @return mixed
+	 */
+	public function actionExportTxt($id) {
+		$model = $this->findModel($id);
+		return Yii::$app->response->sendContentAsFile($model->getTxt(), $model->getTxtName(), ['mimeType' => 'text/plain']);
+	}
 
     /**
      * Finds the Order model based on its primary key value.

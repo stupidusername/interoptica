@@ -21,6 +21,7 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property Product[] $products
  * @property OrderStatus[] $orderStatuses
  * @property OrderStatus $orderStatus
+ * @property OrderStatus $enteredOrderStatus
  */
 class Order extends \yii\db\ActiveRecord
 {
@@ -177,4 +178,41 @@ class Order extends \yii\db\ActiveRecord
     {
         return $this->hasOne(OrderStatus::className(), ['order_id' => 'id'])->orderBy(['id' => SORT_DESC]);
     }
+	
+	/**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEnteredOrderStatus()
+    {
+        return $this->hasOne(OrderStatus::className(), ['order_id' => 'id'])->andWhere(['status' => OrderStatus::STATUS_ENTERED]);
+    }
+	
+	/**
+	 * Content for the exported txt file
+	 * @return string
+	 */
+	public function getTxt() {
+		$output = '';
+		$date = date('dmy', strtotime($this->enteredOrderStatus->create_datetime));
+		$customerGecomId = $this->customer->gecom_id;
+		$userGecomId = $this->user->gecom_id;
+		$orderProducts = $this->getOrderProducts()->with(['product'])->all();
+		foreach ($orderProducts as $orderProduct) {
+			$line = str_pad($date, 13) .
+					str_pad($customerGecomId, 11) .
+					str_pad($orderProduct->quantity . $orderProduct->product->gecom_code, 19) .
+					str_pad(Yii::$app->formatter->asCurrency($orderProduct->price, ''), 9) .
+					$userGecomId;
+			$output .= $line . "\n";
+		}
+		return $output;
+	}
+	
+	/**
+	 * Name for the exported txt file
+	 * @return string
+	 */
+	public function getTxtName() {
+		return 'nota_pedido_' . $this->id . '.txt';
+	}
 }
