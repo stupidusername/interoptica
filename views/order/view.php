@@ -49,7 +49,10 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute' => 'status',
 				'value' => 'statusLabel',
 			],
-			'create_datetime'
+			[
+				'attribute' => 'create_datetime',
+				'format' => 'datetime'
+			],
 		],
 		'dataProvider' => new ActiveDataProvider([
             'query' => $model->getOrderStatuses(),

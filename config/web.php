@@ -9,6 +9,7 @@ $config = [
 	'language' => 'es-AR',
 	'basePath' => dirname(__DIR__),
 	'bootstrap' => ['log'],
+	'timeZone' => 'America/Argentina/Buenos_Aires',
 	'components' => [
 		'request' => [
 			// !!! insert a secret key in the following (if it is empty) - this is required by cookie validation

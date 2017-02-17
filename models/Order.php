@@ -87,7 +87,7 @@ class Order extends \yii\db\ActiveRecord
 			$orderStatus = new OrderStatus();
 			$orderStatus->order_id = $this->id;
 			$orderStatus->status = $this->status;
-			$orderStatus->create_datetime = date('Y-m-d H:i:s');
+			$orderStatus->create_datetime = gmdate('Y-m-d H:i:s');
 			$orderStatus->save(false);
 		}
 		parent::afterSave($insert, $changedAttributes);
@@ -193,7 +193,7 @@ class Order extends \yii\db\ActiveRecord
 	 */
 	public function getTxt() {
 		$output = '';
-		$date = date('dmy', strtotime($this->enteredOrderStatus->create_datetime));
+		$date = Yii::$app->formatter->asDatetime($this->enteredOrderStatus->create_datetime, 'ddMMyy');
 		$customerGecomId = $this->customer->gecom_id;
 		$userGecomId = $this->user->gecom_id;
 		$orderProducts = $this->getOrderProducts()->with(['product'])->all();
