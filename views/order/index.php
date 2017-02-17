@@ -27,9 +27,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'user_id',
             'customer_id',
-            'discount_percentage',
-            'comment:ntext',
-            // 'deleted',
+            [
+				'attribute' => 'discount_percentage',
+				'format' => 'percent',
+				'value' => function ($model) {
+					return $model->discount_percentage / 100;
+				},
+			],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

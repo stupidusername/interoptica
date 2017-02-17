@@ -32,7 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'gecom_id',
             'name',
-            'deleted',
         ],
     ]) ?>
 

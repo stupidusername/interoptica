@@ -34,9 +34,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'user_id',
             'customer_id',
-            'discount_percentage',
+            [
+				'attribute' => 'discount_percentage',
+				'format' => 'percent',
+				'value' => function ($model) {
+					return $model->discount_percentage / 100;
+				},
+			],
             'comment:ntext',
-            'deleted',
         ],
     ]) ?>
 
