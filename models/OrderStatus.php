@@ -72,6 +72,12 @@ class OrderStatus extends \yii\db\ActiveRecord
 			self::STATUS_DELIVERED => 'Entregado',
 		];
 	}
+	/**
+	 * @return string
+	 */
+	public function getStatusLabel() {
+		return self::statusLabels()[$this->status];
+	}
 	
     /**
      * @return \yii\db\ActiveQuery
@@ -79,5 +85,5 @@ class OrderStatus extends \yii\db\ActiveRecord
     public function getOrder()
     {
         return $this->hasOne(Order::className(), ['id' => 'order_id']);
-    }
+	}
 }

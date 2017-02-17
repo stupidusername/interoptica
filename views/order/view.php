@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\grid\GridView;
+use yii\data\ActiveDataProvider;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Order */
@@ -38,4 +40,22 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
+	<h3>Seguimiento de Estados</h3>
+	
+	<?=
+	GridView::widget([
+		'columns' => [
+			[
+				'attribute' => 'status',
+				'value' => 'statusLabel',
+			],
+			'create_datetime'
+		],
+		'dataProvider' => new ActiveDataProvider([
+            'query' => $model->getOrderStatuses(),
+			'pagination' => false,
+        ]),
+	]);
+	?>
+	
 </div>
