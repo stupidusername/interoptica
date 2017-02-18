@@ -29,7 +29,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'gecom_id',
             'name',
-            'tax_situation',
+            [
+				'attribute' => 'tax_situation',
+				'value' => 'taxSituationLabel',
+			],
             'address',
             // 'zip_code',
             // 'locality',
