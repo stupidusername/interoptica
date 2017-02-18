@@ -38,6 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'tax_situation',
             'address',
             'zip_code',
+			'province',
             'locality',
             'phone_number',
             'doc_number',

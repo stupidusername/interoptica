@@ -24,6 +24,8 @@ use app\models\Zone;
     <?= $form->field($model, 'address')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'zip_code')->textInput(['maxlength' => true]) ?>
+	
+	<?= $form->field($model, 'province')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'locality')->textInput(['maxlength' => true]) ?>
 
