@@ -97,6 +97,9 @@ class Customer extends \yii\db\ActiveRecord
 		];
 	}
 	
+	/**
+	 * @return string
+	 */
 	public function getTaxSituationLabel() {
 		return isset(self::taxSituationLabels()[$this->tax_situation]) ? 
 			self::taxSituationLabels()[$this->tax_situation] : $this->tax_situation;
