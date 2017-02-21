@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\grid\GridView;
 use yii\data\ActiveDataProvider;
+use app\widgets\modal\Modal;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Order */
@@ -11,7 +13,17 @@ use yii\data\ActiveDataProvider;
 $this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Pedidos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+Modal::begin([
+    'id' => 'addEntry',
+    'url' => Url::to(['add-entry', 'orderId' => $model->id]),
+    'ajaxSubmit' => true,
+]);
+
+Modal::end(); 
+
 ?>
+
 <div class="order-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
@@ -25,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+		<?= Html::button('Agregar Producto', ['class' => 'btn btn-success', 'onclick' => '$("#addEntry").modal("show");']) ?>
 		<?= Html::a('Exportar TXT', ['export-txt', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
 

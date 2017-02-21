@@ -5,9 +5,11 @@ namespace app\controllers;
 use Yii;
 use app\models\Order;
 use app\models\OrderSearch;
+use app\models\OrderProduct;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * OrderController implements the CRUD actions for Order model.
@@ -108,6 +110,43 @@ class OrderController extends Controller
     }
 	
 	/**
+	 * Adds a product to an existing Order.
+	 * @param integer $orderId
+	 */
+	public function actionAddEntry($orderId) {
+		$order = $this->findModel($orderId);
+		$model = new OrderProduct();
+		$model->order_id = $order->id;
+		
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['success' => true];
+        } else {
+            return $this->renderAjax('add-entry', [
+                'model' => $model,
+            ]);
+        }
+	}
+	
+	/**
+	 * Updates an existing OrderProduct model.
+	 * @param integer $orderId
+	 * @param integer $productId
+	 */
+	public function actionUpdateEntry($orderId, $productId) {
+		$model = $this->findOrderProductModel($orderId, $productId);
+		
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['success' => true];
+        } else {
+            return $this->renderAjax('update-entry', [
+                'model' => $model,
+            ]);
+        }
+	}
+	
+	/**
 	 * Exports an existing Order model to txt.
 	 * @param type $id
 	 * @return mixed
@@ -127,6 +166,23 @@ class OrderController extends Controller
     protected function findModel($id)
     {
         if (($model = Order::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+	
+	/**
+     * Finds the OrderProduct model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $orderId
+	 * @param integer $productId
+     * @return OrderProduct the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findOrderProductModel($orderId, $productId)
+    {
+        if (($model = OrderProduct::findOne($orderId, $productId)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

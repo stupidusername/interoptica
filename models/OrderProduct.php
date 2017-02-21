@@ -31,11 +31,13 @@ class OrderProduct extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'product_id', 'price', 'quantity'], 'required'],
-            [['order_id', 'product_id', 'quantity'], 'integer'],
-            [['price'], 'number'],
-            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
+            [['product_id', 'price', 'quantity'], 'required'],
+            [['product_id'], 'integer'],
+			[['quantity'], 'integer', 'min' => 1],
+            [['price'], 'number', 'min' => 0],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
+			[['product_id'], 'unique', 'targetAttribute' => ['order_id', 'product_id'], 'message' => 'El producto ya se encuentra en el pedido.'],
+			[['quantity'], 'inStock'],
         ];
     }
 
@@ -46,7 +48,7 @@ class OrderProduct extends \yii\db\ActiveRecord
     {
         return [
             'order_id' => 'ID Pedido',
-            'product_id' => 'ID Product',
+            'product_id' => 'ID Producto',
             'price' => 'Precio',
             'quantity' => 'Cantidad',
         ];
@@ -67,4 +69,19 @@ class OrderProduct extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Product::className(), ['id' => 'product_id']);
     }
+	
+	/**
+	 * Validates that entered quantity it's available
+	 * @param string $attribute the attribute currently being validated
+	 * @param mixed $params the value of the "params" given in the rule
+	 * @param \yii\validators\InlineValidator related InlineValidator instance.
+	 * This parameter is available since version 2.0.11.
+	 */
+	public function inStock($attribute, $param, $validator) {
+		$stock = $this->product->stock !== null ? $this->stock : 0;
+		if ($this->$attribute > $stock) {
+			$this->addError($attribute, "El stock de este producto es de: $stock");
+		}
+	}
+
 }
