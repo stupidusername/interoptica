@@ -6,6 +6,8 @@ use yii\grid\GridView;
 use yii\data\ActiveDataProvider;
 use app\widgets\modal\Modal;
 use yii\helpers\Url;
+use yii\widgets\Pjax;
+use app\assets\OrderEntryAsset;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Order */
@@ -22,6 +24,7 @@ Modal::begin([
 
 Modal::end(); 
 
+OrderEntryAsset::register($this);
 ?>
 
 <div class="order-view">
@@ -75,8 +78,48 @@ Modal::end();
 		'dataProvider' => new ActiveDataProvider([
             'query' => $model->getOrderStatuses(),
 			'pagination' => false,
+			'sort' => false,
         ]),
 	]);
 	?>
+	
+	<h3>Productos</h3>
+	
+	<?php Pjax::begin(['id' => 'productsGridview']); ?>
+	<?=
+	GridView::widget([
+		'columns' => [
+			'product.gecom_desc',
+			[
+				'attribute' => 'price',
+				'format' => 'currency',
+			],
+			'quantity',
+			[
+				'class' => 'yii\grid\ActionColumn',
+				'template' => '{update} {delete}',
+				'urlCreator' => function ($action, $model, $key, $index, $actionColumn) {
+					switch ($action) {
+						case 'update':
+							return Url::to(['update-entry', 'orderId' => $model->order_id, 'productId' => $model->product_id]);
+						case 'delete':
+							return Url::to(['delete-entry', 'orderId' => $model->order_id, 'productId' => $model->product_id]);
+					}
+				},
+				'buttons' => [
+					'delete' => function ($url, $model, $key) {
+						return Html::a(Html::tag('span', '', ['class' => "glyphicon glyphicon-trash"]), $url, ['class' => 'productDelete']);
+					},
+				],
+			],
+		],
+		'dataProvider' => new ActiveDataProvider([
+            'query' => $model->getOrderProducts()->with(['product']),
+			'pagination' => false,
+			'sort' => false,
+        ]),
+	]);
+	?>
+	<?php Pjax::end(); ?>
 	
 </div>

@@ -162,8 +162,8 @@
                     // Assume form contains errors if html
                     this.injectHtml(data);
                 }
+				jQuery(this.element).triggerHandler('kbModalSubmit', [data, status, xhr]);
 				jQuery(this.element).modal('hide');
-                jQuery(this.element).triggerHandler('kbModalSubmit', [data, status, xhr]);
             }
         });
 

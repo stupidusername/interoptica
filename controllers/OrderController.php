@@ -26,6 +26,7 @@ class OrderController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+					'delete-entry' => ['POST'],
                 ],
             ],
         ];
@@ -145,6 +146,20 @@ class OrderController extends Controller
             ]);
         }
 	}
+	
+	/**
+     * Deletes an existing OrderProduct model.
+     * If deletion is successful, the browser will be redirected to the 'view' page.
+     * @param integer $orderId
+	 * @param integer $productId
+     * @return mixed
+     */
+    public function actionDeleteEntry($orderId, $productId)
+    {
+        $this->findOrderProductModel($orderId, $productId)->delete();
+
+        return $this->redirect(['view', 'id' => $orderId]);
+    }
 	
 	/**
 	 * Exports an existing Order model to txt.
