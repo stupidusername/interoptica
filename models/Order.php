@@ -108,7 +108,7 @@ class Order extends \yii\db\ActiveRecord
     {
         return [
             [['customer_id'], 'integer'],
-            [['discount_percentage'], 'number'],
+            [['discount_percentage'], 'number', 'min' => 0, 'max' => 100],
             [['comment'], 'string'],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
 			[['customer_id'], 'required'],
