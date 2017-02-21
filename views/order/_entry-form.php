@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use app\models\Customer;
+use app\models\Product;
 use kartik\money\MaskMoney;
 
 /* @var $this yii\web\View */
@@ -14,7 +14,7 @@ use kartik\money\MaskMoney;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'product_id') ?>
+    <?= $form->field($model, 'product_id')->dropDownList(Product::getIdNameArray(), ['prompt' => 'Elegir producto']) ?>
 
     <?= $form->field($model, 'price')->widget(MaskMoney::classname()) ?>
 

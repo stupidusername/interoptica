@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "product".
@@ -46,7 +47,7 @@ class Product extends \yii\db\ActiveRecord
 	/** @inheritdoc */
 	public static function find()
     {
-        return parent::find()->where(['or', ['deleted' => null], ['deleted' => 0]]);
+        return (new ProductQuery(get_called_class()))->where(['or', ['deleted' => null], ['deleted' => 0]]);
     }
 
     /**
@@ -94,4 +95,23 @@ class Product extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Variant::className(), ['id' => 'variant_id']);
     }
+	
+	/**
+	 * Gets an id => name array.
+	 * return string[]
+	 */
+	public static function getIdNameArray() {
+		$getName = function ($array, $defaultValue) {
+			return $array['gecom_desc'] . ' (' . $array['stock'] . ')';
+		};
+		$products = ArrayHelper::map(self::find()->inStock()->select(['id', 'gecom_desc', 'stock'])->asArray()->all(), 'id', $getName);
+		return $products;
+	}
+}
+
+class ProductQuery extends yii\db\ActiveQuery
+{
+	public function inStock() {
+		return $this->andWhere(['>', 'stock', 0]);
+	}
 }
