@@ -24,8 +24,34 @@ class OrderProduct extends \yii\db\ActiveRecord
     {
         return 'order_product';
     }
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function afterSave($insert, $changedAttributes) {
+		// Update product stock
+		if ($insert) {
+			$quantity = $this->quantity;
+		} else {
+			if (!isset($changedAttributes['quantity'])) {
+				$quantity = 0;
+			} else {
+				$quantity = $this->quantity - $changedAttributes['quantity'];
+			}
+		}
+		$this->product->updateCounters(['stock' => -$quantity]);
+		parent::afterSave($insert, $changedAttributes);
+	}
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function afterDelete() {
+		$this->product->updateCounters(['stock' => $this->quantity]);
+		parent::afterDelete();
+	}
 
-    /**
+	/**
      * @inheritdoc
      */
     public function rules()
