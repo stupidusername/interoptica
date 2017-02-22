@@ -104,9 +104,11 @@ class OrderProduct extends \yii\db\ActiveRecord
 	 * This parameter is available since version 2.0.11.
 	 */
 	public function inStock($attribute, $param, $validator) {
+		$oldQuantity = isset($this->oldAttributes['quantity']) ? $this->oldAttributes['quantity'] : 0;
 		$stock = $this->product->stock !== null ? $this->product->stock : 0;
-		if ($this->$attribute > $stock) {
-			$this->addError($attribute, "El stock de este producto es de: $stock");
+		$realStock = $oldQuantity + $stock;
+		if ($this->$attribute > $realStock) {
+			$this->addError($attribute, "El stock de este producto es de: $realStock");
 		}
 	}
 
