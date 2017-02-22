@@ -157,8 +157,8 @@ class OrderController extends Controller
     public function actionDeleteEntry($orderId, $productId)
     {
         $this->findOrderProductModel($orderId, $productId)->delete();
-
-        return $this->redirect(['view', 'id' => $orderId]);
+		Yii::$app->response->format = Response::FORMAT_JSON;
+        return ['success' => true];
     }
 	
 	/**
