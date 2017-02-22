@@ -28,6 +28,20 @@ class OrderProduct extends \yii\db\ActiveRecord
 	/**
 	 * @inheritdoc
 	 */
+	public function beforeSave($insert) {
+		if (parent::beforeSave($insert)) {
+			if ($insert || $this->oldAttributes['product_id'] != $this->product_id) {
+				$this->price = $this->product->price;
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function afterSave($insert, $changedAttributes) {
 		// Update product stock
 		if ($insert) {
@@ -57,10 +71,9 @@ class OrderProduct extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['product_id', 'price', 'quantity'], 'required'],
+            [['product_id', 'quantity'], 'required'],
             [['product_id'], 'integer'],
 			[['quantity'], 'integer', 'min' => 1],
-            [['price'], 'number', 'min' => 0],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
 			[['product_id'], 'unique', 'targetAttribute' => ['order_id', 'product_id'], 'message' => 'El producto ya se encuentra en el pedido.'],
 			[['quantity'], 'inStock'],
