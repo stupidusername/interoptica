@@ -13,7 +13,7 @@ use app\models\Product;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'product_id')->dropDownList(Product::getIdNameArray(), ['prompt' => 'Elegir producto']) ?>
+    <?= $form->field($model, 'product_id')->dropDownList(Product::getIdNameArray($model), ['prompt' => 'Elegir producto']) ?>
 
 	<?= $form->field($model, 'quantity') ?>	
 

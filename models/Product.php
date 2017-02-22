@@ -98,13 +98,23 @@ class Product extends \yii\db\ActiveRecord
 	
 	/**
 	 * Gets an id => name array.
+	 * @param OrderProduct $orderProduct if set, the quantity of $orderProduct
+	 * will be added to its product stock.
 	 * return string[]
 	 */
-	public static function getIdNameArray() {
-		$getName = function ($array, $defaultValue) {
-			return $array['gecom_desc'] . ' (' . $array['stock'] . ')';
+	public static function getIdNameArray($orderProduct = null) {
+		$getName = function ($array, $defaultValue) use ($orderProduct) {
+			$stock = $array['stock'];
+			if ($orderProduct && !$orderProduct->isNewRecord && $orderProduct->product_id == $array['id']) {
+				$stock += $orderProduct->quantity;
+			}
+			return $array['gecom_desc'] . ' (' . $stock . ')';
 		};
-		$products = ArrayHelper::map(self::find()->inStock()->select(['id', 'gecom_desc', 'stock'])->asArray()->all(), 'id', $getName);
+		$activeQuery = self::find()->inStock()->select(['id', 'gecom_desc', 'stock']);
+		if ($orderProduct && !$orderProduct->isNewRecord) {
+			$activeQuery = $activeQuery->orWhere(['id' => $orderProduct->product_id]);
+		}
+		$products = ArrayHelper::map($activeQuery->asArray()->all(), 'id', $getName);
 		return $products;
 	}
 }
