@@ -197,7 +197,7 @@ class OrderController extends Controller
      */
     protected function findOrderProductModel($orderId, $productId)
     {
-        if (($model = OrderProduct::findOne($orderId, $productId)) !== null) {
+        if (($model = OrderProduct::findOne(['order_id' => $orderId, 'product_id' => $productId])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -14,4 +14,10 @@ $(document).ready(function () {
 			}
 		});
 	});
+	
+	$(document).on('click', '.productUpdate', function (event) {
+		event.preventDefault();
+		$("#addEntry").kbModalAjax({url: $(this).attr('href')});
+		$('#addEntry').modal('show');
+	});
 });

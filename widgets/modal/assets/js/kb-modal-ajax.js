@@ -35,8 +35,11 @@
 
     ModalAjax.prototype.init = function(options) {
         this.initalRequestUrl = options.url;
-        this.ajaxSubmit = options.ajaxSubmit || true;
         jQuery(this.element).on('show.bs.modal', this.shown.bind(this));
+    };
+	
+	ModalAjax.prototype.setOptions = function(options) {
+        this.initalRequestUrl = options.url;
     };
 
     /**
@@ -56,9 +59,7 @@
             },
             success: function(data, status, xhr) {
                 this.injectHtml(data);
-                if (this.ajaxSubmit) {
-                    jQuery(this.element).off('submit').on('submit', this.formSubmit.bind(this));
-                }
+                jQuery(this.element).off('submit').on('submit', this.formSubmit.bind(this));
                 jQuery(this.element).triggerHandler('kbModalShow', [data, status, xhr]);
             }
         });
@@ -174,7 +175,9 @@
         return this.each(function () {
             if (!$.data(this, pluginName)) {
                 $.data(this, pluginName, new ModalAjax(this, options));
-            }
+            } else {
+				$.data(this, pluginName).setOptions(options);
+			}
         });
     };
 })(jQuery);

@@ -16,10 +16,11 @@ $this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Pedidos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
+$addEntryUrl = Url::to(['add-entry', 'orderId' => $model->id]);
+
 Modal::begin([
     'id' => 'addEntry',
-    'url' => Url::to(['add-entry', 'orderId' => $model->id]),
-    'ajaxSubmit' => true,
+    'url' => $addEntryUrl,
 ]);
 
 Modal::end(); 
@@ -40,7 +41,7 @@ OrderEntryAsset::register($this);
                 'method' => 'post',
             ],
         ]) ?>
-		<?= Html::button('Agregar Producto', ['class' => 'btn btn-success', 'onclick' => '$("#addEntry").modal("show");']) ?>
+		<?= Html::button('Agregar Producto', ['class' => 'btn btn-success', 'onclick' => "$('#addEntry').kbModalAjax({url: '$addEntryUrl'}); $('#addEntry').modal('show');"]) ?>
 		<?= Html::a('Exportar TXT', ['export-txt', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
 
@@ -107,6 +108,9 @@ OrderEntryAsset::register($this);
 					}
 				},
 				'buttons' => [
+					'update' => function ($url, $model, $key) {
+						return Html::a(Html::tag('span', '', ['class' => "glyphicon glyphicon-pencil"]), $url, ['class' => 'productUpdate']);
+					},
 					'delete' => function ($url, $model, $key) {
 						return Html::a(Html::tag('span', '', ['class' => "glyphicon glyphicon-trash"]), $url, ['class' => 'productDelete']);
 					},

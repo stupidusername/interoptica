@@ -9,10 +9,14 @@ $this->title = 'Editar Producto: ' . $model->product_id;
 ?>
 <div class="order-product-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+	<div id="modal-header">
+		<h3><?= Html::encode($this->title) ?></h3>
+	</div>
 
-    <?= $this->render('_entry-form', [
-        'model' => $model,
-    ]) ?>
+	<div id="modal-body">
+		<?= $this->render('_entry-form', [
+			'model' => $model,
+		]) ?>
+	</div>
 
 </div>
