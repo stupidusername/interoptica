@@ -164,7 +164,9 @@
                     this.injectHtml(data);
                 }
 				jQuery(this.element).triggerHandler('kbModalSubmit', [data, status, xhr]);
-				jQuery(this.element).modal('hide');
+				if (data.success) {
+					jQuery(this.element).modal('hide');
+				}
             }
         });
 
