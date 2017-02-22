@@ -44,16 +44,12 @@ class OrderProduct extends \yii\db\ActiveRecord
 	 */
 	public function afterSave($insert, $changedAttributes) {
 		// Update product stock
-		if ($insert) {
-			$quantity = $this->quantity;
-		} else {
-			if (!isset($changedAttributes['quantity'])) {
-				$quantity = 0;
-			} else {
-				$quantity = $this->quantity - $changedAttributes['quantity'];
-			}
+		if (!$insert) {
+			// Restore stock during update
+			$oldProduct = Product::findOne($changedAttributes['product_id']);
+			$oldProduct->updateCounters(['stock' => $changedAttributes['quantity']]);
 		}
-		$this->product->updateCounters(['stock' => -$quantity]);
+		$this->product->updateCounters(['stock' => -$this->quantity]);
 		parent::afterSave($insert, $changedAttributes);
 	}
 	
