@@ -7,6 +7,7 @@ use yii\web\UploadedFile;
 use ruskid\csvimporter\CSVImporter;
 use ruskid\csvimporter\CSVReader;
 use ruskid\csvimporter\MultipleUpdateStrategy;
+use yii\helpers\ArrayHelper;
 
 class CustomersImportForm extends Model {
 
@@ -56,6 +57,9 @@ class CustomersImportForm extends Model {
 					'enclosure' => chr(8),
 				]
 			]));
+			
+			// Get all zones (deleted or not). Index array by gecom_id for easy search.
+			$zones = ArrayHelper::map(Zone::find()->select(['id', 'gecom_id'])->where([])->asArray()->all(), 'gecom_id', 'id');
 
 			$records = $importer->import(new MultipleUpdateStrategy([
 				'className' => Customer::className(),
@@ -82,39 +86,51 @@ class CustomersImportForm extends Model {
 						},
 					],
 					[
-						'attribute' => 'tax_situation',
+						'attribute' => 'address',
 						'value' => function($line) {
 							return $this->processValue($line[2]);
 						},
 					],
 					[
-						'attribute' => 'address',
-						'value' => function($line) {
-							return $this->processValue($line[3]);
-						},
-					],
-					[
 						'attribute' => 'zip_code',
 						'value' => function($line) {
-							return $this->processValue($line[4]);
+							return $line[3];
 						},
 					],
 					[
 						'attribute' => 'locality',
 						'value' => function($line) {
+							return $this->processValue($line[4]);
+						},
+					],
+					[
+						'attribute' => 'province',
+						'value' => function($line) {
 							return $this->processValue($line[5]);
+						},
+					],
+					[
+						'attribute' => 'zone_id',
+						'value' => function($line) use ($zones){
+							return ArrayHelper::getValue($zones, $line[6], null);
 						},
 					],
 					[
 						'attribute' => 'phone_number',
 						'value' => function($line) {
-							return $this->processValue($line[6]);
+							return $line[7];
+						},
+					],
+					[
+						'attribute' => 'tax_situation',
+						'value' => function($line) {
+							return $line[8];
 						},
 					],
 					[
 						'attribute' => 'doc_number',
 						'value' => function($line) {
-							return $this->processValue($line[7]);
+							return $line[9];
 						},
 					],
 				],
