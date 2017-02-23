@@ -5,10 +5,12 @@ namespace app\controllers;
 use Yii;
 use app\models\Zone;
 use app\models\ZoneSearch;
+use app\models\ZonesImportForm;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\web\UploadedFile;
 use dektrium\user\filters\AccessRule;
 
 /**
@@ -119,6 +121,24 @@ class ZoneController extends Controller
 
         return $this->redirect(['index']);
     }
+	
+	/**
+	 * Renders import zones page.
+	 * @return mixed
+	 */
+	public function actionImport() {
+		$model = new ZonesImportForm();
+
+		if (Yii::$app->request->isPost) {
+			$model->file = UploadedFile::getInstance($model, 'file');
+			if ($model->import()) {
+				// file is uploaded successfully
+				return $this->redirect(['index']);
+			}
+		}
+
+		return $this->render('import', ['model' => $model]);
+	}
 
     /**
      * Finds the Zone model based on its primary key value.
