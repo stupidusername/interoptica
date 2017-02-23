@@ -35,10 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'label' => 'Zona',
 				'value' => $model->zone ? $model->zone->name : '',
 			],
-            [
-				'attribute' => 'tax_situation',
-				'value' => $model->taxSituationLabel,
-			],
+            'tax_situation',
             'address',
             'zip_code',
 			'province',
