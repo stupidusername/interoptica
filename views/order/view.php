@@ -44,7 +44,6 @@ OrderAsset::register($this);
                 'method' => 'post',
             ],
         ]) ?>
-		<?= Html::button('Agregar Producto', ['class' => 'btn btn-success', 'onclick' => "$('#addEntry').kbModalAjax({url: '$addEntryUrl'}); $('#addEntry').modal('show');"]) ?>
 		<?= Html::a('Exportar TXT', ['export-txt', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
 
@@ -129,6 +128,10 @@ OrderAsset::register($this);
 	?>
 	
 	<h3>Productos</h3>
+	
+	<p>
+		<?= Html::button('Agregar Producto', ['class' => 'btn btn-success', 'onclick' => "$('#addEntry').kbModalAjax({url: '$addEntryUrl'}); $('#addEntry').modal('show');"]) ?>
+	</p>
 	
 	<?php Pjax::begin(['id' => 'productsGridview']); ?>
 	<?=
