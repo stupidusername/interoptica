@@ -49,8 +49,18 @@ OrderEntryAsset::register($this);
         'model' => $model,
         'attributes' => [
             'id',
-            'user_id',
-            'customer_id',
+            [
+				'label' => 'Usuario',
+				'value' => $model->user->username,
+			],
+            [
+				'label' => 'Cliente',
+				'value' => $model->customer->name,
+			],
+			[
+				'label' => 'Estado',
+				'value' => $model->orderStatus->statusLabel,
+			],
             [
 				'attribute' => 'discount_percentage',
 				'format' => 'percent',

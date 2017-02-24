@@ -22,17 +22,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'id',
-            'user_id',
-            'customer_id',
             [
-				'attribute' => 'discount_percentage',
-				'format' => 'percent',
-				'value' => function ($model) {
-					return $model->discount_percentage / 100;
-				},
+				'label' => 'Usuario',
+				'value' => 'user.username',
+			],
+            [
+				'label' => 'Cliente',
+				'value' => 'customer.name',
+			],
+			[
+				'label' => 'Estado',
+				'value' => 'orderStatus.statusLabel',
 			],
 
             ['class' => 'yii\grid\ActionColumn'],

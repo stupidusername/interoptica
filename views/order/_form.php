@@ -17,7 +17,7 @@ use kartik\money\MaskMoney;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'customer_id')->dropDownList(Customer::getIdNameArray(), ['prompt' => 'Elegir cliente']) ?>
+    <?= $form->field($model, 'customer_id')->label('Cliente')->dropDownList(Customer::getIdNameArray(), ['prompt' => 'Elegir cliente']) ?>
 
 	<?php if (!$model->isNewRecord && Yii::$app->user->identity->isAdmin): ?>
 		<?= $form->field($model, 'user_id')->label('Usuario')->dropDownList(User::getIdNameArray(), ['prompt' => 'Elegir usuario']) ?>
