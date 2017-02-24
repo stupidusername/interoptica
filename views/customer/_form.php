@@ -17,7 +17,7 @@ use app\models\Zone;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 	
-	<?= $form->field($model, 'zone_id')->dropDownList(Zone::getIdNameArray(), ['prompt' => 'Elegir zona']) ?>
+	<?= $form->field($model, 'zone_id')->label('Zona')->dropDownList(Zone::getIdNameArray(), ['prompt' => 'Elegir zona']) ?>
 
     <?= $form->field($model, 'tax_situation')->textInput(['maxlength' => true]) ?>
 
