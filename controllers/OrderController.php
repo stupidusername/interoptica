@@ -12,6 +12,7 @@ use yii\filters\VerbFilter;
 use yii\web\Response;
 use yii\filters\AccessControl;
 use app\filters\AuthorRule;
+use app\filters\OrderStatusRule;
 
 /**
  * OrderController implements the CRUD actions for Order model.
@@ -61,6 +62,10 @@ class OrderController extends Controller
                         'roles' => ['@'],
                     ],
                 ],
+            ],
+			'status' => [
+                'class' => OrderStatusRule::className(),
+                'only' => ['add-entry', 'update-entry', 'delete-entry'],
             ],
         ];
     }

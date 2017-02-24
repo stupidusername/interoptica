@@ -32,9 +32,11 @@ class AuthorRule extends \yii\filters\AccessRule
     protected function matchRole($user)
     {
 		$model = null;
-		if ($this->modelField && $this->model) {
+		if ($this->modelField && $this->model && !Yii::$app->controller->{$this->modelField}) {
 			$model = call_user_func($this->model);
 			Yii::$app->controller->{$this->modelField} = $model;
+		} elseif ($this->modelField && Yii::$app->controller->{$this->modelField}) {
+			$model = Yii::$app->controller->{$this->modelField};
 		}
 		
         if (empty($this->roles)) {
