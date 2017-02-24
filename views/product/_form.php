@@ -13,8 +13,6 @@ use kartik\money\MaskMoney;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'variant_id')->textInput() ?>
-
     <?= $form->field($model, 'gecom_code')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'gecom_desc')->textInput(['maxlength' => true]) ?>

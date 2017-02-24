@@ -26,9 +26,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
 	<?php
 	$columns = [
-		['class' => 'yii\grid\SerialColumn'],
-		'id',
-		'variant_id',
 		'gecom_code',
 		'gecom_desc',
 		[
@@ -36,7 +33,6 @@ $this->params['breadcrumbs'][] = $this->title;
 			'format' => 'currency'
 		],
 		'stock',
-		['class' => 'yii\grid\ActionColumn'],
 	];
 	?>
 
@@ -44,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	GridView::widget([
 		'dataProvider' => $dataProvider,
 		'filterModel' => $searchModel,
-		'columns' => $columns,
+		'columns' => array_merge($columns, [['class' => 'yii\grid\ActionColumn']]),
 	]);
 	?>
 
