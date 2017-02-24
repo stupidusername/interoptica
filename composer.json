@@ -21,6 +21,10 @@
 		{
             "type": "vcs",
             "url": "https://github.com/stupidusername/yii2-user"
+        },
+		{
+            "type": "vcs",
+            "url": "https://github.com/stupidusername/yii2-money"
         }
     ],
     "require": {
