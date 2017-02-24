@@ -1,13 +1,16 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
 use yii\widgets\DetailView;
 use yii\grid\GridView;
 use yii\data\ActiveDataProvider;
 use app\widgets\modal\Modal;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
-use app\assets\OrderEntryAsset;
+use app\assets\OrderAsset;
+use app\models\OrderStatus;
+use app\models\Order;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Order */
@@ -25,7 +28,7 @@ Modal::begin([
 
 Modal::end(); 
 
-OrderEntryAsset::register($this);
+OrderAsset::register($this);
 ?>
 
 <div class="order-view">
@@ -71,6 +74,37 @@ OrderEntryAsset::register($this);
             'comment:ntext',
         ],
     ]) ?>
+	
+	<h3>Pedidos del mismo Cliente</h3>
+	
+	<?php $statusIds = ArrayHelper::getColumn(OrderStatus::find()->select(['id' => 'max(id)'])->asArray()->groupBy('order_id')->all(), 'id'); ?>
+	
+	<?php Pjax::begin(['id' => 'pendingOrdersGridview']) ?>
+	<?=
+	GridView::widget([
+		'columns' => [
+            'id',
+			[
+				'label' => 'Estado',
+				'value' => 'orderStatus.statusLabel',
+			],
+            [
+				'class' => 'yii\grid\ActionColumn',
+				'template' => '{view}',
+			],
+        ],
+		'dataProvider' => new ActiveDataProvider([
+            'query' => Order::find()->andWhere(['and', ['!=', 'order.id', $model->id], ['=', 'customer_id', $model->customer_id]])
+			->innerJoinWith(['orderStatus' => function ($query) use ($statusIds) {
+				$query->andWhere(['and', ['in', 'order_status.id', $statusIds], ['not in', 'status', [OrderStatus::STATUS_SENT, OrderStatus::STATUS_DELIVERED]]]);
+				
+			}])->orderBy('order.id'),
+			'pagination' => false,
+			'sort' => false,
+        ]),
+	]);
+	?>
+	<?php Pjax::end() ?>
 
 	<h3>Seguimiento de Estados</h3>
 	

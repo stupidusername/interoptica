@@ -1,4 +1,9 @@
 $(document).ready(function () {
+	// refresh pending orders periodically
+	setInterval(function () {
+		$.pjax.reload({container: '#pendingOrdersGridview'});
+	}, 30000);
+	
 	$('#addEntry').on('kbModalSubmit', function (event, xhr, settings) {
 		$.pjax.reload({container: '#productsGridview'});
 	});
