@@ -11,6 +11,9 @@ $(document).ready(function () {
 			url: url,
 			success: function (data, status, xhr) {
 				$.pjax.reload({container: '#productsGridview'});
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
+				alert(jqXHR.responseText);
 			}
 		});
 	});

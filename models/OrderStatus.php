@@ -72,6 +72,7 @@ class OrderStatus extends \yii\db\ActiveRecord
 			self::STATUS_DELIVERED => 'Entregado',
 		];
 	}
+	
 	/**
 	 * @return string
 	 */

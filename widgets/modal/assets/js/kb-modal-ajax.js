@@ -61,7 +61,10 @@
                 this.injectHtml(data);
                 jQuery(this.element).off('submit').on('submit', this.formSubmit.bind(this));
                 jQuery(this.element).triggerHandler('kbModalShow', [data, status, xhr]);
-            }
+            },
+			error: function(jqXHR, textStatus, errorThrown) {
+				this.injectHtml(jqXHR.responseText);
+			}
         });
     };
 
@@ -70,9 +73,16 @@
      * @param  {string} html the html to inject
      */
     ModalAjax.prototype.injectHtml = function(html) {
+		var error = false;
         // Find modal header and body
-        var header = $(html).find('#modal-header');
-		var body = $(html).find('#modal-body');
+		try {
+			var header = $(html).find('#modal-header');
+			var body = $(html).find('#modal-body');
+		} catch (err) {
+			header = null;
+			body = html;
+			error = true;
+		}
 
         // Remove existing forms
         if (jQuery(this.element).find('form').length > 0) {
@@ -82,64 +92,66 @@
 		jQuery(this.element).find('.modal-header').html(header);
         jQuery(this.element).find('.modal-body').html(body);
 
-        var knownScripts = getPageScriptTags();
-        var knownCssLinks = getPageCssLinks();
-        var newScripts = [];
-        var inlineInjections = [];
-        var loadedScriptsCount = 0;
+		if (!error) {
+			var knownScripts = getPageScriptTags();
+			var knownCssLinks = getPageCssLinks();
+			var newScripts = [];
+			var inlineInjections = [];
+			var loadedScriptsCount = 0;
 
-        // Find some element to append to
-        var headTag = jQuery('head');
-        if (headTag.length < 1) {
-            headTag = jQuery('body');
-            if (headTag.length < 1) {
-                headTag = jQuery(document);
-            }
-        }
+			// Find some element to append to
+			var headTag = jQuery('head');
+			if (headTag.length < 1) {
+				headTag = jQuery('body');
+				if (headTag.length < 1) {
+					headTag = jQuery(document);
+				}
+			}
 
-        // CSS stylesheets that haven't been added need to be loaded
-        jQuery(html).filter('link[rel="stylesheet"]').each(function () {
-            var href = jQuery(this).attr('href');
+			// CSS stylesheets that haven't been added need to be loaded
+			jQuery(html).filter('link[rel="stylesheet"]').each(function () {
+				var href = jQuery(this).attr('href');
 
-            if (knownCssLinks.indexOf(href) < 0) {
-                // Append the CSS link to the page
-                headTag.append(jQuery(this).prop('outerHTML'));
-                // Store the link so its not needed to be requested again
-                knownCssLinks.push(href);
-            }
-        });
+				if (knownCssLinks.indexOf(href) < 0) {
+					// Append the CSS link to the page
+					headTag.append(jQuery(this).prop('outerHTML'));
+					// Store the link so its not needed to be requested again
+					knownCssLinks.push(href);
+				}
+			});
 
-        // Scripts that haven't yet been loaded need to be added to the end of the body
-        jQuery(html).filter('script').each(function () {
-            var src = jQuery(this).attr("src");
+			// Scripts that haven't yet been loaded need to be added to the end of the body
+			jQuery(html).filter('script').each(function () {
+				var src = jQuery(this).attr("src");
 
-            if (typeof src === 'undefined') {
-                // If no src supplied, execute the raw JS (need to execute after the script tags have been loaded)
-                inlineInjections.push(jQuery(this).text());
-            } else if (knownScripts.indexOf(src) < 0) {
-                // Prepare src so we can append GET parameter later
-                src += (src.indexOf('?') < 0) ? '?' : '&';
-                newScripts.push(src);
-            }
-        });
+				if (typeof src === 'undefined') {
+					// If no src supplied, execute the raw JS (need to execute after the script tags have been loaded)
+					inlineInjections.push(jQuery(this).text());
+				} else if (knownScripts.indexOf(src) < 0) {
+					// Prepare src so we can append GET parameter later
+					src += (src.indexOf('?') < 0) ? '?' : '&';
+					newScripts.push(src);
+				}
+			});
 
-        /**
-         * Scripts loaded callback
-         */
-        var scriptLoaded = function () {
-            loadedScriptsCount += 1;
-            if (loadedScriptsCount === newScripts.length) {
-                // Execute inline scripts
-                for (var i = 0; i < inlineInjections.length; i += 1) {
-                    window.eval(inlineInjections[i]);
-                }
-            }
-        };
+			/**
+			 * Scripts loaded callback
+			 */
+			var scriptLoaded = function () {
+				loadedScriptsCount += 1;
+				if (loadedScriptsCount === newScripts.length) {
+					// Execute inline scripts
+					for (var i = 0; i < inlineInjections.length; i += 1) {
+						window.eval(inlineInjections[i]);
+					}
+				}
+			};
 
-        // Load each script tag
-        for (var i = 0; i < newScripts.length; i += 1) {
-            jQuery.getScript(newScripts[i] + (new Date().getTime()), scriptLoaded);
-        }
+			// Load each script tag
+			for (var i = 0; i < newScripts.length; i += 1) {
+				jQuery.getScript(newScripts[i] + (new Date().getTime()), scriptLoaded);
+			}
+		}
     };
 
     /**

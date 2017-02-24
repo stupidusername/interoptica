@@ -33,6 +33,6 @@ class OrderStatusRule extends ActionFilter
      */
     protected function denyAccess()
     {
-        throw new ForbiddenHttpException('No se puede editar un pedido que no esta en estado ' . OrderStatus::statusLabels()[OrderStatus::STATUS_ENTERED]);
+        throw new ForbiddenHttpException('No se puede editar un pedido que no esta en estado ' . OrderStatus::statusLabels()[OrderStatus::STATUS_ENTERED] . '.');
     }
 }
