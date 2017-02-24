@@ -106,7 +106,7 @@ class Order extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
+        $rules = [
             [['customer_id'], 'integer'],
             [['discount_percentage'], 'number', 'min' => 0, 'max' => 100],
             [['comment'], 'string'],
@@ -114,6 +114,13 @@ class Order extends \yii\db\ActiveRecord
 			[['customer_id'], 'required'],
 			[['status'], 'required', 'on' => self::SCENARIO_UPDATE],
         ];
+		// Allow to edit user_id if user is admin
+		if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAdmin) {
+			$rules[] = [['user_id'], 'required', 'on' => self::SCENARIO_UPDATE];
+			$rules[] = [['user_id'], 'integer', 'on' => self::SCENARIO_UPDATE];
+			$rules[] = [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id'], 'on' => self::SCENARIO_UPDATE];
+		}
+		return $rules;
     }
 
     /**

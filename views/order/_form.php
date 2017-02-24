@@ -1,9 +1,11 @@
 <?php
 
+use Yii;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\models\Customer;
 use app\models\OrderStatus;
+use app\models\User;
 use kartik\money\MaskMoney;
 
 /* @var $this yii\web\View */
@@ -17,6 +19,10 @@ use kartik\money\MaskMoney;
 
     <?= $form->field($model, 'customer_id')->dropDownList(Customer::getIdNameArray(), ['prompt' => 'Elegir cliente']) ?>
 
+	<?php if (!$model->isNewRecord && Yii::$app->user->identity->isAdmin): ?>
+		<?= $form->field($model, 'user_id')->label('Usuario')->dropDownList(User::getIdNameArray(), ['prompt' => 'Elegir usuario']) ?>
+	<?php endif; ?>
+	
     <?= $form->field($model, 'discount_percentage')->widget(MaskMoney::classname(), ['pluginOptions' => ['prefix' => '']]) ?>
 	
 	<?php if (!$model->isNewRecord): ?>

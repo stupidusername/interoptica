@@ -4,6 +4,7 @@ namespace app\models;
 
 use dektrium\user\models\User as BaseUser;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * @property integer $gecom_id
@@ -56,4 +57,12 @@ class User extends BaseUser {
 		return $attributeLabels;
 	}
 
+	/**
+	 * Gets an id => name array.
+	 * return string[]
+	 */
+	public static function getIdNameArray() {
+		$customers = ArrayHelper::map(self::find()->select(['id', 'username'])->asArray()->all(), 'id', 'username');
+		return $customers;
+	}
 }
