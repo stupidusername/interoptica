@@ -5,7 +5,6 @@ $params = require(__DIR__ . '/params.php');
 $config = [
 	'id' => 'basic',
 	'name' => 'Interoptica',
-	'version' => '1.0.0',
 	'language' => 'es-AR',
 	'basePath' => dirname(__DIR__),
 	'bootstrap' => ['log'],
