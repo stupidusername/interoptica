@@ -10,12 +10,16 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
+use yii\filters\AccessControl;
+use app\filters\AuthorRule;
 
 /**
  * OrderController implements the CRUD actions for Order model.
  */
 class OrderController extends Controller
 {
+	public $model = null;
+	
     /**
      * @inheritdoc
      */
@@ -27,6 +31,35 @@ class OrderController extends Controller
                 'actions' => [
                     'delete' => ['POST'],
 					'delete-entry' => ['POST'],
+                ],
+            ],
+			'access' => [
+                'class' => AccessControl::className(),
+                'ruleConfig' => [
+                    'class' => AuthorRule::className(),
+					'modelField' => 'model',
+					'authorIdAttribute' => 'user_id',
+					'allow' => true,
+                ],
+                'rules' => [
+                    [
+                        'actions' => ['update', 'delete'],
+						'model' => function() {
+							return $this->findModel(Yii::$app->request->getQueryParam('id'));
+						},
+						'roles' => ['admin', 'author'],
+                    ],
+					[
+                        'actions' => ['add-entry', 'update-entry', 'delete-entry'],
+						'model' => function() {
+							return $this->findModel(Yii::$app->request->getQueryParam('orderId'));
+						},
+						'roles' => ['admin', 'author'],
+                    ],
+                    [
+						'actions' => ['index', 'view', 'create', 'export-txt', 'export-pdf'],
+                        'roles' => ['@'],
+                    ],
                 ],
             ],
         ];
@@ -180,8 +213,8 @@ class OrderController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Order::findOne($id)) !== null) {
-            return $model;
+        if ($this->model || ($this->model = Order::findOne($id)) !== null) {
+            return $this->model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
