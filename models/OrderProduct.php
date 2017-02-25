@@ -57,7 +57,7 @@ class OrderProduct extends \yii\db\ActiveRecord
 	 * @inheritdoc
 	 */
 	public function afterDelete() {
-		$this->product->updateCounters(['stock' => $this->quantity]);
+		$this->restoreStock();
 		parent::afterDelete();
 	}
 
@@ -121,4 +121,10 @@ class OrderProduct extends \yii\db\ActiveRecord
 		}
 	}
 
+	/**
+	 * Restores stock to products table in case of record deletion.
+	 */
+	public function restoreStock() {
+		$this->product->updateCounters(['stock' => $this->quantity]);
+	}
 }

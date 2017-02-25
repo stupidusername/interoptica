@@ -101,6 +101,10 @@ class Order extends \yii\db\ActiveRecord
 		parent::afterFind();
 	}
 	
+	public function afterSoftDelete() {
+		$this->restoreStock();
+	}
+	
     /**
      * @inheritdoc
      */
@@ -221,5 +225,14 @@ class Order extends \yii\db\ActiveRecord
 	 */
 	public function getTxtName() {
 		return 'nota_pedido_' . $this->id . '.txt';
+	}
+	
+	/**
+	 * Restores the stock to product table in case of record deletion.
+	 */
+	private function restoreStock() {
+		foreach ($this->orderProducts as $orderProduct) {
+			$orderProduct->restoreStock();
+		}
 	}
 }

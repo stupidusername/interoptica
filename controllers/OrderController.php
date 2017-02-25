@@ -65,7 +65,7 @@ class OrderController extends Controller
             ],
 			'status' => [
                 'class' => OrderStatusRule::className(),
-                'only' => ['add-entry', 'update-entry', 'delete-entry'],
+                'only' => ['delete', 'add-entry', 'update-entry', 'delete-entry'],
             ],
         ];
     }
