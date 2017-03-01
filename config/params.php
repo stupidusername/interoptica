@@ -2,6 +2,7 @@
 
 return [
     'adminEmail' => 'admin@interoptica.com.ar',
+	'iva' => 21,
 	'maskMoneyOptions' => [
         'prefix' => '$ ',
         'suffix' => '',

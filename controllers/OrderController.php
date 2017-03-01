@@ -13,6 +13,7 @@ use yii\web\Response;
 use yii\filters\AccessControl;
 use app\filters\AuthorRule;
 use app\filters\OrderStatusRule;
+use kartik\mpdf\Pdf;
 
 /**
  * OrderController implements the CRUD actions for Order model.
@@ -201,12 +202,52 @@ class OrderController extends Controller
 	
 	/**
 	 * Exports an existing Order model to txt.
-	 * @param type $id
+	 * @param integer $id
 	 * @return mixed
 	 */
 	public function actionExportTxt($id) {
 		$model = $this->findModel($id);
 		return Yii::$app->response->sendContentAsFile($model->getTxt(), $model->getTxtName(), ['mimeType' => 'text/plain']);
+	}
+	
+	/**
+	 * Exports an existing Order model to pdf.
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionExportPdf($id) {
+		$model = Order::find()->andWhere(['id' => $id])->with([
+			'enteredOrderStatus',
+			'user',
+			'customer',
+			'customer.zone',
+			'orderProducts.order',
+			'orderProducts.product',
+		])->one();
+		$header = $this->renderPartial('pdf-header', ['model' => $model]);
+		$content = $this->renderPartial('pdf', ['model' => $model]);
+
+		// setup kartik\mpdf\Pdf component
+		$pdf = new Pdf([
+			'filename' => $model->id . '.pdf',
+			'mode' => Pdf::MODE_UTF8,
+			'format' => Pdf::FORMAT_A4,
+			'orientation' => Pdf::ORIENT_LANDSCAPE,
+			'marginTop' => 0,
+			'destination' => Pdf::DEST_DOWNLOAD,
+			'content' => $content,
+			'cssFile' => '@webroot/css/pdf.css',
+			'options' => [
+				'setAutoTopMargin' => 'pad',
+				'setAutoBottomMargin' => 'pad',
+			],
+			'methods' => [
+				'SetHTMLHeader' => $header,
+			]
+		]);
+
+		// return the pdf output as per the destination setting
+		return $pdf->render();
 	}
 
     /**

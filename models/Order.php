@@ -199,6 +199,47 @@ class Order extends \yii\db\ActiveRecord
     }
 	
 	/**
+	 * @return integer
+	 */
+	public function getTotalQuantity() {
+		$quantity = 0;
+		foreach ($this->orderProducts as $orderProduct) {
+			$quantity += $orderProduct->quantity;
+		}
+		return $quantity;
+	}
+	
+	/**
+	 * @return float
+	 */
+	public function getSubtotal() {
+		$subtotal = 0;
+		foreach ($this->orderProducts as $orderProduct) {
+			$subtotal += $orderProduct->price * $orderProduct->quantity;
+		}
+		return $subtotal;
+	}
+	
+	/**
+	 * @return float
+	 */
+	public function getDiscountedFromSubtotal() {
+		if ($this->discount_percentage) {
+			$value = $this->subtotal * (1 / $this->discount_percentage);
+		} else {
+			$value = 0;
+		}
+		return $value;
+	}
+	
+	/**
+	 * @return float
+	 */
+	public function getTotal() {
+		return ($this->subtotal - $this->discountedFromSubtotal) * (1 + (float) Yii::$app->params['iva'] / 100);
+	}
+	
+	/**
 	 * Content for the exported txt file
 	 * @return string
 	 */

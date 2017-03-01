@@ -106,6 +106,25 @@ class OrderProduct extends \yii\db\ActiveRecord
     }
 	
 	/**
+	 * @return float
+	 */
+	public function getSubtotal() {
+		return $this->price * $this->quantity;
+	}
+	
+	/**
+	 * @return float
+	 */
+	public function getPriceWithDiscount() {
+		if ($this->order->discount_percentage) {
+			$value = $this->price * (1 - $this->order->discount_percentage / 100);
+		} else {
+			$value = $this->price;
+		}
+		return $value;
+	}
+	
+	/**
 	 * Validates that entered quantity it's available
 	 * @param string $attribute the attribute currently being validated
 	 * @param mixed $params the value of the "params" given in the rule
