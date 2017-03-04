@@ -234,7 +234,7 @@ class OrderController extends Controller
 			'format' => Pdf::FORMAT_A4,
 			'orientation' => Pdf::ORIENT_LANDSCAPE,
 			'marginTop' => 0,
-			'destination' => Pdf::DEST_DOWNLOAD,
+			'destination' => Pdf::DEST_BROWSER,
 			'content' => $content,
 			'cssFile' => '@webroot/css/pdf.css',
 			'options' => [
@@ -243,7 +243,8 @@ class OrderController extends Controller
 			],
 			'methods' => [
 				'SetHTMLHeader' => $header,
-			]
+			],
+			'marginFooter' => 0,
 		]);
 
 		// return the pdf output as per the destination setting

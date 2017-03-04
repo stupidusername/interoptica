@@ -225,7 +225,7 @@ class Order extends \yii\db\ActiveRecord
 	 */
 	public function getDiscountedFromSubtotal() {
 		if ($this->discount_percentage) {
-			$value = $this->subtotal * (1 / $this->discount_percentage);
+			$value = $this->subtotal * ($this->discount_percentage / 100);
 		} else {
 			$value = 0;
 		}

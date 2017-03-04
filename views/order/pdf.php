@@ -11,7 +11,7 @@ $table = [];
 foreach ($model->orderProducts as $k => $orderProduct) {
 	$page = $k / ENTRIES_PER_PAGE;
 	$row = $k % (ENTRIES_PER_PAGE / 2);
-	$column = $k % ENTRIES_PER_PAGE > ENTRIES_PER_PAGE / 2 ? 1 : 0;
+	$column = $k % ENTRIES_PER_PAGE >= ENTRIES_PER_PAGE / 2 ? 1 : 0;
 	$table[$page][$row][$column] = $orderProduct;
 }
 ?>
@@ -22,17 +22,15 @@ foreach ($model->orderProducts as $k => $orderProduct) {
 			<tr>
 				<td class="tr5 td11"><p class="p0">Cant.</p></td>
 				<td class="tr5 td27"><p class="p0">Modelo</p></td>
-				<td class="tr5 td25"><p class="p0">Obser.</p></td>
+				<td class="tr5 td13"><p class="p0">Obser.</p></td>
 				<td class="tr5 td23"><p class="p0">Precio</p></td>
-				<td class="tr5 td23"><p class="p0">C/Dto.</p></td>
 				<td class="tr5 td26"><p class="p0">Subtotal</p></td>
 				<td class="tr5"><p class="p0">&nbsp;</p></td>
 				<td class="tr5 td11"><p class="p0">Cant.</p></td>
 				<td class="tr5 td27"><p class="p0">Modelo</p></td>
 				<td class="tr5 td25"><p class="p0">Obser.</p></td>
-				<td class="tr5 td23"><p class="p0">Precio</p></td>
-				<td class="tr5 td23"><p class="p0">C/Dto.</p></td>
-				<td class="tr5 td26"><p class="p0">Subtotal</p></td>
+				<td class="tr5 td25"><p class="p0">Precio</p></td>
+				<td class="tr5 td13"><p class="p0">Subtotal</p></td>
 			</tr>
 			<tr>
 				<td class="tr7 td11"></td>
@@ -42,10 +40,9 @@ foreach ($model->orderProducts as $k => $orderProduct) {
 					<?php foreach ($row as $column => $orderProduct): ?>
 						<td class="tr14 td11"><p class="p0"><?= $orderProduct->quantity ?></p></td>
 						<td class="tr14 td27"><p class="p0"><?= $orderProduct->product->gecom_desc ?></p></td>
-						<td class="tr14 td25"><p class="p0">&nbsp;</p></td>
-						<td class="tr14 td23"><p class="p0"><?= Yii::$app->formatter->asCurrency($orderProduct->price) ?></p></td>
-						<td class="tr14 td23"><p class="p0"><?= Yii::$app->formatter->asCurrency($orderProduct->priceWithDiscount) ?></p></td>
-						<td class="tr14 td26"><p class="p0"><?= Yii::$app->formatter->asCurrency($orderProduct->subtotal) ?></p></td>
+						<td class="tr14 td13"><p class="p0">&nbsp;</p></td>
+						<td class="tr14 td25"><p class="p0"><?= Yii::$app->formatter->asCurrency($orderProduct->price) ?></p></td>
+						<td class="tr14 td13"><p class="p0"><?= Yii::$app->formatter->asCurrency($orderProduct->subtotal) ?></p></td>
 						<?php if ($column == 0): ?>
 							<td class="tr14"><p class="p0">&nbsp;</p></td>
 						<?php endif; ?>	
