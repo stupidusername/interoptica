@@ -116,12 +116,16 @@ OrderAsset::register($this);
 				'value' => 'statusLabel',
 			],
 			[
+				'label' => 'Usuario',
+				'attribute' => 'user.username'
+			],
+			[
 				'attribute' => 'create_datetime',
 				'format' => 'datetime'
 			],
 		],
 		'dataProvider' => new ActiveDataProvider([
-            'query' => $model->getOrderStatuses(),
+            'query' => $model->getOrderStatuses()->with(['user']),
 			'pagination' => false,
 			'sort' => false,
         ]),

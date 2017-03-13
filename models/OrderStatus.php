@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property integer $order_id
+ * @property integer $user_id
  * @property integer $status
  * @property string $create_datetime
  *
@@ -52,6 +53,7 @@ class OrderStatus extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'order_id' => 'ID Pedido',
+			'order_id' => 'ID Usuario',
             'status' => 'Estado',
             'create_datetime' => 'Fecha',
         ];
@@ -86,5 +88,13 @@ class OrderStatus extends \yii\db\ActiveRecord
     public function getOrder()
     {
         return $this->hasOne(Order::className(), ['id' => 'order_id']);
+	}
+	
+	/**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
 	}
 }

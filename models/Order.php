@@ -86,6 +86,7 @@ class Order extends \yii\db\ActiveRecord
 		if (!$oldStatus || $oldStatus->status != $this->status) {
 			$orderStatus = new OrderStatus();
 			$orderStatus->order_id = $this->id;
+			$orderStatus->user_id = Yii::$app->user->id;
 			$orderStatus->status = $this->status;
 			$orderStatus->create_datetime = gmdate('Y-m-d H:i:s');
 			$orderStatus->save(false);
