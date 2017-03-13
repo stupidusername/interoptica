@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'adminEmail' => 'admin@interoptica.com.ar',
+    'adminEmail' => 'no-reply@interoptica.com.ar',
 	'iva' => 21,
 	'maskMoneyOptions' => [
         'prefix' => '$ ',
