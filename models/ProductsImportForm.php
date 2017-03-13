@@ -49,7 +49,7 @@ class ProductsImportForm extends Model {
 	 * @return string
 	 */
 	public function processValue($value) {
-		return mb_convert_encoding($value, 'UTF-8', 'ISO-8859-3');
+		return mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
 	}
 
 	/**
@@ -76,12 +76,13 @@ class ProductsImportForm extends Model {
 
 			switch ($this->scenario) {
 				case self::SCENARIO_PRICE:
+					$delimiter = ';';
 					$startFromLine = 2;
 					$aditionalConfigs = [
 							[
 							'attribute' => 'price',
 							'value' => function($line) {
-									return (float) filter_var( $line[4], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
+									return (float) filter_var($line[3], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 								},
 							],
 					];
@@ -90,17 +91,18 @@ class ProductsImportForm extends Model {
 					};
 					break;
 				case self::SCENARIO_STOCK:
+					$delimiter = ',';
 					$startFromLine = 0;
 					$aditionalConfigs = [
 							[
 							'attribute' => 'stock',
 							'value' => function($line) {
-									return (int) $line[2];
+									return (int) $line[3];
 								},
 							],
 					];
 					$skipImport = function ($line) {
-						return	!$line[0] || count($line) != 3;
+						return	!$line[0] || count($line) != 8;
 					};
 					break;
 			}
@@ -114,7 +116,7 @@ class ProductsImportForm extends Model {
 				'filename' => $this->file->tempName,
 				'startFromLine' => $startFromLine,
 				'fgetcsvOptions' => [
-					'delimiter' => ';',
+					'delimiter' => $delimiter,
 					'enclosure' => chr(8),
 				]
 			]));
