@@ -1,5 +1,13 @@
 <?php
 /* @var app\models\Order $model */
+
+// Split comment into lines
+$commentBreaked = wordwrap($model->comment, 50, "\n", true);
+$commentBreakedLines = explode("\n", $commentBreaked);
+$commentLines = ['', '', '', '', '', ''];
+foreach ($commentLines as $k => $commentLine) {
+	$commentLines[$k] = $k < count($commentBreakedLines) ? $commentBreakedLines[$k] : '';
+}
 ?>
 
 <table cellpadding="0" cellspacing="0" class="t0">
@@ -43,42 +51,42 @@
 		<tr>
 			<td class="tr6 td0"><p class="p0">Cliente:</p></td>
 			<td colspan="2" class="tr6 td10"><p class="p0"><?= $model->customer->gecom_id . ' ' . $model->customer->name ?></p></td>
-			<td class="tr6 td3"><p class="p0">&nbsp;</p></td>
+			<td class="tr6 td3"><p class="p0"><?= $commentLines[0]; ?></p></td>
 			<td class="tr6 td4"><p class="p0">Modificar: N</p></td>
 		</tr>
 		<tr>
 			<td class="tr10 td0"><p class="p0">&nbsp;</p></td>
 			<td class="tr10 td1"><p class="p0">&nbsp;</p></td>
 			<td class="tr10 td2"><p class="p0"><?= $model->customer->address ?></p></td>
-			<td class="tr10 td3"><p class="p0">&nbsp;</p></td>
+			<td class="tr10 td3"><p class="p0"><?= $commentLines[1]; ?></p></td>
 			<td class="tr10 td4"><p class="p0">Saldo:</p></td>
 		</tr>
 		<tr>
 			<td class="tr10 td0"><p class="p0">&nbsp;</p></td>
 			<td class="tr10 td1"><p class="p0">&nbsp;</p></td>
 			<td class="tr10 td2"><p class="p0"><?= $model->customer->locality ?></p></td>
-			<td class="tr10 td3"><p class="p0">&nbsp;</p></td>
+			<td class="tr10 td3"><p class="p0"><?= $commentLines[2]; ?></p></td>
 			<td class="tr10 td4"><p class="p0">&nbsp;</p></td>
 		</tr>
 		<tr>
 			<td class="tr11 td0"><p class="p0">&nbsp;</p></td>
 			<td class="tr11 td1"><p class="p0">&nbsp;</p></td>
 			<td class="tr11 td2"><p class="p0"><?= $model->customer->province ?></p></td>
-			<td class="tr11 td3"><p class="p0">&nbsp;</p></td>
+			<td class="tr11 td3"><p class="p0"><?= $commentLines[3]; ?></p></td>
 			<td class="tr11 td4"><p class="p0">&nbsp;</p></td>
 		</tr>
 		<tr>
 			<td class="tr10 td0"><p class="p0">&nbsp;</p></td>
 			<td class="tr10 td1"><p class="p0">&nbsp;</p></td>
 			<td class="tr10 td2"><p class="p0"><?= $model->customer->zip_code ?></p></td>
-			<td class="tr10 td3"><p class="p0">&nbsp;</p></td>
+			<td class="tr10 td3"><p class="p0"><?= $commentLines[4]; ?></p></td>
 			<td class="tr10 td4"><p class="p0">Fecha de Fact.:</p></td>
 		</tr>
 		<tr>
 			<td class="tr10 td0"><p class="p0">&nbsp;</p></td>
 			<td class="tr10 td1"><p class="p0">&nbsp;</p></td>
 			<td class="tr10 td2"><p class="p0"><?= $model->customer->phone_number ?></td>
-			<td class="tr10 td3"><p class="p0">&nbsp;</p></td>
+			<td class="tr10 td3"><p class="p0"><?= $commentLines[5]; ?></p></td>
 			<td class="tr10 td4"><p class="p0">&nbsp;</p></td>
 		</tr>
 	</tbody>
