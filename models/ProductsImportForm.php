@@ -7,6 +7,7 @@ use yii\web\UploadedFile;
 use ruskid\csvimporter\CSVImporter;
 use ruskid\csvimporter\CSVReader;
 use ruskid\csvimporter\MultipleUpdateStrategy;
+use app\helpers\ImportHelper;
 
 class ProductsImportForm extends Model {
 
@@ -49,7 +50,7 @@ class ProductsImportForm extends Model {
 	 * @return string
 	 */
 	public function processValue($value) {
-		return mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
+		return ImportHelper::processValue($value);
 	}
 
 	/**

@@ -7,6 +7,7 @@ use yii\web\UploadedFile;
 use ruskid\csvimporter\CSVImporter;
 use ruskid\csvimporter\CSVReader;
 use ruskid\csvimporter\MultipleUpdateStrategy;
+use app\helpers\ImportHelper;
 
 class ZonesImportForm extends Model {
 
@@ -37,7 +38,7 @@ class ZonesImportForm extends Model {
 	 * @return string
 	 */
 	public function processValue($value) {
-		return ucwords(mb_strtolower(mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1')), "_-. \t\r\n\f\v");
+		return ImportHelper::processValue($value);
 	}
 	
 	/**
