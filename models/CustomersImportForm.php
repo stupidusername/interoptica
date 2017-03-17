@@ -38,8 +38,8 @@ class CustomersImportForm extends Model {
 	 * @param string $value
 	 * @return string
 	 */
-	public function processValue($value) {
-		return ImportHelper::processValue($value);
+	public function processValue($value, $toEncoding) {
+		return ImportHelper::processValue($value, $toEncoding);
 	}
 	
 	/**
@@ -51,12 +51,8 @@ class CustomersImportForm extends Model {
 			$importer = new CSVImporter;
 
 			//Will read CSV file
-			$importer->setData(new CSVReader([
+			$importer->setData(new CustomerReader([
 				'filename' => $this->file->tempName,
-				'fgetcsvOptions' => [
-					'delimiter' => ';',
-					'enclosure' => chr(8),
-				]
 			]));
 			
 			// Get all zones (deleted or not). Index array by gecom_id for easy search.
@@ -65,73 +61,73 @@ class CustomersImportForm extends Model {
 			$records = $importer->import(new MultipleUpdateStrategy([
 				'className' => Customer::className(),
 				'csvKey' => function ($line) {
-					return $line[0];
+					return $line[1];
 				},
 				'rowKey' => function ($row) {
 					return $row['gecom_id'];
 				},
 				'skipImport' => function ($line) {
-					return !$line[0];
+					return !$line[1];
 				},
 				'configs' => [
 					[
 						'attribute' => 'gecom_id',
 						'value' => function($line) {
-							return $line[0];
+							return $line[1];
 						},
 					],
 					[
 						'attribute' => 'name',
 						'value' => function($line) {
-							return $this->processValue($line[1]);
+							return $this->processValue($line[2], 'UTF-8');
 						},
 					],
 					[
 						'attribute' => 'address',
 						'value' => function($line) {
-							return $this->processValue($line[2]);
+							return $this->processValue($line[3], 'UTF-8');
 						},
 					],
 					[
 						'attribute' => 'zip_code',
 						'value' => function($line) {
-							return $line[3];
+							return $line[4];
 						},
 					],
 					[
 						'attribute' => 'locality',
 						'value' => function($line) {
-							return $this->processValue($line[4]);
+							return $this->processValue($line[5], 'UTF-8');
 						},
 					],
 					[
 						'attribute' => 'province',
 						'value' => function($line) {
-							return $this->processValue($line[5]);
+							return $this->processValue($line[6], 'UTF-8');
 						},
 					],
 					[
 						'attribute' => 'zone_id',
 						'value' => function($line) use ($zones){
-							return ArrayHelper::getValue($zones, $line[6], null);
+							return ArrayHelper::getValue($zones, $line[7], null);
 						},
 					],
 					[
 						'attribute' => 'phone_number',
 						'value' => function($line) {
-							return $line[7];
+							return $line[8];
 						},
 					],
 					[
 						'attribute' => 'tax_situation',
 						'value' => function($line) {
-							return $line[8];
+							return $line[9];
 						},
 					],
 					[
 						'attribute' => 'doc_number',
 						'value' => function($line) {
-							return $line[9];
+							return $line[10];
 						},
 					],
 				],
@@ -142,4 +138,22 @@ class CustomersImportForm extends Model {
 		}
 	}
 
+}
+
+class CustomerReader extends CSVReader {
+	
+	/**
+     * Will read customers file into array
+     * @throws Exception
+     * @return $array customer file filtered data [n][0] it's the whole line
+     */
+    public function readFile() {
+        if (!file_exists($this->filename)) {
+            throw new Exception(__CLASS__ . ' couldn\'t find the customer file.');
+        }
+		$fileContent = str_replace('""', '"', mb_convert_encoding(file_get_contents($this->filename), 'UTF-8', 'ISO-8859-1'));
+		$matches = [];
+		preg_match_all('/\D*(\d*)\w*\s*(.{31})(.{31})\s*(\d*)\s*(.{16})(.{16})\w*\s*(\d*)\s*.*;[\r\n]+\s*(.{49}).{27}(\w)\s(.{13}).*;[\r\n]+.*;/u', $fileContent, $matches, PREG_SET_ORDER);
+		return $matches;
+    }
 }
