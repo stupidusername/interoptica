@@ -16,6 +16,6 @@ class ImportHelper {
 		if ($fromEncoding != self::TO_ENCODING) {
 			$value = mb_convert_encoding($value, self::TO_ENCODING, $fromEncoding);
 		}
-		return ucwords(mb_strtolower($value), "*_-. \t\r\n\f\v");
+		return ucwords(mb_strtolower(trim($value)), "*_-. \t\r\n\f\v");
 	}
 }

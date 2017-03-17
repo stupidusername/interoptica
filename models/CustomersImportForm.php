@@ -61,13 +61,13 @@ class CustomersImportForm extends Model {
 			$records = $importer->import(new MultipleUpdateStrategy([
 				'className' => Customer::className(),
 				'csvKey' => function ($line) {
-					return $line[1];
+					return isset($line[1]) ? $line[1] : null;
 				},
 				'rowKey' => function ($row) {
 					return $row['gecom_id'];
 				},
 				'skipImport' => function ($line) {
-					return !$line[1];
+					return !isset($line[1]);
 				},
 				'configs' => [
 					[
@@ -148,12 +148,27 @@ class CustomerReader extends CSVReader {
      * @return $array customer file filtered data [n][0] it's the whole line
      */
     public function readFile() {
+		$lines = [];
         if (!file_exists($this->filename)) {
             throw new Exception(__CLASS__ . ' couldn\'t find the customer file.');
         }
-		$fileContent = str_replace('""', '"', mb_convert_encoding(file_get_contents($this->filename), 'UTF-8', 'ISO-8859-1'));
-		$matches = [];
-		preg_match_all('/\D*(\d*)\w*\s*(.{31})(.{31})\s*(\d*)\s*(.{16})(.{16})\w*\s*(\d*)\s*.*;[\r\n]+\s*(.{49}).{27}(\w)\s(.{13}).*;[\r\n]+.*;/u', $fileContent, $matches, PREG_SET_ORDER);
-		return $matches;
+		$handle = fopen($this->filename, "r");
+		if ($handle) {
+			$i = 0;
+			$value = '';
+			while (($line = fgets($handle)) !== false) {
+				$value .= $line;
+				$i++;
+				if ($i % 3 == 0) {
+					$value = str_replace('""', '"', mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1'));
+					$matches = [];
+					preg_match_all('/\D*(\d*)\w*\s*(.{31})(.{31})\s*(\d*)\s*(.{16})(.{16})\w*\s*(\d*)\s*.*;[\r\n]+\s*(.{49}).{27}(\w)\s(.{13}).*;[\r\n]+.*;/u', $value, $matches, PREG_SET_ORDER);
+					$lines[] = isset($matches[0]) ? $matches[0] : [];
+					$value = '';
+				}
+			}
+			fclose($handle);
+		}
+		return $lines;
     }
 }
