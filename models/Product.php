@@ -23,6 +23,8 @@ use yii\helpers\ArrayHelper;
  */
 class Product extends \yii\db\ActiveRecord
 {
+	const STOCK_MIN = 10;
+	
     /**
      * @inheritdoc
      */

@@ -123,8 +123,8 @@ class OrderProduct extends \yii\db\ActiveRecord
 		$oldQuantity = isset($this->oldAttributes['quantity']) ? $this->oldAttributes['quantity'] : 0;
 		$stock = $this->product->stock !== null ? $this->product->stock : 0;
 		$realStock = $oldQuantity + $stock;
-		if ($this->$attribute > $realStock) {
-			$this->addError($attribute, "El stock de este producto es de: $realStock");
+		if ($this->$attribute > $realStock - Product::STOCK_MIN) {
+			$this->addError($attribute, "El stock de este producto es de $realStock y tienen que quedar " . Product::STOCK_MIN. ".");
 		}
 	}
 
