@@ -38,8 +38,8 @@ class CustomersImportForm extends Model {
 	 * @param string $value
 	 * @return string
 	 */
-	public function processValue($value, $toEncoding) {
-		return ImportHelper::processValue($value, $toEncoding);
+	public function processValue($value) {
+		return ImportHelper::processValue($value, 'UTF-8');
 	}
 	
 	/**
@@ -79,13 +79,13 @@ class CustomersImportForm extends Model {
 					[
 						'attribute' => 'name',
 						'value' => function($line) {
-							return $this->processValue($line[2], 'UTF-8');
+							return $this->processValue($line[2]);
 						},
 					],
 					[
 						'attribute' => 'address',
 						'value' => function($line) {
-							return $this->processValue($line[3], 'UTF-8');
+							return $this->processValue($line[3]);
 						},
 					],
 					[
@@ -97,13 +97,13 @@ class CustomersImportForm extends Model {
 					[
 						'attribute' => 'locality',
 						'value' => function($line) {
-							return $this->processValue($line[5], 'UTF-8');
+							return $this->processValue($line[5]);
 						},
 					],
 					[
 						'attribute' => 'province',
 						'value' => function($line) {
-							return $this->processValue($line[6], 'UTF-8');
+							return $this->processValue($line[6]);
 						},
 					],
 					[
