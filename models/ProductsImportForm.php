@@ -47,10 +47,11 @@ class ProductsImportForm extends Model {
 	/**
 	 * Prepares values for db insert
 	 * @param string $value
+	 * @param string $fromEncoding
 	 * @return string
 	 */
-	public function processValue($value) {
-		return ImportHelper::processValue($value);
+	public function processValue($value, $fromEncoding) {
+		return mb_convert_encoding($value, ImportHelper::TO_ENCODING, $fromEncoding);
 	}
 
 	/**
@@ -60,26 +61,26 @@ class ProductsImportForm extends Model {
 	public function import() {
 		if ($this->validate()) {
 
-			$commonConfigs = [
-					[
-					'attribute' => 'gecom_code',
-					'value' => function($line) {
-							return $this->processValue($line[0]);
-						},
-					],
-					[
-					'attribute' => 'gecom_desc',
-					'value' => function($line) {
-							return $this->processValue($line[1]);
-						},
-					],
-			];
-
 			switch ($this->scenario) {
 				case self::SCENARIO_PRICE:
 					$delimiter = ';';
 					$startFromLine = 2;
-					$aditionalConfigs = [
+					$cvsKey = function ($line) {
+						return $this->processValue($line[0], 'CP850');
+					};
+					$configs = [
+							[
+							'attribute' => 'gecom_code',
+							'value' => function($line) {
+									return $this->processValue($line[0], 'CP850');
+								},
+							],
+							[
+							'attribute' => 'gecom_desc',
+							'value' => function($line) {
+									return $this->processValue($line[1], 'CP850');
+								},
+							],
 							[
 							'attribute' => 'price',
 							'value' => function($line) {
@@ -94,7 +95,22 @@ class ProductsImportForm extends Model {
 				case self::SCENARIO_STOCK:
 					$delimiter = ',';
 					$startFromLine = 0;
-					$aditionalConfigs = [
+					$cvsKey = function ($line) {
+						return $this->processValue($line[0], 'ISO-8859-3');
+					};
+					$configs = [
+							[
+							'attribute' => 'gecom_code',
+							'value' => function($line) {
+									return $this->processValue($line[0], 'ISO-8859-3');
+								},
+							],
+							[
+							'attribute' => 'gecom_desc',
+							'value' => function($line) {
+									return $this->processValue($line[1], 'ISO-8859-3');
+								},
+							],
 							[
 							'attribute' => 'stock',
 							'value' => function($line) {
@@ -107,8 +123,6 @@ class ProductsImportForm extends Model {
 					};
 					break;
 			}
-			
-			$configs = array_merge($commonConfigs, $aditionalConfigs);
 
 			$importer = new CSVImporter;
 
@@ -124,9 +138,7 @@ class ProductsImportForm extends Model {
 
 			$records = $importer->import(new MultipleUpdateStrategy([
 				'className' => Product::className(),
-				'csvKey' => function ($line) {
-					return $line[0];
-				},
+				'csvKey' => $cvsKey,
 				'rowKey' => function ($row) {
 					return $row['gecom_code'];
 				},
