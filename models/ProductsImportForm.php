@@ -24,7 +24,7 @@ class ProductsImportForm extends Model {
 				[['file'], 'file', 'skipOnEmpty' => false, 'extensions' => ['csv'], 'checkExtensionByMimeType' => false],
 		];
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -50,8 +50,8 @@ class ProductsImportForm extends Model {
 	 * @param string $fromEncoding
 	 * @return string
 	 */
-	public function processValue($value, $fromEncoding) {
-		return mb_convert_encoding($value, ImportHelper::TO_ENCODING, $fromEncoding);
+	public function processValue($value) {
+		return mb_convert_encoding($value, ImportHelper::TO_ENCODING, 'ISO-8859-3');
 	}
 
 	/**
@@ -61,68 +61,55 @@ class ProductsImportForm extends Model {
 	public function import() {
 		if ($this->validate()) {
 
+			$commonConfigs = [
+				[
+					'attribute' => 'gecom_code',
+					'value' => function($line) {
+						return $this->processValue($line[0]);
+					},
+				],
+				[
+					'attribute' => 'gecom_desc',
+					'value' => function($line) {
+						return $this->processValue($line[1]);
+					},
+				],
+			];
+
 			switch ($this->scenario) {
 				case self::SCENARIO_PRICE:
 					$delimiter = ';';
 					$startFromLine = 2;
-					$cvsKey = function ($line) {
-						return $this->processValue($line[0], 'CP850');
-					};
-					$configs = [
-							[
-							'attribute' => 'gecom_code',
-							'value' => function($line) {
-									return $this->processValue($line[0], 'CP850');
-								},
-							],
-							[
-							'attribute' => 'gecom_desc',
-							'value' => function($line) {
-									return $this->processValue($line[1], 'CP850');
-								},
-							],
-							[
+					$aditionalConfigs = [
+						[
 							'attribute' => 'price',
 							'value' => function($line) {
-									return (float) filter_var($line[3], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-								},
-							],
+								return (float) filter_var($line[3], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+							},
+						],
 					];
 					$skipImport = function ($line) {
-						return	!$line[0] || count($line) != 5;
+						return !$line[0] || count($line) != 5;
 					};
 					break;
 				case self::SCENARIO_STOCK:
 					$delimiter = ',';
 					$startFromLine = 0;
-					$cvsKey = function ($line) {
-						return $this->processValue($line[0], 'ISO-8859-3');
-					};
-					$configs = [
-							[
-							'attribute' => 'gecom_code',
-							'value' => function($line) {
-									return $this->processValue($line[0], 'ISO-8859-3');
-								},
-							],
-							[
-							'attribute' => 'gecom_desc',
-							'value' => function($line) {
-									return $this->processValue($line[1], 'ISO-8859-3');
-								},
-							],
-							[
+					$aditionalConfigs = [
+						[
 							'attribute' => 'stock',
 							'value' => function($line) {
-									return (int) $line[3];
-								},
-							],
+								return (int) $line[3];
+							},
+						],
 					];
 					$skipImport = function ($line) {
-						return	!$line[0] || count($line) != 8;
+						return !$line[0] || count($line) != 8;
 					};
 					break;
 			}
+
+			$configs = array_merge($commonConfigs, $aditionalConfigs);
 
 			$importer = new CSVImporter;
 
@@ -138,7 +125,9 @@ class ProductsImportForm extends Model {
 
 			$records = $importer->import(new MultipleUpdateStrategy([
 				'className' => Product::className(),
-				'csvKey' => $cvsKey,
+				'csvKey' => function ($line) {
+					return $this->processValue($line[0]);
+				},
 				'rowKey' => function ($row) {
 					return $row['gecom_code'];
 				},
