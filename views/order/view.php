@@ -138,7 +138,7 @@ OrderAsset::register($this);
 	<h3>Productos</h3>
 	
 	<p>
-		<?= Html::button('Agregar Producto', ['class' => 'btn btn-success', 'onclick' => "$('#addEntry').kbModalAjax({url: '$addEntryUrl'}); $('#addEntry').modal('show');"]) ?>
+		<?= Html::button('Agregar Producto', ['id' => 'addEntryButton', 'class' => 'btn btn-success', 'url' => "$addEntryUrl"]) ?>
 	</p>
 	
 	<?php Pjax::begin(['id' => 'productsGridview']); ?>

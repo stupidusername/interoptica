@@ -1,11 +1,22 @@
 $(document).ready(function () {
+	var addEntryUrl = $('#addEntryButton').attr('url');
+	
+	var showAddEntryModal = function() {
+		$('#addEntry').kbModalAjax({url: addEntryUrl}); $('#addEntry').modal('show');
+	}
+	
+	$('#addEntryButton').on('click', function () {
+		showAddEntryModal();
+	});
+	
 	// refresh pending orders periodically
 	setInterval(function () {
 		$.pjax.reload({container: '#pendingOrdersGridview'});
 	}, 30000);
 	
-	$('#addEntry').on('kbModalSubmit', function (event, xhr, settings) {
+	$('#addEntry').on('kbModalSubmitSuccess', function (event, xhr, settings) {
 		$.pjax.reload({container: '#productsGridview'});
+		showAddEntryModal();
 	});
 
 	$(document).on('click', '.productDelete', function (event) {
