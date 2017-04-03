@@ -133,23 +133,33 @@
 					newScripts.push(src);
 				}
 			});
+			
+			var loadNextScript = function() {
+				jQuery.getScript(newScripts[loadedScriptsCount] + (new Date().getTime()), function () {
+					loadedScriptsCount++;
+					if (loadedScriptsCount === newScripts.length) {
+						scriptsLoaded();
+					} else {
+						loadNextScript();
+					}
+				});
+			}
 
 			/**
 			 * Scripts loaded callback
 			 */
-			var scriptLoaded = function () {
-				loadedScriptsCount += 1;
-				if (loadedScriptsCount === newScripts.length) {
-					// Execute inline scripts
-					for (var i = 0; i < inlineInjections.length; i += 1) {
-						window.eval(inlineInjections[i]);
-					}
+			var scriptsLoaded = function () {
+				// Execute inline scripts
+				for (var i = 0; i < inlineInjections.length; i += 1) {
+					window.eval(inlineInjections[i]);
 				}
 			};
-
-			// Load each script tag
-			for (var i = 0; i < newScripts.length; i += 1) {
-				jQuery.getScript(newScripts[i] + (new Date().getTime()), scriptLoaded);
+			
+			// Load scripts
+			if (newScripts.length) {
+				loadNextScript();
+			} else {
+				scriptsLoaded();
 			}
 		}
     };
