@@ -50,7 +50,8 @@ foreach ($commentLines as $k => $commentLine) {
 		</tr>
 		<tr>
 			<td class="tr6 td0"><p class="p0">Cliente:</p></td>
-			<td colspan="2" class="tr6 td10"><p class="p0"><?= $model->customer->gecom_id . ' ' . $model->customer->name ?></p></td>
+			<td class="tr6 td1"><p class="p0">&nbsp;</p></td>
+			<td class="tr6 td2"><p class="p0"><?= $model->customer->gecom_id . ' - ' . $model->customer->name ?></p></td>
 			<td class="tr6 td3"><p class="p0"><?= $commentLines[0]; ?></p></td>
 			<td class="tr6 td4"><p class="p0">Modificar: N</p></td>
 		</tr>
@@ -96,7 +97,7 @@ foreach ($commentLines as $k => $commentLine) {
 	<tbody>
 		<tr>
 			<td class="tr12 td27"><p class="p0">&nbsp;</p></td>
-			<td class="tr12 td13"><p class="p0"><?= $model->customer->tax_situation ?></p></td>
+			<td class="tr12 td13"><p class="p0"><?= $model->customer->taxSituationLabel ?></p></td>
 			<td class="tr12 td17"><p class="p0">Transporte:</p></td>
 			<td class="tr12 td2"><p class="p0">Detalle:</p></td>
 		</tr>
