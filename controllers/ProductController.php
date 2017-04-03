@@ -37,7 +37,7 @@ class ProductController extends Controller
                 ],
                 'rules' => [
 					[
-						'actions' => ['index', 'view'],
+						'actions' => ['index', 'view', 'list'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -151,6 +151,21 @@ class ProductController extends Controller
 		}
 
 		return $this->render('import', ['model' => $model]);
+	}
+	
+	/**
+	 * Builds a response for Select2 product widgets
+	 * @param string $q
+	 * @return JSON
+	 */
+	public function actionList($q = '') {
+		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		$productsArray = Product::find()->andWhere(['or', ['like', 'gecom_code', $q], ['like', 'gecom_desc', $q]])->asArray()->all();
+		$results = array_map(function ($productArray) {
+					return ['id' => $productArray['id'], 'text' => $productArray['gecom_desc'] . ' (' . $productArray['stock']. ')'];
+				}, $productsArray);
+		$out = ['results' => $results];
+		return $out;
 	}
 
     /**

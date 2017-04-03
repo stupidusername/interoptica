@@ -22,8 +22,11 @@ $this->params['breadcrumbs'][] = $this->title;
 $addEntryUrl = Url::to(['add-entry', 'orderId' => $model->id]);
 
 Modal::begin([
-    'id' => 'addEntry',
-    'url' => $addEntryUrl,
+	'id' => 'addEntry',
+	'url' => $addEntryUrl,
+	'options' => [
+		'tabindex' => false // important for Select2 to work properly
+	],
 ]);
 
 Modal::end(); 

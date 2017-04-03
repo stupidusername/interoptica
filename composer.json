@@ -38,7 +38,8 @@
 		"kartik-v/yii2-grid": "@dev",
 		"kartik-v/yii2-export": "@dev",
 		"kartik-v/yii2-money": "dev-master",
-		"kartik-v/yii2-mpdf": "dev-master"
+		"kartik-v/yii2-mpdf": "dev-master",
+		"kartik-v/yii2-widget-select2": "@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

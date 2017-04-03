@@ -1,6 +1,8 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
+use kartik\select2\Select2;
 use yii\widgets\ActiveForm;
 use app\models\Product;
 
@@ -12,8 +14,19 @@ use app\models\Product;
 <div class="order-product-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'product_id')->label('Producto')->dropDownList(Product::getIdNameArray($model), ['prompt' => 'Elegir producto']) ?>
+	
+	<?=
+	$form->field($model, 'product_id')->label('Producto')->widget(Select2::classname(), [
+		'initValueText' => $model->product_id ? $model->product->gecom_desc . ' (' . $model->product->stock . ')' : null,
+		'options' => ['placeholder' => 'Elegir producto'],
+		'pluginOptions' => [
+			'minimumInputLength' => 3,
+			'ajax' => [
+				'url' => Url::to('/product/list'),
+			],
+		],
+	])
+	?>
 
 	<?= $form->field($model, 'quantity') ?>	
 

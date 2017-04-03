@@ -114,7 +114,7 @@ class Product extends \yii\db\ActiveRecord
 		};
 		$activeQuery = self::find()->inStock()->select(['id', 'gecom_desc', 'stock']);
 		if ($orderProduct && !$orderProduct->isNewRecord) {
-			$activeQuery = $activeQuery->orWhere(['id' => $orderProduct->product_id]);
+			$activeQuery->orWhere(['id' => $orderProduct->product_id]);
 		}
 		$products = ArrayHelper::map($activeQuery->asArray()->all(), 'id', $getName);
 		return $products;

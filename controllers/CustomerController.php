@@ -36,6 +36,11 @@ class CustomerController extends Controller
                     'class' => AccessRule::className(),
                 ],
                 'rules' => [
+					[
+						'actions' => ['list'],
+						'roles' => ['@'],
+						'allow' => true,
+					],
                     [
                         'allow' => true,
                         'roles' => ['admin'],
@@ -138,6 +143,21 @@ class CustomerController extends Controller
 		}
 
 		return $this->render('import', ['model' => $model]);
+	}
+	
+	/**
+	 * Builds a response for Select2 customer widgets
+	 * @param string $q
+	 * @return JSON
+	 */
+	public function actionList($q = '') {
+		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		$customersArray = Customer::find()->andWhere(['or', ['gecom_id' => $q], ['like', 'name', $q]])->asArray()->all();
+		$results = array_map(function ($customerArray) {
+					return ['id' => $customerArray['id'], 'text' => $customerArray['name']];
+				}, $customersArray);
+		$out = ['results' => $results];
+		return $out;
 	}
 
 	/**
