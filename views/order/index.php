@@ -35,6 +35,11 @@ $this->params['breadcrumbs'][] = $this->title;
 				'label' => 'Estado',
 				'value' => 'orderStatus.statusLabel',
 			],
+			[
+				'attribute' => 'comment',
+				'format' => 'ntext',
+				'options' => ['style' => 'width: 400px;']
+			],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
