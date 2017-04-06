@@ -13,7 +13,15 @@ use app\models\Product;
 
 <div class="order-product-form">
 
-    <?php $form = ActiveForm::begin(['enableClientValidation' => false]); ?>
+    <?php $form = ActiveForm::begin([
+		'enableClientValidation' => false,
+		'fieldConfig' => [
+			'errorOptions' => [
+				'class' => 'help-block',
+				'encode' => false,
+			],
+		],
+	]); ?>
 	
 	<?=
 	$form->field($model, 'product_id')->label('Producto')->widget(Select2::classname(), [

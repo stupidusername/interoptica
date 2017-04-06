@@ -12,6 +12,14 @@ $(document).ready(function () {
 		}, 25);
 	};
 	
+	var setUpUpdateButtons = function (domElem) {
+		domElem.on('click', '.productUpdate', function (event) {
+			event.preventDefault();
+			$("#addEntry").kbModalAjax({url: $(this).attr('href')});
+			$('#addEntry').modal('show');
+		});
+	};
+	
 	var addEntryUrl = $('#addEntryButton').attr('url');
 	
 	var showAddEntryModal = function() {
@@ -38,6 +46,7 @@ $(document).ready(function () {
 	
 	$('#addEntry').on('kbModalSubmit', function (event, xhr, settings) {
 		focus();
+		setUpUpdateButtons($('#addEntry'));
 	});
 
 	$(document).on('click', '.productDelete', function (event) {
@@ -55,9 +64,5 @@ $(document).ready(function () {
 		});
 	});
 	
-	$(document).on('click', '.productUpdate', function (event) {
-		event.preventDefault();
-		$("#addEntry").kbModalAjax({url: $(this).attr('href')});
-		$('#addEntry').modal('show');
-	});
+	setUpUpdateButtons($(document));
 });

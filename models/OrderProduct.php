@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\Html;
+use yii\validators\UniqueValidator;
 
 /**
  * This is the model class for table "order_product".
@@ -71,7 +73,7 @@ class OrderProduct extends \yii\db\ActiveRecord
             [['product_id'], 'integer'],
 			[['quantity'], 'integer', 'min' => 1],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
-			[['product_id'], 'unique', 'targetAttribute' => ['order_id', 'product_id'], 'message' => 'El producto ya se encuentra en el pedido.'],
+			[['product_id'], 'uniqueEntry'],
 			[['quantity'], 'inStock'],
         ];
     }
@@ -125,6 +127,25 @@ class OrderProduct extends \yii\db\ActiveRecord
 		$realStock = $oldQuantity + $stock;
 		if ($this->$attribute > $realStock - Product::STOCK_MIN) {
 			$this->addError($attribute, "El stock de este producto es de $realStock y tienen que quedar " . Product::STOCK_MIN. ".");
+		}
+	}
+	
+	/**
+	 * Validates that entered entry it's unique
+	 * @param string $attribute the attribute currently being validated
+	 * @param mixed $params the value of the "params" given in the rule
+	 * @param \yii\validators\InlineValidator related InlineValidator instance.
+	 * This parameter is available since version 2.0.11.
+	 */
+	public function uniqueEntry($attribute, $param, $validator) {
+		$validator = new UniqueValidator([
+			'targetAttribute' => ['order_id', 'product_id'],
+		]);
+		$validator->validateAttribute($this, $attribute);
+		if ($this->hasErrors($attribute)) {
+			$this->clearErrors($attribute);
+			$this->addError($attribute, 'El producto ya se encuentra en el pedido. ' .
+					Html::a('Editar', ['/order/update-entry', 'orderId' => $this->order_id, 'productId' => $this->product_id], ['class' => 'productUpdate']) . '.');
 		}
 	}
 
