@@ -174,7 +174,7 @@ OrderAsset::register($this);
 			],
 		],
 		'dataProvider' => new ActiveDataProvider([
-            'query' => $model->getOrderProducts()->with(['product']),
+            'query' => $model->getOrderProducts()->with(['product'])->orderBy(['id' => SORT_DESC]),
 			'pagination' => false,
 			'sort' => false,
         ]),
