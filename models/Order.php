@@ -25,6 +25,10 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  */
 class Order extends \yii\db\ActiveRecord
 {
+	/**
+	 * Scenarios
+	 */
+	const SCENARIO_VIEW = 'grid';
 	const SCENARIO_UPDATE = 'update';
 	
 	/**
@@ -127,6 +131,15 @@ class Order extends \yii\db\ActiveRecord
 		}
 		return $rules;
     }
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function scenarios() {
+		$scenarios = parent::scenarios();
+		$scenarios[self::SCENARIO_VIEW] = ['status'];
+		return $scenarios;
+	}
 
     /**
      * @inheritdoc

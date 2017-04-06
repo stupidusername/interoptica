@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Order;
+use app\models\OrderStatus;
 use app\models\OrderSearch;
 use app\models\OrderProduct;
 use yii\web\Controller;
@@ -14,6 +15,7 @@ use yii\filters\AccessControl;
 use app\filters\AuthorRule;
 use app\filters\OrderStatusRule;
 use kartik\mpdf\Pdf;
+use yii\helpers\Json;
 
 /**
  * OrderController implements the CRUD actions for Order model.
@@ -93,8 +95,22 @@ class OrderController extends Controller
      */
     public function actionView($id)
     {
+		$model = $this->findModel($id);
+		if (Yii::$app->request->isPost) {
+			$model->scenario = Order::SCENARIO_VIEW;
+			$out = Json::encode(['output' => '', 'message' => '']);
+			if ($model->load(Yii::$app->request->post())) {
+				$model->save();
+				$output = OrderStatus::statusLabels()[$model->status];
+				$out = Json::encode(['output' => $output, 'message' => $model->getErrors()]);
+			}
+			// return ajax json encoded response and exit
+			echo $out;
+			return;
+		}
+		
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 

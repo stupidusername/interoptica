@@ -11,6 +11,7 @@ use yii\widgets\Pjax;
 use app\assets\OrderAsset;
 use app\models\OrderStatus;
 use app\models\Order;
+use kartik\editable\Editable;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Order */
@@ -65,7 +66,17 @@ OrderAsset::register($this);
 			],
 			[
 				'label' => 'Estado',
-				'value' => $model->orderStatus->statusLabel,
+				'format' => 'raw',
+				'value' => Editable::widget([
+					'inputType' => Editable::INPUT_DROPDOWN_LIST,
+					'model' => $model,
+					'attribute' => 'status',
+					'data' => OrderStatus::statusLabels(),
+					'displayValue' => $model->orderStatus->statusLabel,
+					'pluginEvents' => [
+						'editableSuccess' => 'function () { $.pjax.reload({container: "#orderStatusGridview"}); }',
+					],
+				]),
 			],
             [
 				'attribute' => 'discount_percentage',
@@ -111,6 +122,7 @@ OrderAsset::register($this);
 
 	<h3>Seguimiento de Estados</h3>
 	
+	<?php Pjax::begin(['id' => 'orderStatusGridview']) ?>
 	<?=
 	GridView::widget([
 		'columns' => [
@@ -134,6 +146,7 @@ OrderAsset::register($this);
         ]),
 	]);
 	?>
+	<?php Pjax::end() ?>
 	
 	<h3>Productos</h3>
 	
