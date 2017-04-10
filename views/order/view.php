@@ -16,11 +16,17 @@ use kartik\editable\Editable;
 /* @var $this yii\web\View */
 /* @var $model app\models\Order */
 
-$this->title = $model->id;
+$this->title = 'Pedido: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Pedidos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 $addEntryUrl = Url::to(['add-entry', 'orderId' => $model->id]);
+$statusIds = ArrayHelper::getColumn(OrderStatus::find()->select(['id' => 'max(id)'])->asArray()->groupBy('order_id')->all(), 'id');
+$clientPendingOrdersQuery = Order::find()->andWhere(['and', ['!=', 'order.id', $model->id], ['=', 'customer_id', $model->customer_id]])
+		->innerJoinWith(['orderStatus' => function ($query) use ($statusIds) {
+			$query->andWhere(['and', ['in', 'order_status.id', $statusIds], ['not in', 'status', [OrderStatus::STATUS_SENT, OrderStatus::STATUS_DELIVERED]]]);
+		}])->orderBy('order.id');
+$clientPendingOrders = $clientPendingOrdersQuery->all();
 
 Modal::begin([
 	'id' => 'addEntry',
@@ -39,7 +45,16 @@ OrderAsset::register($this);
 
     <h1><?= Html::encode($this->title) ?></h1>
 
+	<?php Pjax::begin(['id' => 'orderSummary']) ?>
+	<?php if(count($clientPendingOrders)): ?>
+		<div class="error-summary">
+			<h4>El cliente tiene <?= count($clientPendingOrders) ?> pedido(s) en proceso.</h4>
+		</div>
+	<?php endif; ?>
+	<?php Pjax::end() ?>
+	
     <p>
+		<?= Html::button('Mostrar/Ocultar detalle', ['class' => 'btn btn-primary', 'onclick' => '$("#orderDetail").toggle()']) ?>
         <?= Html::a('Editar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Borrar', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -52,101 +67,97 @@ OrderAsset::register($this);
 		<?= Html::a('Exportar PDF', ['export-pdf', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            [
-				'label' => 'Usuario',
-				'value' => $model->user->username,
+	<div id="orderDetail" style="display: none;">
+		<?= DetailView::widget([
+			'model' => $model,
+			'attributes' => [
+				'id',
+				[
+					'label' => 'Usuario',
+					'value' => $model->user->username,
+				],
+				[
+					'label' => 'Cliente',
+					'value' => $model->customer->name,
+				],
+				[
+					'label' => 'Estado',
+					'format' => 'raw',
+					'value' => Editable::widget([
+						'inputType' => Editable::INPUT_DROPDOWN_LIST,
+						'model' => $model,
+						'attribute' => 'status',
+						'data' => OrderStatus::statusLabels(),
+						'displayValue' => $model->orderStatus->statusLabel,
+						'pluginEvents' => [
+							'editableSuccess' => 'function () { $.pjax.reload({container: "#orderStatusGridview"}); }',
+						],
+					]),
+				],
+				[
+					'attribute' => 'discount_percentage',
+					'format' => 'percent',
+					'value' => function ($model) {
+						return $model->discount_percentage / 100;
+					},
+				],
+				'comment:ntext',
 			],
-            [
-				'label' => 'Cliente',
-				'value' => $model->customer->name,
-			],
-			[
-				'label' => 'Estado',
-				'format' => 'raw',
-				'value' => Editable::widget([
-					'inputType' => Editable::INPUT_DROPDOWN_LIST,
-					'model' => $model,
-					'attribute' => 'status',
-					'data' => OrderStatus::statusLabels(),
-					'displayValue' => $model->orderStatus->statusLabel,
-					'pluginEvents' => [
-						'editableSuccess' => 'function () { $.pjax.reload({container: "#orderStatusGridview"}); }',
-					],
-				]),
-			],
-            [
-				'attribute' => 'discount_percentage',
-				'format' => 'percent',
-				'value' => function ($model) {
-					return $model->discount_percentage / 100;
-				},
-			],
-            'comment:ntext',
-        ],
-    ]) ?>
-	
-	<h3>Pedidos del mismo Cliente</h3>
-	
-	<?php $statusIds = ArrayHelper::getColumn(OrderStatus::find()->select(['id' => 'max(id)'])->asArray()->groupBy('order_id')->all(), 'id'); ?>
-	
-	<?php Pjax::begin(['id' => 'pendingOrdersGridview']) ?>
-	<?=
-	GridView::widget([
-		'columns' => [
-            'id',
-			[
-				'label' => 'Estado',
-				'value' => 'orderStatus.statusLabel',
-			],
-            [
-				'class' => 'yii\grid\ActionColumn',
-				'template' => '{view}',
-			],
-        ],
-		'dataProvider' => new ActiveDataProvider([
-            'query' => Order::find()->andWhere(['and', ['!=', 'order.id', $model->id], ['=', 'customer_id', $model->customer_id]])
-			->innerJoinWith(['orderStatus' => function ($query) use ($statusIds) {
-				$query->andWhere(['and', ['in', 'order_status.id', $statusIds], ['not in', 'status', [OrderStatus::STATUS_SENT, OrderStatus::STATUS_DELIVERED]]]);
-				
-			}])->orderBy('order.id'),
-			'pagination' => false,
-			'sort' => false,
-        ]),
-	]);
-	?>
-	<?php Pjax::end() ?>
+		]) ?>
 
-	<h3>Seguimiento de Estados</h3>
-	
-	<?php Pjax::begin(['id' => 'orderStatusGridview']) ?>
-	<?=
-	GridView::widget([
-		'columns' => [
-			[
-				'attribute' => 'status',
-				'value' => 'statusLabel',
+		<h3>Pedidos del mismo Cliente</h3>
+		
+		<?php Pjax::begin(['id' => 'pendingOrdersGridview']) ?>
+		<?=
+		GridView::widget([
+			'columns' => [
+				'id',
+				[
+					'label' => 'Estado',
+					'value' => 'orderStatus.statusLabel',
+				],
+				[
+					'class' => 'yii\grid\ActionColumn',
+					'template' => '{view}',
+				],
 			],
-			[
-				'label' => 'Usuario',
-				'attribute' => 'user.username'
+			'dataProvider' => new ActiveDataProvider([
+				'query' => $clientPendingOrdersQuery,
+				'pagination' => false,
+				'sort' => false,
+			]),
+		]);
+		?>
+		<?php Pjax::end() ?>
+
+		<h3>Seguimiento de Estados</h3>
+
+		<?php Pjax::begin(['id' => 'orderStatusGridview']) ?>
+		<?=
+		GridView::widget([
+			'columns' => [
+				[
+					'attribute' => 'status',
+					'value' => 'statusLabel',
+				],
+				[
+					'label' => 'Usuario',
+					'attribute' => 'user.username'
+				],
+				[
+					'attribute' => 'create_datetime',
+					'format' => 'datetime'
+				],
 			],
-			[
-				'attribute' => 'create_datetime',
-				'format' => 'datetime'
-			],
-		],
-		'dataProvider' => new ActiveDataProvider([
-            'query' => $model->getOrderStatuses()->with(['user']),
-			'pagination' => false,
-			'sort' => false,
-        ]),
-	]);
-	?>
-	<?php Pjax::end() ?>
+			'dataProvider' => new ActiveDataProvider([
+				'query' => $model->getOrderStatuses()->with(['user']),
+				'pagination' => false,
+				'sort' => false,
+			]),
+		]);
+		?>
+		<?php Pjax::end() ?>
+	</div>
 	
 	<h3>Productos</h3>
 	
