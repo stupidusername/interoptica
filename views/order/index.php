@@ -22,7 +22,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            'id',
+            [
+				'attribute' => 'id',
+				'contentOptions' => ['style'=>'width: 100px;'],
+			],
             [
 				'label' => 'Usuario',
 				'value' => 'user.username',
