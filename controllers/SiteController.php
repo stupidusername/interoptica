@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\User;
 
 class SiteController extends Controller {
 
@@ -20,8 +21,8 @@ class SiteController extends Controller {
 				'class' => AccessControl::className(),
 				'only' => ['logout'],
 				'rules' => [
-						[
-						'actions' => ['logout'],
+					[
+						'actions' => ['logout', 'user-list'],
 						'allow' => true,
 						'roles' => ['@'],
 					],
@@ -56,4 +57,20 @@ class SiteController extends Controller {
 		return $this->render('index');
 	}
 
+	/**
+	 * Builds a response for Select2 user widgets
+	 * @param string $q
+	 * @return JSON
+	 */
+	public function actionUserList($q = '') {
+		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		$usersArray = User::find()->andWhere(
+				['or', ['gecom_id' => $q], ['like', 'username', $q], ['like', 'email', $q], ['like', 'name', $q], ['like', 'public_email', $q]])
+				->joinWith(['profile'])->asArray()->all();
+		$results = array_map(function ($userArray) {
+					return ['id' => $userArray['id'], 'text' => $userArray['username']];
+				}, $usersArray);
+		$out = ['results' => $results];
+		return $out;
+	}
 }

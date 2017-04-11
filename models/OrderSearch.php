@@ -12,14 +12,18 @@ use app\models\Order;
  */
 class OrderSearch extends Order
 {
+	/**
+	 * @var integer
+	 */
+	public $status;
+	
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'user_id', 'customer_id', 'deleted'], 'integer'],
-            [['discount_percentage'], 'number'],
+            [['id', 'user_id', 'customer_id', 'status'], 'integer'],
             [['comment'], 'safe'],
         ];
     }
@@ -63,9 +67,14 @@ class OrderSearch extends Order
             'id' => $this->id,
             'user_id' => $this->user_id,
             'customer_id' => $this->customer_id,
-            'discount_percentage' => $this->discount_percentage,
-            'deleted' => $this->deleted,
         ]);
+		
+		if ($this->status != null) {
+			$query->innerJoinWith(['orderStatuses' => function ($query) {
+				$subQuery = OrderStatus::getLastStatuses();
+				$query->andWhere([OrderStatus::tableName() . '.id' => $subQuery, 'status' => $this->status]);
+			}]);
+		}
 
         $query->andFilterWhere(['like', 'comment', $this->comment]);
 

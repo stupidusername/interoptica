@@ -97,4 +97,12 @@ class OrderStatus extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
 	}
+	
+	/**
+	 * Get last status of each order
+	 * @return \yii\db\ActiveQuery
+	 */
+	public static function getLastStatuses() {
+		return self::find()->select(['id' => 'max(id)'])->asArray()->groupBy('order_id');
+	}
 }

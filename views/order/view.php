@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Pedidos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 $addEntryUrl = Url::to(['add-entry', 'orderId' => $model->id]);
-$statusIds = ArrayHelper::getColumn(OrderStatus::find()->select(['id' => 'max(id)'])->asArray()->groupBy('order_id')->all(), 'id');
+$statusIds = ArrayHelper::getColumn(OrderStatus::getLastStatuses()->all(), 'id');
 $clientPendingOrdersQuery = Order::find()->andWhere(['and', ['!=', 'order.id', $model->id], ['=', 'customer_id', $model->customer_id]])
 		->innerJoinWith(['orderStatus' => function ($query) use ($statusIds) {
 			$query->andWhere(['and', ['in', 'order_status.id', $statusIds], ['not in', 'status', [OrderStatus::STATUS_SENT, OrderStatus::STATUS_DELIVERED]]]);
