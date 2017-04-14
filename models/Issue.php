@@ -125,6 +125,7 @@ class Issue extends \yii\db\ActiveRecord
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
             [['issue_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => IssueType::className(), 'targetAttribute' => ['issue_type_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+			[['status'], 'required', 'on' => self::SCENARIO_UPDATE],
         ];
     }
 

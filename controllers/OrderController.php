@@ -54,6 +54,14 @@ class OrderController extends Controller
 						'roles' => ['admin', 'author'],
                     ],
 					[
+                        'actions' => ['view'],
+						'verbs' => ['POST'],
+						'model' => function() {
+							return $this->findModel(Yii::$app->request->getQueryParam('id'));
+						},
+						'roles' => ['admin', 'author'],
+                    ],
+					[
                         'actions' => ['add-entry', 'update-entry', 'delete-entry'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('orderId'));
@@ -61,7 +69,12 @@ class OrderController extends Controller
 						'roles' => ['admin', 'author'],
                     ],
                     [
-						'actions' => ['index', 'view', 'create', 'export-txt', 'export-pdf'],
+						'actions' => ['index', 'view', 'export-txt', 'export-pdf'],
+						'verbs' => ['GET'],
+                        'roles' => ['@'],
+                    ],
+					[
+						'actions' => ['create'],
                         'roles' => ['@'],
                     ],
                 ],
