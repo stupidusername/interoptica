@@ -28,7 +28,7 @@ class Order extends \yii\db\ActiveRecord
 	/**
 	 * Scenarios
 	 */
-	const SCENARIO_VIEW = 'grid';
+	const SCENARIO_VIEW = 'view';
 	const SCENARIO_UPDATE = 'update';
 	
 	/**
