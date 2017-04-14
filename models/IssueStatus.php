@@ -5,32 +5,27 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "order_status".
+ * This is the model class for table "issue_status".
  *
  * @property integer $id
- * @property integer $order_id
+ * @property integer $issue_id
  * @property integer $user_id
  * @property integer $status
  * @property string $create_datetime
  *
- * @property Order $order
+ * @property Issue $issue
  */
-class OrderStatus extends \yii\db\ActiveRecord
+class IssueStatus extends \yii\db\ActiveRecord
 {
-	const STATUS_ENTERED = 0;
-	const STATUS_COLLECT = 1;
-	const STATUS_PUT_TOGETHER = 2;
-	const STATUS_BILLING = 3;
-	const STATUS_PACKAGING = 4;
-	const STATUS_SENT = 5;
-	const STATUS_DELIVERED = 6;
+	const STATUS_OPEN = 0;
+	const STATUS_CLOSED = 1;
 	
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'order_status';
+        return 'issue_status';
     }
 
     /**
@@ -39,9 +34,9 @@ class OrderStatus extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'status'], 'integer'],
+            [['issue_id', 'status'], 'integer'],
             [['create_datetime'], 'safe'],
-            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
+            [['issue_id'], 'exist', 'skipOnError' => true, 'targetClass' => Issue::className(), 'targetAttribute' => ['issue_id' => 'id']],
         ];
     }
 
@@ -52,7 +47,7 @@ class OrderStatus extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'order_id' => 'ID Pedido',
+            'issue_id' => 'ID Pedido',
 			'user_id' => 'ID Usuario',
             'status' => 'Estado',
             'create_datetime' => 'Fecha',
@@ -65,13 +60,8 @@ class OrderStatus extends \yii\db\ActiveRecord
 	 */
 	public static function statusLabels() {
 		return [
-			self::STATUS_ENTERED => 'Ingresado',
-			self::STATUS_COLLECT => 'Cobranzas',
-			self::STATUS_PUT_TOGETHER => 'Armado',
-			self::STATUS_BILLING => 'Facturación',
-			self::STATUS_PACKAGING => 'Embalaje',
-			self::STATUS_SENT => 'Enviado',
-			self::STATUS_DELIVERED => 'Entregado',
+			self::STATUS_OPEN => 'Abierto',
+			self::STATUS_CLOSED => 'Cerrado',
 		];
 	}
 	
@@ -85,9 +75,9 @@ class OrderStatus extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getOrder()
+    public function getIssue()
     {
-        return $this->hasOne(Order::className(), ['id' => 'order_id']);
+        return $this->hasOne(Issue::className(), ['id' => 'issue_id']);
 	}
 	
 	/**
@@ -99,10 +89,10 @@ class OrderStatus extends \yii\db\ActiveRecord
 	}
 	
 	/**
-	 * Get last status of each order
+	 * Get last status of each issue
 	 * @return \yii\db\ActiveQuery
 	 */
 	public static function getLastStatuses() {
-		return self::find()->select(['id' => 'max(id)'])->asArray()->groupBy('order_id');
+		return self::find()->select(['id' => 'max(id)'])->asArray()->groupBy('issue_id');
 	}
 }

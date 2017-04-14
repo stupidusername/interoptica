@@ -86,7 +86,7 @@ class Issue extends \yii\db\ActiveRecord
 	 */
 	public function afterSave($insert, $changedAttributes) {
 		if ($insert) {
-			$this->status = IssueStatus::STATUS_ENTERED;
+			$this->status = IssueStatus::STATUS_OPEN;
 		}
 		$oldStatus = $this->issueStatus;
 		// Save issue status if there was a change
@@ -204,8 +204,8 @@ class Issue extends \yii\db\ActiveRecord
 	/**
      * @return \yii\db\ActiveQuery
      */
-    public function getEnteredIssueStatus()
+    public function getOpenIssueStatus()
     {
-        return $this->hasOne(IssueStatus::className(), ['issue_id' => 'id'])->andWhere(['status' => IssueStatus::STATUS_ENTERED]);
+        return $this->hasOne(IssueStatus::className(), ['issue_id' => 'id'])->andWhere(['status' => IssueStatus::STATUS_OPEN]);
     }
 }
