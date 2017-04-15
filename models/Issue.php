@@ -115,9 +115,9 @@ class Issue extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-			[['user_id', 'issue_type_id'], 'required'],
+			[['issue_type_id'], 'required'],
 			[['customer_id', 'order_id', 'product_id'], AtLeastValidator::className(), 'in' => ['customer_id', 'order_id', 'product_id']],
-            [['user_id', 'customer_id', 'order_id', 'product_id', 'issue_type_id', 'deleted'], 'integer'],
+            [['user_id', 'customer_id', 'order_id', 'product_id', 'issue_type_id'], 'integer'],
             [['comment'], 'string'],
             [['contact'], 'string', 'max' => 255],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
@@ -199,7 +199,7 @@ class Issue extends \yii\db\ActiveRecord
      */
     public function getIssueStatus()
     {
-        return $this->hasOne(IssueStatus::className(), ['issue_id' => 'id'])->issueBy(['id' => SORT_DESC]);
+        return $this->hasOne(IssueStatus::className(), ['issue_id' => 'id'])->orderBy(['id' => SORT_DESC]);
     }
 	
 	/**

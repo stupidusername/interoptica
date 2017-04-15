@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\IssueSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Issues';
+$this->title = 'Reclamos';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="issue-index">
@@ -16,24 +16,27 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Issue', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Reclamo', ['create'], ['class' => 'btn btn-success']) ?>
 		<?= Html::a('Administrar Tipos de Reclamos', ['/issue-type/index'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            [
+				'attribute' => 'id',
+				'contentOptions' => ['style' => 'width: 100px;'],
+			],
             'user_id',
             'customer_id',
-            'order_id',
+            [
+				'attribute' => 'order_id',
+				'contentOptions' => ['style' => 'width: 100px;'],
+			],
             'product_id',
-            // 'issue_type_id',
-            // 'comment:ntext',
-            // 'contact',
-            // 'deleted',
+            'issue_type_id',
+            'comment:ntext',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

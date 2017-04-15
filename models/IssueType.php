@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "issue_type".
@@ -73,4 +74,13 @@ class IssueType extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Issue::className(), ['issue_type_id' => 'id']);
     }
+	
+	/**
+	 * Returns an array containing the names of all undeleted issue types.
+	 * @return string[]
+	 */
+	public static function getIdNameArray() {
+		$issues = self::find()->select(['id', 'name'])->asArray()->all();
+		return ArrayHelper::map($issues, 'id', 'name');
+	}
 }
