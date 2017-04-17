@@ -12,13 +12,18 @@ use app\models\Issue;
  */
 class IssueSearch extends Issue
 {
+	/**
+	 * @var integer
+	 */
+	public $status;
+	
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'user_id', 'customer_id', 'order_id', 'product_id', 'issue_type_id', 'deleted'], 'integer'],
+            [['id', 'user_id', 'customer_id', 'order_id', 'product_id', 'issue_type_id', 'status'], 'integer'],
             [['comment', 'contact'], 'safe'],
         ];
     }
@@ -41,7 +46,7 @@ class IssueSearch extends Issue
      */
     public function search($params)
     {
-        $query = Issue::find();
+		$query = Issue::find()->with(['user', 'customer', 'product', 'issueType', 'issueStatus']);
 
         // add conditions that should always apply here
 
@@ -67,6 +72,13 @@ class IssueSearch extends Issue
             'issue_type_id' => $this->issue_type_id,
             'deleted' => $this->deleted,
         ]);
+		
+		if ($this->status != null) {
+			$query->innerJoinWith(['issueStatuses' => function ($query) {
+				$subQuery = IssueStatus::getLastStatuses();
+				$query->andWhere([IssueStatus::tableName() . '.id' => $subQuery, 'status' => $this->status]);
+			}]);
+		}
 
         $query->andFilterWhere(['like', 'comment', $this->comment])
             ->andFilterWhere(['like', 'contact', $this->contact]);

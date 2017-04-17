@@ -1,5 +1,6 @@
 <?php
 
+use app\models\IssueStatus;
 use app\models\IssueType;
 use kartik\select2\Select2;
 use yii\helpers\Html;
@@ -90,6 +91,11 @@ $this->params['breadcrumbs'][] = $this->title;
 				'label' => 'Tipo',
 				'value' => 'issueType.name',
 				'filter' => Html::activeDropDownList($searchModel, 'issue_type_id', IssueType::getIdNameArray(), ['class' => 'form-control', 'prompt' => 'Elegir tipo']),
+			],
+			[
+				'label' => 'Estado',
+				'value' => 'issueStatus.statusLabel',
+				'filter' => Html::activeDropDownList($searchModel, 'status', IssueStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
 			],
             'comment:ntext',
 
