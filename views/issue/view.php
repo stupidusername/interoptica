@@ -29,11 +29,23 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'user_id',
-            'customer_id',
+            [
+				'label' => 'Usuario',
+				'value' => $model->user->username,
+			],
+            [
+				'label' => 'Cliente',
+				'value' => $model->customer_id ? $model->customer->name : null,
+			],
             'order_id',
-            'product_id',
-            'issue_type_id',
+            [
+				'label' => 'Producto',
+				'value' => $model->product_id ? $model->product->gecom_desc : null,
+			],
+            [
+				'label' => 'Tipo',
+				'value' => $model->issueType->name,
+			],
             'comment:ntext',
             'contact',
         ],
