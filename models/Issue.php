@@ -128,6 +128,15 @@ class Issue extends \yii\db\ActiveRecord
 			[['status'], 'required', 'on' => self::SCENARIO_UPDATE],
         ];
     }
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function scenarios() {
+		$scenarios = parent::scenarios();
+		$scenarios[self::SCENARIO_VIEW] = ['status'];
+		return $scenarios;
+	}
 
     /**
      * @inheritdoc

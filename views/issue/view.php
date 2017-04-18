@@ -2,6 +2,12 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\grid\GridView;
+use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
+use yii\widgets\Pjax;
+use app\models\IssueStatus;
+use kartik\editable\Editable;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Issue */
@@ -46,9 +52,51 @@ $this->params['breadcrumbs'][] = $this->title;
 				'label' => 'Tipo',
 				'value' => $model->issueType->name,
 			],
+			[
+				'label' => 'Estado',
+				'format' => 'raw',
+				'value' => Editable::widget([
+					'inputType' => Editable::INPUT_DROPDOWN_LIST,
+					'model' => $model,
+					'attribute' => 'status',
+					'data' => IssueStatus::statusLabels(),
+					'displayValue' => $model->issueStatus->statusLabel,
+					'pluginEvents' => [
+						'editableSuccess' => 'function () { $.pjax.reload({container: "#issueStatusGridview"}); }',
+					],
+				]),
+			],
             'comment:ntext',
             'contact',
         ],
     ]) ?>
+	
+	<h3>Seguimiento de Estados</h3>
+
+	<?php Pjax::begin(['id' => 'issueStatusGridview']) ?>
+	<?=
+	GridView::widget([
+		'columns' => [
+			[
+				'attribute' => 'status',
+				'value' => 'statusLabel',
+			],
+			[
+				'label' => 'Usuario',
+				'attribute' => 'user.username'
+			],
+			[
+				'attribute' => 'create_datetime',
+				'format' => 'datetime'
+			],
+		],
+		'dataProvider' => new ActiveDataProvider([
+			'query' => $model->getIssueStatuses()->with(['user']),
+			'pagination' => false,
+			'sort' => false,
+		]),
+	]);
+	?>
+	<?php Pjax::end() ?>
 
 </div>

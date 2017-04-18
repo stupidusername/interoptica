@@ -5,11 +5,13 @@ namespace app\controllers;
 use Yii;
 use app\models\Issue;
 use app\models\IssueSearch;
+use app\models\IssueStatus;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use app\filters\AuthorRule;
+use yii\helpers\Json;
 
 /**
  * IssueController implements the CRUD actions for Issue model.
@@ -90,8 +92,22 @@ class IssueController extends Controller
      */
     public function actionView($id)
     {
+		$model = $this->findModel($id);
+		if (Yii::$app->request->isPost) {
+			$model->scenario = Issue::SCENARIO_VIEW;
+			$out = Json::encode(['output' => '', 'message' => '']);
+			if ($model->load(Yii::$app->request->post())) {
+				$model->save();
+				$output = IssueStatus::statusLabels()[$model->status];
+				$out = Json::encode(['output' => $output, 'message' => $model->getErrors()]);
+			}
+			// return ajax json encoded response and exit
+			echo $out;
+			return;
+		}
+		
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
