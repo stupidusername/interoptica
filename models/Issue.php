@@ -75,6 +75,10 @@ class Issue extends \yii\db\ActiveRecord
 			if ($insert) {
 				$this->user_id = Yii::$app->user->id;
 			}
+			if ($insert || $this->order_id != $this->oldAttributes['order_id']) {
+				$order = Order::find()->where(['id' => $this->order_id])->one();
+				$this->customer_id = $order->customer_id;
+			}
 			return true;
 		} else {
 			return false;
