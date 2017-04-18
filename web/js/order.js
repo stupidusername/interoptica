@@ -33,7 +33,7 @@ $(document).ready(function () {
 	// refresh order details periodically
 	setInterval(function () {
 		$.pjax.reload({container: '#orderSummary'}).done(function() {
-			$.pjax.reload({container: '#pendingOrdersGridview'});
+			$.pjax.reload({container: '#pendingGridview'});
 		});
 	}, 30000);
 	

@@ -11,6 +11,8 @@ use yii\widgets\Pjax;
 use app\assets\OrderAsset;
 use app\models\OrderStatus;
 use app\models\Order;
+use app\models\IssueStatus;
+use app\models\Issue;
 use kartik\editable\Editable;
 
 /* @var $this yii\web\View */
@@ -27,6 +29,13 @@ $clientPendingOrdersQuery = Order::find()->andWhere(['and', ['!=', 'order.id', $
 			$query->andWhere(['and', ['in', 'order_status.id', $statusIds], ['not in', 'status', [OrderStatus::STATUS_SENT, OrderStatus::STATUS_DELIVERED]]]);
 		}])->orderBy('order.id');
 $clientPendingOrders = $clientPendingOrdersQuery->all();
+
+$statusIds = ArrayHelper::getColumn(IssueStatus::getLastStatuses()->all(), 'id');
+$clientPendingIssuesQuery = Issue::find()->andWhere(['and', ['!=', 'issue.id', $model->id], ['=', 'customer_id', $model->customer_id]])
+		->innerJoinWith(['issueStatus' => function ($query) use ($statusIds) {
+			$query->andWhere(['and', ['in', 'issue_status.id', $statusIds], ['not in', 'status', [IssueStatus::STATUS_CLOSED]]]);
+		}])->orderBy('issue.id');
+$clientPendingIssues = $clientPendingIssuesQuery->all();
 
 Modal::begin([
 	'id' => 'addEntry',
@@ -46,9 +55,13 @@ OrderAsset::register($this);
     <h1><?= Html::encode($this->title) ?></h1>
 
 	<?php Pjax::begin(['id' => 'orderSummary']) ?>
-	<?php if(count($clientPendingOrders)): ?>
+	<?php if (count($clientPendingOrders) || count($clientPendingIssues)): ?>
 		<div class="error-summary">
-			<h4>El cliente tiene <?= count($clientPendingOrders) ?> pedido(s) en proceso.</h4>
+			<?php if (count($clientPendingOrders)): ?>
+				<h4>El cliente tiene <?= count($clientPendingOrders) ?> pedido(s) en proceso.</h4>
+			<?php elseif (count($clientPendingIssues)): ?>
+				<h4>El cliente tiene <?= count($clientPendingIssues) ?> reclamo(s) en proceso.</h4>
+			<?php endif; ?>
 		</div>
 	<?php endif; ?>
 	<?php Pjax::end() ?>
@@ -105,9 +118,9 @@ OrderAsset::register($this);
 			],
 		]) ?>
 
+		<?php Pjax::begin(['id' => 'pendingGridview']) ?>
 		<h3>Pedidos del mismo Cliente</h3>
 		
-		<?php Pjax::begin(['id' => 'pendingOrdersGridview']) ?>
 		<?=
 		GridView::widget([
 			'columns' => [
@@ -123,6 +136,35 @@ OrderAsset::register($this);
 			],
 			'dataProvider' => new ActiveDataProvider([
 				'query' => $clientPendingOrdersQuery,
+				'pagination' => false,
+				'sort' => false,
+			]),
+		]);
+		?>
+		
+		<h3>Reclamos del mismo Cliente</h3>
+		
+		<?=
+		GridView::widget([
+			'columns' => [
+				'id',
+				[
+					'label' => 'Estado',
+					'value' => 'issueStatus.statusLabel',
+				],
+				[
+					'class' => 'yii\grid\ActionColumn',
+					'template' => '{view}',
+					'urlCreator' => function ($action, $model, $key, $index, $actionColumn) {
+						switch ($action) {
+							case 'view':
+								return Url::to(['/issue/view', 'id' => $model->id]);
+						}
+					},
+				],
+			],
+			'dataProvider' => new ActiveDataProvider([
+				'query' => $clientPendingIssuesQuery,
 				'pagination' => false,
 				'sort' => false,
 			]),
