@@ -67,7 +67,7 @@ OrderAsset::register($this);
 	<?php Pjax::end() ?>
 	
     <p>
-		<?= Html::button('Mostrar/Ocultar detalle', ['class' => 'btn btn-primary', 'onclick' => '$("#orderDetail").toggle()']) ?>
+		<?= Html::button('Mostrar/Ocultar Detalle', ['class' => 'btn btn-primary', 'onclick' => '$("#orderDetail").toggle()']) ?>
         <?= Html::a('Editar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Borrar', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -78,6 +78,7 @@ OrderAsset::register($this);
         ]) ?>
 		<?= Html::a('Exportar TXT', ['export-txt', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
 		<?= Html::a('Exportar PDF', ['export-pdf', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+		<?= Html::a('Crear Reclamo', ['/issue/create', 'orderId' => $model->id], ['class' => 'btn btn-success']) ?>
     </p>
 
 	<div id="orderDetail" style="display: none;">

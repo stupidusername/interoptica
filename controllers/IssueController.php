@@ -114,11 +114,13 @@ class IssueController extends Controller
     /**
      * Creates a new Issue model.
      * If creation is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $orderId
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($orderId = null)
     {
         $model = new Issue();
+		$model->order_id = $orderId;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
