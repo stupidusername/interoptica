@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b09ba38ba9bdb335f8851ccf9a223df4",
+    "content-hash": "a7f7d660656be1391c131e948e8ca231",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -326,13 +326,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/code-on-yii/yii2-at-least-validator.git",
-                "reference": "509ee0a705c848c90f7f688177d3b5ad0fe18e68"
+                "url": "https://github.com/stupidusername/yii2-at-least-validator.git",
+                "reference": "1136c394cab6c4f67d78450eec8a48defe2f31f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/code-on-yii/yii2-at-least-validator/zipball/509ee0a705c848c90f7f688177d3b5ad0fe18e68",
-                "reference": "509ee0a705c848c90f7f688177d3b5ad0fe18e68",
+                "url": "https://api.github.com/repos/stupidusername/yii2-at-least-validator/zipball/1136c394cab6c4f67d78450eec8a48defe2f31f6",
+                "reference": "1136c394cab6c4f67d78450eec8a48defe2f31f6",
                 "shasum": ""
             },
             "require": {
@@ -347,7 +347,6 @@
                     "codeonyii\\yii2validators\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache 2.0"
             ],
@@ -365,7 +364,10 @@
                 "validator",
                 "yii2"
             ],
-            "time": "2016-11-29 03:46:18"
+            "support": {
+                "source": "https://github.com/stupidusername/yii2-at-least-validator/tree/master"
+            },
+            "time": "2017-04-20 13:04:03"
         },
         {
             "name": "dektrium/yii2-user",
@@ -373,12 +375,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/stupidusername/yii2-user.git",
-                "reference": "e45be802ef965ec0fbc1eef934d2a5e21b2cc7af"
+                "reference": "5ec77ceb5232e472166ad008159628652e7cbaa7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stupidusername/yii2-user/zipball/e45be802ef965ec0fbc1eef934d2a5e21b2cc7af",
-                "reference": "e45be802ef965ec0fbc1eef934d2a5e21b2cc7af",
+                "url": "https://api.github.com/repos/stupidusername/yii2-user/zipball/5ec77ceb5232e472166ad008159628652e7cbaa7",
+                "reference": "5ec77ceb5232e472166ad008159628652e7cbaa7",
                 "shasum": ""
             },
             "require": {
@@ -427,7 +429,7 @@
                 "forum": "https://gitter.im/dektrium/yii2-user",
                 "source": "https://github.com/dektrium/yii2-user"
             },
-            "time": "2017-03-04 20:16:28"
+            "time": "2017-04-20 12:11:39"
         },
         {
             "name": "ezyang/htmlpurifier",
