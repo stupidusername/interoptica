@@ -18,7 +18,8 @@ use Yii;
 class IssueStatus extends \yii\db\ActiveRecord
 {
 	const STATUS_OPEN = 0;
-	const STATUS_CLOSED = 1;
+	const STATUS_PENDING = 1;
+	const STATUS_CLOSED = 2;
 	
     /**
      * @inheritdoc
@@ -61,6 +62,7 @@ class IssueStatus extends \yii\db\ActiveRecord
 	public static function statusLabels() {
 		return [
 			self::STATUS_OPEN => 'Abierto',
+			self::STATUS_PENDING => 'Pendiente',
 			self::STATUS_CLOSED => 'Cerrado',
 		];
 	}
