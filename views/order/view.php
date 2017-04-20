@@ -32,7 +32,7 @@ $clientPendingOrders = $clientPendingOrdersQuery->all();
 
 $statusIds = ArrayHelper::getColumn(IssueStatus::getLastStatuses()->all(), 'id');
 $clientPendingIssuesQuery = Issue::find()->andWhere(['and', ['!=', 'issue.id', $model->id], ['=', 'customer_id', $model->customer_id]])
-		->innerJoinWith(['issueStatus' => function ($query) use ($statusIds) {
+		->innerJoinWith(['issueType', 'issueStatus' => function ($query) use ($statusIds) {
 			$query->andWhere(['and', ['in', 'issue_status.id', $statusIds], ['not in', 'status', [IssueStatus::STATUS_CLOSED]]]);
 		}])->orderBy('issue.id');
 $clientPendingIssues = $clientPendingIssuesQuery->all();
@@ -149,6 +149,10 @@ OrderAsset::register($this);
 		GridView::widget([
 			'columns' => [
 				'id',
+				[
+					'label' => 'Tipo',
+					'value' => 'issueType.name',
+				],
 				[
 					'label' => 'Estado',
 					'value' => 'issueStatus.statusLabel',

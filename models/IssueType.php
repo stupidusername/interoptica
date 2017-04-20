@@ -41,7 +41,7 @@ class IssueType extends \yii\db\ActiveRecord
 	/** @inheritdoc */
 	public static function find()
     {
-        return parent::find()->where(['or', ['deleted' => null], ['deleted' => 0]]);
+        return parent::find()->where(['or', [self::tableName() . '.deleted' => null], [self::tableName() . '.deleted' => 0]]);
     }
 	
     /**
