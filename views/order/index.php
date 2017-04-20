@@ -1,5 +1,6 @@
 <?php
 
+use app\widgets\indicators\StatusIndicator;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use kartik\select2\Select2;
@@ -67,7 +68,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			],
 			[
 				'label' => 'Estado',
-				'value' => 'orderStatus.statusLabel',
+				'value' => function ($model, $key, $index, $column) {
+					return StatusIndicator::widget(['color' => $model->orderStatus->statusColor]) . ' ' . $model->orderStatus->statusLabel;
+				},
+				'format' => 'raw',
 				'filter' => Html::activeDropDownList($searchModel, 'status', OrderStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
 			],
 			[

@@ -76,10 +76,33 @@ class OrderStatus extends \yii\db\ActiveRecord
 	}
 	
 	/**
+	 * Status color
+	 * @return string[]
+	 */
+	public static function statusColors() {
+		return [
+			self::STATUS_ENTERED => 'black',
+			self::STATUS_COLLECT => 'purple',
+			self::STATUS_PUT_TOGETHER => 'blue',
+			self::STATUS_BILLING => 'cyan',
+			self::STATUS_PACKAGING => 'pink',
+			self::STATUS_SENT => 'orange',
+			self::STATUS_DELIVERED => 'lime',
+		];
+	}
+	
+	/**
 	 * @return string
 	 */
 	public function getStatusLabel() {
 		return self::statusLabels()[$this->status];
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getStatusColor() {
+		return self::statusColors()[$this->status];
 	}
 	
     /**
