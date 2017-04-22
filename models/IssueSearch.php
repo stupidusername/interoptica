@@ -23,7 +23,7 @@ class IssueSearch extends Issue
     public function rules()
     {
         return [
-            [['id', 'user_id', 'customer_id', 'order_id', 'product_id', 'issue_type_id', 'status'], 'integer'],
+            [['id', 'user_id', 'customer_id', 'order_id', 'issue_type_id', 'status'], 'integer'],
             [['comment', 'contact'], 'safe'],
         ];
     }
@@ -46,7 +46,7 @@ class IssueSearch extends Issue
      */
     public function search($params)
     {
-		$query = Issue::find()->with(['user', 'customer', 'product', 'issueType', 'issueStatus']);
+		$query = Issue::find()->with(['user', 'customer', 'issueType', 'issueStatus']);
 
         // add conditions that should always apply here
 
@@ -68,7 +68,6 @@ class IssueSearch extends Issue
             'user_id' => $this->user_id,
             'customer_id' => $this->customer_id,
             'order_id' => $this->order_id,
-            'product_id' => $this->product_id,
             'issue_type_id' => $this->issue_type_id,
             'deleted' => $this->deleted,
         ]);

@@ -13,7 +13,6 @@ use codeonyii\yii2validators\AtLeastValidator;
  * @property integer $user_id
  * @property integer $customer_id
  * @property integer $order_id
- * @property integer $product_id
  * @property integer $issue_type_id
  * @property string $comment
  * @property string $contact
@@ -21,9 +20,9 @@ use codeonyii\yii2validators\AtLeastValidator;
  *
  * @property Customer $customer
  * @property Order $order
- * @property Product $product
  * @property IssueType $issueType
  * @property User $user
+ * @property IssueProduct[] $issueProducts
  * @property IssueStatus[] $issueStatuses
  */
 class Issue extends \yii\db\ActiveRecord
@@ -36,7 +35,7 @@ class Issue extends \yii\db\ActiveRecord
 	
 	/**
 	 * The last order status saved
-	 * @var integer 
+	 * @var integer
 	 */
 	public $status;
 	
@@ -120,13 +119,12 @@ class Issue extends \yii\db\ActiveRecord
     {
         return [
 			[['issue_type_id'], 'required'],
-			[['customer_id', 'order_id', 'product_id'], AtLeastValidator::className(), 'in' => ['customer_id', 'order_id', 'product_id']],
-            [['user_id', 'customer_id', 'order_id', 'product_id', 'issue_type_id'], 'integer'],
+			[['customer_id', 'order_id'], AtLeastValidator::className(), 'in' => ['customer_id', 'order_id']],
+            [['user_id', 'customer_id', 'order_id', 'issue_type_id'], 'integer'],
             [['comment'], 'string'],
             [['contact'], 'string', 'max' => 255],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
-            [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
             [['issue_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => IssueType::className(), 'targetAttribute' => ['issue_type_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
 			[['status'], 'required', 'on' => self::SCENARIO_UPDATE],
@@ -152,7 +150,6 @@ class Issue extends \yii\db\ActiveRecord
             'user_id' => 'ID Usuario',
             'customer_id' => 'ID Cliente',
             'order_id' => 'ID Pedido',
-            'product_id' => 'ID Producto',
             'issue_type_id' => 'ID Tipo',
             'comment' => 'Comentario',
             'contact' => 'Contacto',
@@ -178,14 +175,6 @@ class Issue extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProduct()
-    {
-        return $this->hasOne(Product::className(), ['id' => 'product_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getIssueType()
     {
         return $this->hasOne(IssueType::className(), ['id' => 'issue_type_id']);
@@ -197,6 +186,14 @@ class Issue extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+	
+	/**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIssueProducts()
+    {
+        return $this->hasMany(IssueProduct::className(), ['issue_id' => 'id']);
     }
 
     /**
