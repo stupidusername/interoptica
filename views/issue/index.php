@@ -22,6 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Crear Reclamo', ['create'], ['class' => 'btn btn-success']) ?>
 		<?= Html::a('Administrar Tipos de Reclamos', ['/issue-type/index'], ['class' => 'btn btn-primary']) ?>
+		<?= Html::a('Administrar Tipos de Falla', ['/fail/index'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -69,23 +70,6 @@ $this->params['breadcrumbs'][] = $this->title;
             [
 				'attribute' => 'order_id',
 				'contentOptions' => ['style' => 'width: 100px;'],
-			],
-            [
-				'label' => 'Producto',
-				'value' => 'product.gecom_desc',
-				'filter' => Select2::widget([
-					'initValueText' => $searchModel->product_id ? $searchModel->product->gecom_desc . ' (' . $searchModel->product->stock . ')' : null,
-					'model' => $searchModel,
-					'attribute' => 'product_id',
-					'options' => ['placeholder' => 'Elegir producto'],
-					'pluginOptions' => [
-						'allowClear' => true,
-						'minimumInputLength' => 3,
-						'ajax' => [
-							'url' => Url::to('/product/list'),
-						],
-					],
-				]),
 			],
             [
 				'label' => 'Tipo',
