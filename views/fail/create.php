@@ -6,8 +6,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Fail */
 
-$this->title = 'Create Fail';
-$this->params['breadcrumbs'][] = ['label' => 'Fails', 'url' => ['index']];
+$this->title = 'Crear Falla';
+$this->params['breadcrumbs'][] = ['label' => 'Reclamos', 'url' => ['/issue/index']];
+$this->params['breadcrumbs'][] = ['label' => 'Fallas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="fail-create">

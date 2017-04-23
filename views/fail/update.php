@@ -5,10 +5,11 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Fail */
 
-$this->title = 'Update Fail: ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Fails', 'url' => ['index']];
+$this->title = 'Editar Falla: ' . $model->name;
+$this->params['breadcrumbs'][] = ['label' => 'Reclamos', 'url' => ['/issue/index']];
+$this->params['breadcrumbs'][] = ['label' => 'Fallas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Editar';
 ?>
 <div class="fail-update">
 
