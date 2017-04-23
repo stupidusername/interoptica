@@ -23,8 +23,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'order_id') ?>
 
-    <?= $form->field($model, 'product_id') ?>
-
     <?php // echo $form->field($model, 'issue_type_id') ?>
 
     <?php // echo $form->field($model, 'comment') ?>

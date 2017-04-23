@@ -45,10 +45,6 @@ $this->params['breadcrumbs'][] = $this->title;
 			],
             'order_id',
             [
-				'label' => 'Producto',
-				'value' => $model->product_id ? $model->product->gecom_desc : null,
-			],
-            [
 				'label' => 'Tipo',
 				'value' => $model->issueType->name,
 			],

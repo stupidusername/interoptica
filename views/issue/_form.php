@@ -31,20 +31,6 @@ use app\models\IssueType;
 
     <?= $form->field($model, 'order_id')->textInput() ?>
 
-    <?=
-	$form->field($model, 'product_id')->label('Producto')->widget(Select2::classname(), [
-		'initValueText' => $model->product_id ? $model->product->gecom_desc . ' (' . $model->product->stock . ')' : null,
-		'options' => ['placeholder' => 'Elegir producto'],
-		'pluginOptions' => [
-			'allowClear' => true,
-			'minimumInputLength' => 3,
-			'ajax' => [
-				'url' => Url::to('/product/list'),
-			],
-		],
-	])
-	?>
-
     <?= $form->field($model, 'issue_type_id')->label('Tipo')->dropDownList(IssueType::getIdNameArray(), ['prompt' => 'Elegir tipo']) ?>
 
     <?= $form->field($model, 'comment')->textarea(['rows' => 6]) ?>

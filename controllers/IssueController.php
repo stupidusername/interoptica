@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Issue;
+use app\models\IssueProduct;
 use app\models\IssueSearch;
 use app\models\IssueStatus;
 use yii\web\Controller;
@@ -11,6 +12,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use app\filters\AuthorRule;
+use app\filters\IssueStatusRule;
 use yii\helpers\Json;
 
 /**
@@ -56,6 +58,13 @@ class IssueController extends Controller
 						},
 						'roles' => ['admin', 'author'],
                     ],
+					[
+                        'actions' => ['add-entry', 'update-entry', 'delete-entry'],
+						'model' => function() {
+							return $this->findModel(Yii::$app->request->getQueryParam('issueId'));
+						},
+						'roles' => ['admin', 'author'],
+                    ],
                     [
 						'actions' => ['index', 'view'],
 						'verbs' => ['GET'],
@@ -66,6 +75,10 @@ class IssueController extends Controller
                         'roles' => ['@'],
                     ],
                 ],
+            ],
+			'status' => [
+                'class' => IssueStatusRule::className(),
+                'only' => ['delete', 'add-entry', 'update-entry', 'delete-entry'],
             ],
         ];
     }
@@ -162,6 +175,57 @@ class IssueController extends Controller
 
         return $this->redirect(['index']);
     }
+	
+	/**
+	 * Adds a product to an existing Issue.
+	 * @param integer $issueId
+	 */
+	public function actionAddEntry($issueId) {
+		$issue = $this->findModel($issueId);
+		$model = new IssueProduct();
+		$model->issue_id = $issue->id;
+		
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['success' => true];
+        } else {
+            return $this->renderAjax('add-entry', [
+                'model' => $model,
+            ]);
+        }
+	}
+	
+	/**
+	 * Updates an existing IssueProduct model.
+	 * @param integer $issueId
+	 * @param integer $productId
+	 */
+	public function actionUpdateEntry($issueId, $productId) {
+		$model = $this->findIssueProductModel($issueId, $productId);
+		
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['success' => true];
+        } else {
+            return $this->renderAjax('update-entry', [
+                'model' => $model,
+            ]);
+        }
+	}
+	
+	/**
+     * Deletes an existing IssueProduct model.
+     * If deletion is successful, the browser will be redirected to the 'view' page.
+     * @param integer $issueId
+	 * @param integer $productId
+     * @return mixed
+     */
+    public function actionDeleteEntry($issueId, $productId)
+    {
+        $this->findIssueProductModel($issueId, $productId)->delete();
+		Yii::$app->response->format = Response::FORMAT_JSON;
+        return ['success' => true];
+    }
 
     /**
      * Finds the Issue model based on its primary key value.
@@ -174,6 +238,23 @@ class IssueController extends Controller
     {
         if ($this->model || ($this->model = Issue::findOne($id)) !== null) {
             return $this->model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+	
+	/**
+     * Finds the IssueProduct model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $issueId
+	 * @param integer $productId
+     * @return IssueProduct the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findIssueProductModel($issueId, $productId)
+    {
+        if (($model = IssueProduct::findOne(['issue_id' => $issueId, 'product_id' => $productId])) !== null) {
+            return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
