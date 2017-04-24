@@ -9,6 +9,7 @@ use app\models\IssueSearch;
 use app\models\IssueStatus;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use app\filters\AuthorRule;

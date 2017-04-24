@@ -5,8 +5,11 @@ use yii\widgets\DetailView;
 use yii\grid\GridView;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use yii\widgets\Pjax;
+use app\assets\IssueAsset;
 use app\models\IssueStatus;
+use app\widgets\modal\Modal;
 use kartik\editable\Editable;
 
 /* @var $this yii\web\View */
@@ -15,10 +18,32 @@ use kartik\editable\Editable;
 $this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Reclamos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$addEntryUrl = Url::to(['add-entry', 'issueId' => $model->id]);
+
+Modal::begin([
+	'id' => 'addEntry',
+	'url' => $addEntryUrl,
+	'options' => [
+		'tabindex' => false // important for Select2 to work properly
+	],
+]);
+
+Modal::end(); 
+
+IssueAsset::register($this);
 ?>
 <div class="issue-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
+	
+	<?php Pjax::begin(['id' => 'issueErrors']) ?>
+	<?php if ($model->issueType->required_issue_product && empty($model->issueProducts)): ?>
+		<div class="error-summary">
+			<h4>Este reclamo requiere la carga de productos.</h4>
+		</div>
+	<?php endif; ?>
+	<?php Pjax::end() ?>
 
     <p>
         <?= Html::a('Editar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -94,5 +119,52 @@ $this->params['breadcrumbs'][] = $this->title;
 	]);
 	?>
 	<?php Pjax::end() ?>
+	
+	<h3>Productos</h3>
+	
+	<p>
+		<?= Html::button('Agregar Producto', ['id' => 'addEntryButton', 'class' => 'btn btn-success', 'url' => "$addEntryUrl"]) ?>
+	</p>
+	
+	<?php Pjax::begin(['id' => 'productsGridview']); ?>
+	<?=
+	GridView::widget([
+		'columns' => [
+			'product.gecom_desc',
+			'quantity',
+			[
+				'label' => 'Falla',
+				'value' => 'fail.name'
+			],
+			'comment:ntext',
+			[
+				'class' => 'yii\grid\ActionColumn',
+				'template' => '{update} {delete}',
+				'urlCreator' => function ($action, $model, $key, $index, $actionColumn) {
+					switch ($action) {
+						case 'update':
+							return Url::to(['update-entry', 'issueId' => $model->issue_id, 'productId' => $model->product_id]);
+						case 'delete':
+							return Url::to(['delete-entry', 'issueId' => $model->issue_id, 'productId' => $model->product_id]);
+					}
+				},
+				'buttons' => [
+					'update' => function ($url, $model, $key) {
+						return Html::a(Html::tag('span', '', ['class' => "glyphicon glyphicon-pencil"]), $url, ['class' => 'productUpdate']);
+					},
+					'delete' => function ($url, $model, $key) {
+						return Html::a(Html::tag('span', '', ['class' => "glyphicon glyphicon-trash"]), $url, ['class' => 'productDelete']);
+					},
+				],
+			],
+		],
+		'dataProvider' => new ActiveDataProvider([
+            'query' => $model->getIssueProducts()->with(['product', 'fail'])->orderBy(['id' => SORT_DESC]),
+			'pagination' => false,
+			'sort' => false,
+        ]),
+	]);
+	?>
+	<?php Pjax::end(); ?>
 
 </div>

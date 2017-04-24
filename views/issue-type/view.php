@@ -31,6 +31,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'name',
+			[
+				'attribute' => 'required_issue_product',
+				'format' => 'boolean',
+			],
         ],
     ]) ?>
 
