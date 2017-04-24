@@ -66,7 +66,7 @@ IssueAsset::register($this);
 			],
             [
 				'label' => 'Cliente',
-				'value' => $model->customer_id ? $model->customer->name : null,
+				'value' => $model->customer->name,
 			],
             'order_id',
             [

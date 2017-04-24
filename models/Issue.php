@@ -4,7 +4,6 @@ namespace app\models;
 
 use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
-use codeonyii\yii2validators\AtLeastValidator;
 
 /**
  * This is the model class for table "issue".
@@ -69,23 +68,6 @@ class Issue extends \yii\db\ActiveRecord
 	/**
 	 * @inheritdoc
 	 */
-	public function beforeValidate() {
-		if (parent::beforeValidate()) {
-			if ($this->order_id && $this->isAttributeChanged('order_id')) {
-				$order = Order::find()->where(['id' => $this->order_id])->one();
-				if ($order) {
-					$this->customer_id = $order->customer_id;
-				}
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	 * @inheritdoc
-	 */
 	public function beforeSave($insert) {
 		if (parent::beforeSave($insert)) {
 			if ($insert) {
@@ -131,8 +113,7 @@ class Issue extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-			[['issue_type_id'], 'required'],
-			[['customer_id', 'order_id'], AtLeastValidator::className(), 'in' => ['customer_id', 'order_id']],
+			[['issue_type_id', 'customer_id'], 'required'],
             [['user_id', 'customer_id', 'order_id', 'issue_type_id'], 'integer'],
             [['comment'], 'string'],
             [['contact'], 'string', 'max' => 255],

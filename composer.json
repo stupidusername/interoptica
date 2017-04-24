@@ -25,10 +25,6 @@
 		{
             "type": "vcs",
             "url": "https://github.com/stupidusername/yii2-money"
-        },
-		{
-            "type": "vcs",
-            "url": "https://github.com/stupidusername/yii2-at-least-validator"
         }
     ],
     "require": {
@@ -44,8 +40,7 @@
 		"kartik-v/yii2-money": "dev-master",
 		"kartik-v/yii2-mpdf": "dev-master",
 		"kartik-v/yii2-widget-select2": "@dev",
-		"kartik-v/yii2-editable": "*",
-		"codeonyii/yii2-at-least-validator": "dev-master"
+		"kartik-v/yii2-editable": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

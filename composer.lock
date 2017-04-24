@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a7f7d660656be1391c131e948e8ca231",
+    "content-hash": "ae71175ad9f2b9199f2ac78d56e565be",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -320,54 +320,6 @@
                 "markdown-extra"
             ],
             "time": "2016-09-14T20:40:20+00:00"
-        },
-        {
-            "name": "codeonyii/yii2-at-least-validator",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stupidusername/yii2-at-least-validator.git",
-                "reference": "1136c394cab6c4f67d78450eec8a48defe2f31f6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stupidusername/yii2-at-least-validator/zipball/1136c394cab6c4f67d78450eec8a48defe2f31f6",
-                "reference": "1136c394cab6c4f67d78450eec8a48defe2f31f6",
-                "shasum": ""
-            },
-            "require": {
-                "yiisoft/yii2": "2.0.*"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.7.0"
-            },
-            "type": "yii2-extension",
-            "autoload": {
-                "psr-4": {
-                    "codeonyii\\yii2validators\\": ""
-                }
-            },
-            "license": [
-                "Apache 2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Sidney Lins",
-                    "email": "slinstj@gmail.com"
-                }
-            ],
-            "description": "Validates at least one (or more) attributes.",
-            "homepage": "https://github.com/code-on-yii/yii2-at-least-validator",
-            "keywords": [
-                "at least",
-                "validation",
-                "validator",
-                "yii2"
-            ],
-            "support": {
-                "source": "https://github.com/stupidusername/yii2-at-least-validator/tree/master"
-            },
-            "time": "2017-04-20 13:04:03"
         },
         {
             "name": "dektrium/yii2-user",
@@ -1363,16 +1315,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v5.4.6",
+            "version": "v5.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e"
+                "reference": "56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e",
-                "reference": "81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4",
+                "reference": "56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4",
                 "shasum": ""
             },
             "require": {
@@ -1413,7 +1365,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2017-02-13T07:52:53+00:00"
+            "time": "2017-04-20T17:32:18+00:00"
         },
         {
             "name": "yii2tech/ar-softdelete",
@@ -4282,8 +4234,7 @@
         "kartik-v/yii2-export": 20,
         "kartik-v/yii2-money": 20,
         "kartik-v/yii2-mpdf": 20,
-        "kartik-v/yii2-widget-select2": 20,
-        "codeonyii/yii2-at-least-validator": 20
+        "kartik-v/yii2-widget-select2": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

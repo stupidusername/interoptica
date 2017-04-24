@@ -7,6 +7,7 @@ use app\models\Issue;
 use app\models\IssueProduct;
 use app\models\IssueSearch;
 use app\models\IssueStatus;
+use app\models\Order;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -133,8 +134,12 @@ class IssueController extends Controller
      */
     public function actionCreate($orderId = null)
     {
-        $model = new Issue();
-		$model->order_id = $orderId;
+		$model = new Issue();
+		$order = Order::findOne($orderId);
+		if ($order) {
+			$model->customer_id = $order->customer_id;
+			$model->order_id = $order->id;
+		}
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
