@@ -31,7 +31,7 @@ use app\models\IssueType;
 
     <?= $form->field($model, 'order_id')->textInput() ?>
 
-    <?= $form->field($model, 'issue_type_id')->label('Tipo')->dropDownList(IssueType::getIdNameArray(), ['prompt' => 'Elegir tipo']) ?>
+    <?= $form->field($model, 'issue_type_id')->label('Asunto')->dropDownList(IssueType::getIdNameArray(), ['prompt' => 'Elegir asunto']) ?>
 
     <?= $form->field($model, 'comment')->textarea(['rows' => 6]) ?>
 

@@ -70,7 +70,7 @@ IssueAsset::register($this);
 			],
             'order_id',
             [
-				'label' => 'Tipo',
+				'label' => 'Asunto',
 				'value' => $model->issueType->name,
 			],
 			[

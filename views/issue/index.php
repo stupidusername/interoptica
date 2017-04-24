@@ -72,9 +72,9 @@ $this->params['breadcrumbs'][] = $this->title;
 				'contentOptions' => ['style' => 'width: 100px;'],
 			],
             [
-				'label' => 'Tipo',
+				'label' => 'Asunto',
 				'value' => 'issueType.name',
-				'filter' => Html::activeDropDownList($searchModel, 'issue_type_id', IssueType::getIdNameArray(), ['class' => 'form-control', 'prompt' => 'Elegir tipo']),
+				'filter' => Html::activeDropDownList($searchModel, 'issue_type_id', IssueType::getIdNameArray(), ['class' => 'form-control', 'prompt' => 'Elegir asunto']),
 			],
 			[
 				'label' => 'Estado',
