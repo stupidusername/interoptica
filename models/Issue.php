@@ -69,14 +69,27 @@ class Issue extends \yii\db\ActiveRecord
 	/**
 	 * @inheritdoc
 	 */
+	public function beforeValidate() {
+		if (parent::beforeValidate()) {
+			if ($this->order_id && $this->isAttributeChanged('order_id')) {
+				$order = Order::find()->where(['id' => $this->order_id])->one();
+				if ($order) {
+					$this->customer_id = $order->customer_id;
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * @inheritdoc
+	 */
 	public function beforeSave($insert) {
 		if (parent::beforeSave($insert)) {
 			if ($insert) {
 				$this->user_id = Yii::$app->user->id;
-			}
-			if ($insert || $this->order_id != $this->oldAttributes['order_id']) {
-				$order = Order::find()->where(['id' => $this->order_id])->one();
-				$this->customer_id = $order->customer_id;
 			}
 			return true;
 		} else {
@@ -124,7 +137,7 @@ class Issue extends \yii\db\ActiveRecord
             [['comment'], 'string'],
             [['contact'], 'string', 'max' => 255],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
-            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
+            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id', 'customer_id' => 'customer_id']],
             [['issue_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => IssueType::className(), 'targetAttribute' => ['issue_type_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
 			[['status'], 'required', 'on' => self::SCENARIO_UPDATE],
