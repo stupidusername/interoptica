@@ -93,6 +93,7 @@ class IssueController extends Controller
     {
         $searchModel = new IssueSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
 
         return $this->render('index', [
             'searchModel' => $searchModel,
