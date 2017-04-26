@@ -40,7 +40,8 @@
 		"kartik-v/yii2-money": "dev-master",
 		"kartik-v/yii2-mpdf": "dev-master",
 		"kartik-v/yii2-widget-select2": "@dev",
-		"kartik-v/yii2-editable": "*"
+		"kartik-v/yii2-editable": "*",
+		"miloschuman/yii2-highcharts-widget": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

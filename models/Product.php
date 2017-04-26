@@ -89,6 +89,22 @@ class Product extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Order::className(), ['id' => 'order_id'])->viaTable('order_product', ['product_id' => 'id']);
     }
+	
+	/**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrderProducts()
+    {
+        return $this->hasMany(OrderProduct::className(), ['product_id' => 'id']);
+    }
+	
+	/**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIssueProducts()
+    {
+        return $this->hasMany(IssueProduct::className(), ['product_id' => 'id']);
+    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -118,6 +134,23 @@ class Product extends \yii\db\ActiveRecord
 		}
 		$products = ArrayHelper::map($activeQuery->asArray()->all(), 'id', $getName);
 		return $products;
+	}
+	
+	/**
+	 * Gets products ordered by fail rate
+	 * @param integere $limit
+	 * @return mixed
+	 */
+	public static function getProductsOrderedByFailRate($limit = null) {
+		$products = self::find()->select([
+			self::tableName() . '.id',
+			'gecom_desc',
+			'fails' => IssueProduct::find()->select('sum(quantity)')->where('product_id = ' . Product::tableName() . '.id'),
+			'orders' => OrderProduct::find()->select('sum(quantity)')->where('product_id = ' . Product::tableName() . '.id'),
+		])->orderBy(['(fails / orders)' => SORT_DESC])->limit($limit)->asArray()->all();
+		return array_filter($products, function ($product) {
+			return $product['fails'] > 0 && $product['orders'] > 0;
+		});
 	}
 }
 

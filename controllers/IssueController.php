@@ -68,7 +68,7 @@ class IssueController extends Controller
 						'roles' => ['admin', 'author'],
                     ],
                     [
-						'actions' => ['index', 'view'],
+						'actions' => ['index', 'statistics', 'view'],
 						'verbs' => ['GET'],
                         'roles' => ['@'],
                     ],
@@ -99,6 +99,15 @@ class IssueController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+	
+	 /**
+     * Render fail statistics.
+     * @return mixed
+     */
+    public function actionStatistics()
+    {
+        return $this->render('statistics');
     }
 
     /**

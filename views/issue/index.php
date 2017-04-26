@@ -23,6 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Crear Reclamo', ['create'], ['class' => 'btn btn-success']) ?>
 		<?= Html::a('Administrar Tipos de Reclamos', ['/issue-type/index'], ['class' => 'btn btn-primary']) ?>
 		<?= Html::a('Administrar Tipos de Falla', ['/fail/index'], ['class' => 'btn btn-primary']) ?>
+		<?= Html::a('Estadísticas de Fallas', ['statistics'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
