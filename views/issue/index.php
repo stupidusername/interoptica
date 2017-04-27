@@ -17,13 +17,14 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="issue-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a('Crear Reclamo', ['create'], ['class' => 'btn btn-success']) ?>
 		<?= Html::a('Administrar Tipos de Reclamos', ['/issue-type/index'], ['class' => 'btn btn-primary']) ?>
 		<?= Html::a('Administrar Tipos de Falla', ['/fail/index'], ['class' => 'btn btn-primary']) ?>
 		<?= Html::a('Estadísticas de Fallas', ['statistics'], ['class' => 'btn btn-primary']) ?>
+		<?= Html::a('Resumen de Fallas', ['fail-summary'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

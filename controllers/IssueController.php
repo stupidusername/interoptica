@@ -6,6 +6,7 @@ use Yii;
 use app\models\Issue;
 use app\models\IssueComment;
 use app\models\IssueProduct;
+use app\models\IssueProductSearch;
 use app\models\IssueSearch;
 use app\models\IssueStatus;
 use app\models\Order;
@@ -69,12 +70,12 @@ class IssueController extends Controller
 						'roles' => ['admin', 'author'],
                     ],
                     [
-						'actions' => ['index', 'statistics', 'view'],
+						'actions' => ['view'],
 						'verbs' => ['GET'],
                         'roles' => ['@'],
                     ],
 					[
-						'actions' => ['create', 'add-comment'],
+						'actions' => ['index', 'statistics', 'fail-summary', 'create', 'add-comment',],
                         'roles' => ['@'],
                     ],
                 ],
@@ -109,6 +110,22 @@ class IssueController extends Controller
     public function actionStatistics()
     {
         return $this->render('statistics');
+    }
+	
+	/**
+     * Lists all IssueProduct models.
+     * @return mixed
+     */
+    public function actionFailSummary()
+    {
+        $searchModel = new IssueProductSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		$dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
+
+        return $this->render('fail-summary', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
