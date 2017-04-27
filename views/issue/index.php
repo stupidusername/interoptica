@@ -82,7 +82,6 @@ $this->params['breadcrumbs'][] = $this->title;
 				'value' => 'issueStatus.statusLabel',
 				'filter' => Html::activeDropDownList($searchModel, 'status', IssueStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
 			],
-            'comment:ntext',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

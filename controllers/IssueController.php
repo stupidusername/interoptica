@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Issue;
+use app\models\IssueComment;
 use app\models\IssueProduct;
 use app\models\IssueSearch;
 use app\models\IssueStatus;
@@ -73,7 +74,7 @@ class IssueController extends Controller
                         'roles' => ['@'],
                     ],
 					[
-						'actions' => ['create'],
+						'actions' => ['create', 'add-comment'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -243,6 +244,25 @@ class IssueController extends Controller
         return ['success' => true];
     }
 
+	/**
+	 * Adds a comment to an existing Issue.
+	 * @param integer $issueId
+	 */
+	public function actionAddComment($issueId) {
+		$issue = $this->findModel($issueId);
+		$model = new IssueComment();
+		$model->issue_id = $issue->id;
+		
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['success' => true];
+        } else {
+            return $this->renderAjax('add-comment', [
+                'model' => $model,
+            ]);
+        }
+	}
+	
     /**
      * Finds the Issue model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

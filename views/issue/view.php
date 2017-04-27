@@ -31,6 +31,16 @@ Modal::begin([
 
 Modal::end(); 
 
+Modal::begin([
+	'id' => 'addComment',
+	'url' => Url::to(['add-comment', 'issueId' => $model->id]),
+	'options' => [
+		'tabindex' => false // important for Select2 to work properly
+	],
+]);
+
+Modal::end();
+
 IssueAsset::register($this);
 ?>
 <div class="issue-view">
@@ -87,7 +97,6 @@ IssueAsset::register($this);
 					],
 				]),
 			],
-            'comment:ntext',
             'contact',
         ],
     ]) ?>
@@ -160,6 +169,35 @@ IssueAsset::register($this);
 		],
 		'dataProvider' => new ActiveDataProvider([
             'query' => $model->getIssueProducts()->with(['product', 'fail'])->orderBy(['id' => SORT_DESC]),
+			'pagination' => false,
+			'sort' => false,
+        ]),
+	]);
+	?>
+	<?php Pjax::end(); ?>
+	
+	<h3>Comentarios</h3>
+	
+	<p>
+		<?= Html::button('Agregar Comentario', ['id' => 'addCommentButton', 'class' => 'btn btn-success']) ?>
+	</p>
+	
+	<?php Pjax::begin(['id' => 'commentsGridview']); ?>
+	<?=
+	GridView::widget([
+		'columns' => [
+			[
+				'label' => 'Usuario',
+				'value' => 'user.username',
+			],
+			[
+				'attribute' => 'create_datetime',
+				'format' => 'datetime'
+			],
+			'comment:ntext',
+		],
+		'dataProvider' => new ActiveDataProvider([
+            'query' => $model->getIssueComments()->with(['user']),
 			'pagination' => false,
 			'sort' => false,
         ]),

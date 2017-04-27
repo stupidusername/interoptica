@@ -25,8 +25,6 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'issue_type_id') ?>
 
-    <?php // echo $form->field($model, 'comment') ?>
-
     <?php // echo $form->field($model, 'contact') ?>
 
     <?php // echo $form->field($model, 'deleted') ?>

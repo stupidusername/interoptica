@@ -33,8 +33,6 @@ use app\models\IssueType;
 
     <?= $form->field($model, 'issue_type_id')->label('Asunto')->dropDownList(IssueType::getIdNameArray(), ['prompt' => 'Elegir asunto']) ?>
 
-    <?= $form->field($model, 'comment')->textarea(['rows' => 6]) ?>
-
     <?= $form->field($model, 'contact')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">

@@ -16,6 +16,15 @@ $(document).ready(function () {
 		}, 25);
 	};
 	
+	var focusComment = function () {
+		var timer = setInterval(function () {
+			if ($("#issuecomment-comment").is(":focus")) {
+				clearInterval(timer);
+			}
+			$("#issuecomment-comment").focus();
+		}, 25);
+	};
+	
 	var setUpUpdateButtons = function (domElem) {
 		domElem.on('click', '.productUpdate', function (event) {
 			event.preventDefault();
@@ -27,11 +36,20 @@ $(document).ready(function () {
 	var addEntryUrl = $('#addEntryButton').attr('url');
 	
 	var showAddEntryModal = function() {
-		$('#addEntry').kbModalAjax({url: addEntryUrl}); $('#addEntry').modal('show');
+		$('#addEntry').kbModalAjax({url: addEntryUrl});
+		$('#addEntry').modal('show');
+	};
+	
+	var showAddCommentModal = function() {
+		$('#addComment').modal('show');
 	};
 	
 	$('#addEntryButton').on('click', function () {
 		showAddEntryModal();
+	});
+	
+	$('#addCommentButton').on('click', function () {
+		showAddCommentModal();
 	});
 	
 	$('#addEntry').on('kbModalSubmitSuccess', function (event, xhr, settings) {
@@ -39,8 +57,17 @@ $(document).ready(function () {
 		showAddEntryModal();
 	});
 	
+	$('#addComment').on('kbModalSubmitSuccess', function (event, xhr, settings) {
+		$('#addComment').modal('hide');
+		$.pjax.reload({container: '#commentsGridview'});
+	});
+	
 	$('#addEntry').on('kbModalShow', function (event, xhr, settings) {
 		focus();
+	});
+	
+	$('#addComment').on('kbModalShow', function (event, xhr, settings) {
+		focusComment();
 	});
 	
 	$('#addEntry').on('kbModalSubmit', function (event, xhr, settings) {

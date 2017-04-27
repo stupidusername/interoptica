@@ -13,7 +13,6 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property integer $customer_id
  * @property integer $order_id
  * @property integer $issue_type_id
- * @property string $comment
  * @property string $contact
  * @property integer $deleted
  *
@@ -115,7 +114,6 @@ class Issue extends \yii\db\ActiveRecord
         return [
 			[['issue_type_id', 'customer_id'], 'required'],
             [['user_id', 'customer_id', 'order_id', 'issue_type_id'], 'integer'],
-            [['comment'], 'string'],
             [['contact'], 'string', 'max' => 255],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id', 'customer_id' => 'customer_id']],
@@ -145,7 +143,6 @@ class Issue extends \yii\db\ActiveRecord
             'customer_id' => 'ID Cliente',
             'order_id' => 'ID Pedido',
             'issue_type_id' => 'ID Tipo',
-            'comment' => 'Comentario',
             'contact' => 'Contacto',
         ];
     }
@@ -212,5 +209,13 @@ class Issue extends \yii\db\ActiveRecord
     public function getOpenIssueStatus()
     {
         return $this->hasOne(IssueStatus::className(), ['issue_id' => 'id'])->andWhere(['status' => IssueStatus::STATUS_OPEN]);
+    }
+	
+	/**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIssueComments()
+    {
+        return $this->hasMany(IssueComment::className(), ['issue_id' => 'id']);
     }
 }

@@ -24,7 +24,7 @@ class IssueSearch extends Issue
     {
         return [
             [['id', 'user_id', 'customer_id', 'order_id', 'issue_type_id', 'status'], 'integer'],
-            [['comment', 'contact'], 'safe'],
+            [['contact'], 'safe'],
         ];
     }
 
@@ -79,8 +79,7 @@ class IssueSearch extends Issue
 			}]);
 		}
 
-        $query->andFilterWhere(['like', 'comment', $this->comment])
-            ->andFilterWhere(['like', 'contact', $this->contact]);
+        $query->andFilterWhere(['like', 'contact', $this->contact]);
 
         return $dataProvider;
     }
