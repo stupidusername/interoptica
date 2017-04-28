@@ -12,14 +12,35 @@ use app\models\IssueProduct;
  */
 class IssueProductSearch extends IssueProduct
 {
+	/**
+	 * @var string
+	 */
+	public $fromDate;
+	
+	/**
+	 * @var string
+	 */
+	public $toDate;
+	
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'issue_id', 'product_id', 'fail_id', 'quantity'], 'integer'],
-            [['comment'], 'safe'],
+            [['product_id', 'fail_id'], 'integer'],
+			[['fromDate', 'toDate'], 'string'],
+        ];
+    }
+	
+	/**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'fromDate' => 'Desde',
+            'toDate' => 'Hasta',
         ];
     }
 
@@ -59,16 +80,25 @@ class IssueProductSearch extends IssueProduct
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'issue_id' => $this->issue_id,
             'product_id' => $this->product_id,
             'fail_id' => $this->fail_id,
-            'quantity' => $this->quantity,
         ]);
 
         $query->andFilterWhere(['like', 'comment', $this->comment]);
 		
-		$query->joinWith(['fail', 'product']);
+		$query->joinWith([
+			'fail',
+			'product',
+			'issue.openIssueStatus' => function ($query) {
+				if ($this->fromDate) {
+					$query->andWhere(['>=', 'create_datetime', $this->fromDate]);
+				}
+				if ($this->toDate) {
+					$toDate = gmdate('Y-m-d', strtotime($this->toDate . ' +1 day'));
+					$query->andWhere(['<', 'create_datetime', $toDate]);
+				}
+			},
+		]);
 
         return $dataProvider;
     }

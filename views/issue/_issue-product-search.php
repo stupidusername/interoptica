@@ -5,6 +5,7 @@ use app\models\Product;
 use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\jui\DatePicker;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -33,6 +34,16 @@ use yii\widgets\ActiveForm;
 	?>
 
     <?= $form->field($model, 'fail_id')->label('Falla')->dropDownList(Fail::getIdNameArray(), ['prompt' => 'Elegir falla']) ?>
+	
+	<?= $form->field($model, 'fromDate')->widget(DatePicker::classname(), [
+		'dateFormat' => 'yyyy-MM-dd',
+		'options' => ['class' => 'form-control'],
+	]) ?>
+	
+	<?= $form->field($model, 'toDate')->widget(DatePicker::classname(), [
+		'dateFormat' => 'yyyy-MM-dd',
+		'options' => ['class' => 'form-control'],
+	]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Buscar', ['class' => 'btn btn-primary']) ?>
