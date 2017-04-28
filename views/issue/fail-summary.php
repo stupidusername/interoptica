@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use kartik\export\ExportMenu;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\IssueProductSearch */
@@ -16,21 +17,34 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?php echo $this->render('_issue-product-search', ['model' => $searchModel]); ?>
 
+	<?php
+	$columns = [
+		'id',
+		[
+			'label' => 'Producto',
+			'value' => 'product.gecom_desc'
+		],
+		[
+			'label' => 'Falla',
+			'value' => 'fail.name'
+		],
+		'quantity',
+		'comment:ntext',
+	];
+	?>
+	
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'columns' => [
-			
-            'id',
-            [
-				'label' => 'Producto',
-				'value' => 'product.gecom_desc'
-			],
-            [
-				'label' => 'Falla',
-				'value' => 'fail.name'
-			],
-            'quantity',
-            'comment:ntext',
-        ],
+        'columns' => $columns,
     ]); ?>
+	
+	<?=
+	ExportMenu::widget([
+		'dataProvider' => $exportDataProvider,
+		'target' => ExportMenu::TARGET_SELF,
+		'showConfirmAlert' => false,
+		'filename' => 'fallas',
+		'columns' => $columns,
+	]);
+	?>
 </div>

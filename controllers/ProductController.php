@@ -59,7 +59,7 @@ class ProductController extends Controller
         $searchModel = new ProductSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		 
-		 // data provider used for export
+		// data provider used for export
 		$exportDataProvider = $dataProvider;
 		if (Yii::$app->request->isPost) {
 			$exportDataProvider = $searchModel->search(Yii::$app->request->queryParams);
