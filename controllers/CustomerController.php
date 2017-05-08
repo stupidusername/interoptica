@@ -37,7 +37,7 @@ class CustomerController extends Controller
                 ],
                 'rules' => [
 					[
-						'actions' => ['list'],
+						'actions' => ['index', 'view', 'list'],
 						'roles' => ['@'],
 						'allow' => true,
 					],
