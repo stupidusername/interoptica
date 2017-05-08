@@ -55,27 +55,14 @@ class IssueController extends Controller
 						'roles' => ['admin', 'author'],
                     ],
 					[
-                        'actions' => ['view'],
-						'verbs' => ['POST'],
-						'model' => function() {
-							return $this->findModel(Yii::$app->request->getQueryParam('id'));
-						},
-						'roles' => ['admin', 'author'],
-                    ],
-					[
                         'actions' => ['add-entry', 'update-entry', 'delete-entry'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('issueId'));
 						},
 						'roles' => ['admin', 'author'],
                     ],
-                    [
-						'actions' => ['view'],
-						'verbs' => ['GET'],
-                        'roles' => ['@'],
-                    ],
 					[
-						'actions' => ['index', 'statistics', 'fail-summary', 'create', 'add-comment',],
+						'actions' => ['index', 'view', 'statistics', 'fail-summary', 'create', 'add-comment',],
                         'roles' => ['@'],
                     ],
                 ],
