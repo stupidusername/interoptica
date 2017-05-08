@@ -75,8 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			],
 			[
 				'attribute' => 'comment',
-				'format' => 'ntext',
-				'options' => ['style' => 'width: 400px;']
+				'contentOptions' => ['style' => 'width: 400px; max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'],
 			],
 			['class' => 'yii\grid\ActionColumn'],
 		],
