@@ -81,6 +81,7 @@ class IssueController extends Controller
     public function actionIndex()
     {
         $searchModel = new IssueSearch();
+		$searchModel->user_id = Yii::$app->user->id;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
 
