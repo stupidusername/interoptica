@@ -33,7 +33,7 @@ foreach ($commentLines as $k => $commentLine) {
 		</tr>
 		<tr>
 			<td colspan="2" rowspan="2" class="tr6 td8"><p class="p0">Vendedor:</p></td>
-			<td rowspan="2" class="tr6 td2"><p class="p0"><?= $model->user->gecom_id . ' - ' . $model->user->profile->name ?> </p></td>
+			<td rowspan="2" class="tr6 td2"><p class="p0"><?= $model->user->displayName ?> </p></td>
 			<td class="tr8 td6"><p class="p0">&nbsp;</p></td>
 			<td class="tr8 td9"><p class="p0">&nbsp;</p></td>
 		</tr>
@@ -51,7 +51,7 @@ foreach ($commentLines as $k => $commentLine) {
 		<tr>
 			<td class="tr6 td0"><p class="p0">Cliente:</p></td>
 			<td class="tr6 td1"><p class="p0">&nbsp;</p></td>
-			<td class="tr6 td2"><p class="p0"><?= $model->customer->gecom_id . ' - ' . $model->customer->name ?></p></td>
+			<td class="tr6 td2"><p class="p0"><?= $model->customer->displayName ?></p></td>
 			<td class="tr6 td3"><p class="p0"><?= $commentLines[0]; ?></p></td>
 			<td class="tr6 td4"><p class="p0">Modificar: N</p></td>
 		</tr>

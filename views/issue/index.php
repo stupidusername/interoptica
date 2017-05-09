@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			],
             [
 				'label' => 'Cliente',
-				'value' => 'customer.name',
+				'value' => 'customer.displayName',
 				'filter' => Select2::widget([
 					'initValueText' => $searchModel->customer_id ? $searchModel->customer->name : null,
 					'model' => $searchModel,

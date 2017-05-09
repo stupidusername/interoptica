@@ -96,6 +96,13 @@ class Customer extends \yii\db\ActiveRecord
 			'E' => 'Exento',
 		];
 	}
+	
+	/**
+	 * @return string
+	 */
+	public function getDisplayName() {
+		return implode(' - ', [$this->gecom_id, $this->name]);
+	}
 
 	/**
 	 * @return string

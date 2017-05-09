@@ -56,6 +56,13 @@ class User extends BaseUser {
 		$attributeLabels['gecom_id'] = 'Gecom ID';
 		return $attributeLabels;
 	}
+	
+	/**
+	 * @return string
+	 */
+	public function getDisplayName() {
+		return implode(' - ', [$this->gecom_id, $this->profile->name ?? $this->username]);
+	}
 
 	/**
 	 * Gets an id => name array.
