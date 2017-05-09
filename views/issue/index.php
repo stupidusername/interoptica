@@ -33,6 +33,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
 				'attribute' => 'id',
+				'value' => function ($model, $key, $index, $column) {
+					return Html::a($model->id, ['view', 'id' => $model->id]);
+				},
+				'format' => 'raw',
 				'contentOptions' => ['style' => 'width: 100px;'],
 			],
             [
