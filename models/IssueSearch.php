@@ -46,7 +46,7 @@ class IssueSearch extends Issue
      */
     public function search($params)
     {
-		$query = Issue::find()->with(['user', 'customer', 'issueType', 'issueStatus']);
+		$query = Issue::find()->with(['user', 'customer', 'issueType', 'openIssueStatus', 'issueStatus']);
 
         // add conditions that should always apply here
 

@@ -83,6 +83,11 @@ $this->params['breadcrumbs'][] = $this->title;
 				'value' => 'issueStatus.statusLabel',
 				'filter' => Html::activeDropDownList($searchModel, 'status', IssueStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
 			],
+			[
+				'label' => 'Fecha de Ingreso',
+				'value' => 'openIssueStatus.create_datetime',
+				'format' => 'datetime'
+			],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
