@@ -6,6 +6,8 @@ use Yii;
 use app\models\Customer;
 use app\models\CustomerSearch;
 use app\models\CustomersImportForm;
+use app\models\IssueSearch;
+use app\models\OrderSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -72,8 +74,26 @@ class CustomerController extends Controller
      */
     public function actionView($id)
     {
+		$model = $this->findModel($id);
+		
+		$orderSearchModel = new OrderSearch();
+		$orderSearchModel->customer_id = $model->id;
+		$orderDataProvider = $orderSearchModel->search(Yii::$app->request->queryParams);
+		$orderDataProvider->sort->defaultOrder = ['id' => SORT_DESC];
+		$orderDataProvider->pagination->pageSize = 5;
+		
+		$issueSearchModel = new IssueSearch();
+		$issueSearchModel->customer_id = $model->id;
+		$issueDataProvider = $issueSearchModel->search(Yii::$app->request->queryParams);
+		$issueDataProvider->sort->defaultOrder = ['id' => SORT_DESC];
+		$issueDataProvider->pagination->pageSize = 5;
+		
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+			'orderSearchModel' => $orderSearchModel,
+			'orderDataProvider' => $orderDataProvider,
+			'issueSearchModel' => $issueSearchModel,
+			'issueDataProvider' => $issueDataProvider,
         ]);
     }
 

@@ -26,6 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		<?= Html::a('Estadísticas de Fallas', ['statistics'], ['class' => 'btn btn-primary']) ?>
 		<?= Html::a('Resumen de Fallas', ['fail-summary'], ['class' => 'btn btn-primary']) ?>
     </p>
+	
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
