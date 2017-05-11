@@ -104,7 +104,10 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute' => 'comment',
 				'contentOptions' => ['style' => 'width: 400px; max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'],
 			],
-			['class' => 'yii\grid\ActionColumn'],
+			[
+				'class' => 'yii\grid\ActionColumn',
+				'controller' => 'order',
+			],
 		],
 	]);
 	?>
@@ -163,7 +166,10 @@ $this->params['breadcrumbs'][] = $this->title;
 				'format' => 'datetime'
 			],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+				'class' => 'yii\grid\ActionColumn',
+				'controller' => 'issue',
+			],
         ],
     ]); ?>
 	<?php Pjax::end(); ?>
