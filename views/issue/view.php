@@ -15,7 +15,7 @@ use kartik\editable\Editable;
 /* @var $this yii\web\View */
 /* @var $model app\models\Issue */
 
-$this->title = $model->id;
+$this->title = 'Reclamo: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Reclamos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
