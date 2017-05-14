@@ -19,11 +19,12 @@ class OrderStatus extends \yii\db\ActiveRecord
 {
 	const STATUS_ENTERED = 0;
 	const STATUS_COLLECT = 1;
-	const STATUS_PUT_TOGETHER = 2;
-	const STATUS_BILLING = 3;
-	const STATUS_PACKAGING = 4;
-	const STATUS_SENT = 5;
-	const STATUS_DELIVERED = 6;
+	const STATUS_PENDING_PUT_TOGETHER = 2;
+	const STATUS_PUT_TOGETHER = 3;
+	const STATUS_BILLING = 4;
+	const STATUS_PACKAGING = 5;
+	const STATUS_SENT = 6;
+	const STATUS_DELIVERED = 7;
 	
     /**
      * @inheritdoc
@@ -67,6 +68,7 @@ class OrderStatus extends \yii\db\ActiveRecord
 		return [
 			self::STATUS_ENTERED => 'Ingresado',
 			self::STATUS_COLLECT => 'Cobranzas',
+			self::STATUS_PENDING_PUT_TOGETHER => 'Armado pendiente',
 			self::STATUS_PUT_TOGETHER => 'Armado',
 			self::STATUS_BILLING => 'Facturación',
 			self::STATUS_PACKAGING => 'Embalaje',
@@ -76,33 +78,10 @@ class OrderStatus extends \yii\db\ActiveRecord
 	}
 	
 	/**
-	 * Status color
-	 * @return string[]
-	 */
-	public static function statusColors() {
-		return [
-			self::STATUS_ENTERED => 'black',
-			self::STATUS_COLLECT => 'purple',
-			self::STATUS_PUT_TOGETHER => 'blue',
-			self::STATUS_BILLING => 'cyan',
-			self::STATUS_PACKAGING => 'pink',
-			self::STATUS_SENT => 'orange',
-			self::STATUS_DELIVERED => 'lime',
-		];
-	}
-	
-	/**
 	 * @return string
 	 */
 	public function getStatusLabel() {
 		return self::statusLabels()[$this->status];
-	}
-	
-	/**
-	 * @return string
-	 */
-	public function getStatusColor() {
-		return self::statusColors()[$this->status];
 	}
 	
     /**
