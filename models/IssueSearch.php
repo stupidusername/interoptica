@@ -65,7 +65,8 @@ class IssueSearch extends Issue
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'user_id' => $this->user_id,
+			// disambiguate if needed
+            $this->status != null ? 'issue_status.user_id' : 'user_id' => $this->user_id,
             'customer_id' => $this->customer_id,
             'order_id' => $this->order_id,
             'issue_type_id' => $this->issue_type_id,

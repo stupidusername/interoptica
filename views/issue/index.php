@@ -87,6 +87,9 @@ $this->params['breadcrumbs'][] = $this->title;
 				'label' => 'Estado',
 				'value' => 'issueStatus.statusLabel',
 				'filter' => Html::activeDropDownList($searchModel, 'status', IssueStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
+				'contentOptions' => function ($model, $key, $index, $column) {
+					return $model->status == IssueStatus::STATUS_OPEN_URGENT ? ['style' => 'color: red; font-weight: bold;'] : [];
+				},
 			],
 			[
 				'label' => 'Fecha de Ingreso',

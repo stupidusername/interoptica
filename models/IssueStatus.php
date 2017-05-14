@@ -18,8 +18,11 @@ use Yii;
 class IssueStatus extends \yii\db\ActiveRecord
 {
 	const STATUS_OPEN = 0;
-	const STATUS_PENDING = 1;
-	const STATUS_CLOSED = 2;
+	const STATUS_OPEN_URGENT = 1;
+	const STATUS_PENDING_MERCHANDISE = 2;
+	const STATUS_PENDING_RESPONSE = 3;
+	const STATUS_CUSTOMER_OWES_MERCHANDISE = 4;
+	const STATUS_CLOSED = 5;
 	
     /**
      * @inheritdoc
@@ -62,7 +65,10 @@ class IssueStatus extends \yii\db\ActiveRecord
 	public static function statusLabels() {
 		return [
 			self::STATUS_OPEN => 'Abierto',
-			self::STATUS_PENDING => 'Pendiente',
+			self::STATUS_OPEN_URGENT => 'Abierto (urgente)',
+			self::STATUS_PENDING_MERCHANDISE => 'Pendiente mercadería',
+			self::STATUS_PENDING_RESPONSE => 'Pendiente respuesta',
+			self::STATUS_CUSTOMER_OWES_MERCHANDISE => 'Debe mercadería',
 			self::STATUS_CLOSED => 'Cerrado',
 		];
 	}
