@@ -107,6 +107,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'class' => 'yii\grid\ActionColumn',
 				'controller' => 'order',
+				'template' => '{view}',
 			],
 		],
 	]);
@@ -169,6 +170,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
 				'class' => 'yii\grid\ActionColumn',
 				'controller' => 'issue',
+				'template' => '{view}',
 			],
         ],
     ]); ?>
