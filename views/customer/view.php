@@ -7,7 +7,6 @@ use kartik\select2\Select2;
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\widgets\DetailView;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
@@ -36,28 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'gecom_id',
-            'name',
-			[
-				'label' => 'Zona',
-				'value' => $model->zone ? $model->zone->name : '',
-			],
-            [
-				'attribute' => 'tax_situation',
-				'value' => $model->taxSituationLabel,
-			],
-            'address',
-            'zip_code',
-			'province',
-            'locality',
-            'phone_number',
-            'doc_number',
-        ],
-    ]) ?>
+    <?= $this->render('_detail', ['model' => $model]) ?>
 	
 	<h2>Pedidos</h2>
 	

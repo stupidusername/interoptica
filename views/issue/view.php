@@ -56,6 +56,7 @@ IssueAsset::register($this);
 	<?php Pjax::end() ?>
 
     <p>
+		<?= Html::button('Mostrar/Ocultar Detalle del Cliente', ['class' => 'btn btn-primary', 'onclick' => '$("#customerDetail").toggle()']) ?>
         <?= Html::a('Editar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Borrar', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -101,6 +102,14 @@ IssueAsset::register($this);
             'contact',
         ],
     ]) ?>
+	
+	<div id="customerDetail" style="display: none">
+		
+		<h3>Detalle del Cliente</h3>
+		
+		<?= $this->render('/customer/_detail', ['model' => $model->customer]) ?>
+		
+	</div>
 	
 	<h3>Seguimiento de Estados</h3>
 
