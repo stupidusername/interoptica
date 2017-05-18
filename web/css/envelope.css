@@ -1,0 +1,11 @@
+body {
+	font-size: 12px;
+	font-family: DejaVuSans;
+	line-height: 23px;
+}
+
+ul {
+    margin: 20;
+    padding-left: 0;
+}
+

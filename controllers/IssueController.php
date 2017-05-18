@@ -2,7 +2,8 @@
 
 namespace app\controllers;
 
-use Yii;
+use app\filters\AuthorRule;
+use app\filters\IssueStatusRule;
 use app\models\Issue;
 use app\models\IssueComment;
 use app\models\IssueProduct;
@@ -10,15 +11,14 @@ use app\models\IssueProductSearch;
 use app\models\IssueSearch;
 use app\models\IssueStatus;
 use app\models\Order;
+use kartik\mpdf\Pdf;
+use Yii;
+use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use app\filters\AuthorRule;
-use app\filters\IssueStatusRule;
-use yii\helpers\Json;
-
 /**
  * IssueController implements the CRUD actions for Issue model.
  */
@@ -62,7 +62,7 @@ class IssueController extends Controller
 						'roles' => ['admin', 'author'],
                     ],
 					[
-						'actions' => ['index', 'view', 'statistics', 'fail-summary', 'create', 'add-comment',],
+						'actions' => ['index', 'view', 'statistics', 'fail-summary', 'create', 'add-comment', 'get-envelope'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -274,6 +274,33 @@ class IssueController extends Controller
                 'model' => $model,
             ]);
         }
+	}
+	
+	/**
+	 * Gets the envelope for a given issue.
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionGetEnvelope($id) {
+		$model = $this->findModel($id);
+		$content = $this->renderPartial('envelope', ['model' => $model]);
+
+		// setup kartik\mpdf\Pdf component
+		$pdf = new Pdf([
+			'filename' => $model->id . '.pdf',
+			'mode' => Pdf::MODE_UTF8,
+			'format' => [100, 50],
+			'marginLeft' => 0,
+			'marginBottom' => 0,
+			'marginTop' => 0,
+			'marginRight' => 0,
+			'destination' => Pdf::DEST_DOWNLOAD,
+			'content' => $content,
+			'cssFile' => '@webroot/css/envelope.css',
+		]);
+
+		// return the pdf output as per the destination setting
+		return $pdf->render();
 	}
 	
     /**

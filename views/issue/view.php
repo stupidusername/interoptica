@@ -64,6 +64,7 @@ IssueAsset::register($this);
                 'method' => 'post',
             ],
         ]) ?>
+		<?= Html::a('Crear Etiqueta', ['get-envelope', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
 
     <?= DetailView::widget([
