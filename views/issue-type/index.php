@@ -27,6 +27,14 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute' => 'required_issue_product',
 				'format' => 'boolean',
 			],
+			[
+				'attribute' => 'required_issue_product_fail_id',
+				'format' => 'boolean',
+			],
+			[
+				'attribute' => 'required_issue_product_quantity',
+				'format' => 'boolean',
+			],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

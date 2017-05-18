@@ -21,7 +21,7 @@ class IssueStatusRule extends ActionFilter
      */
     public function beforeAction($action)
     {
-        if (Yii::$app->controller->model->status != IssueStatus::STATUS_OPEN) {
+        if (!in_array(Yii::$app->controller->model->status, [IssueStatus::STATUS_OPEN, IssueStatus::STATUS_OPEN_URGENT])) {
 			$this->denyAccess();
 		}
 		return true;

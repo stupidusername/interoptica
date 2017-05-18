@@ -12,6 +12,8 @@ use yii\helpers\ArrayHelper;
  * @property integer $id
  * @property string $name
  * @property integer $required_issue_product
+ * @property integer $required_issue_product_fail_id
+ * @property integer $required_issue_product_quantity
  * @property integer $deleted
  *
  * @property Issue[] $issues
@@ -52,7 +54,7 @@ class IssueType extends \yii\db\ActiveRecord
     {
         return [
 			[['name'], 'required'],
-            [['required_issue_product'], 'integer'],
+            [['required_issue_product', 'required_issue_product_fail_id', 'required_issue_product_quantity'], 'integer'],
             [['name'], 'string', 'max' => 255],
         ];
     }
@@ -66,6 +68,8 @@ class IssueType extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Nombre',
 			'required_issue_product' => 'Requerir Productos',
+			'required_issue_product_fail_id' => 'Requerir Falla',
+			'required_issue_product_quantity' => 'Requerir Cantidad',
         ];
     }
 

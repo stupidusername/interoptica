@@ -35,6 +35,8 @@ class IssueProduct extends \yii\db\ActiveRecord
     {
         return [
 			[['product_id'], 'required'],
+			[['fail_id'], 'required', 'when' => function ($model) { return $model->issue->issueType->required_issue_product_fail_id; }],
+			[['quantity'], 'required', 'when' => function ($model) { return $model->issue->issueType->required_issue_product_quantity; }],
             [['issue_id', 'product_id', 'fail_id', 'quantity'], 'integer'],
             [['comment'], 'string'],
             [['fail_id'], 'exist', 'skipOnError' => true, 'targetClass' => Fail::className(), 'targetAttribute' => ['fail_id' => 'id']],
