@@ -74,22 +74,21 @@ class IssueController extends Controller
         ];
     }
 
-    /**
-     * Lists all Issue models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new IssueSearch();
-		$searchModel->user_id = Yii::$app->user->id;
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+	/**
+	 * Lists all Issue models.
+	 * @return mixed
+	 */
+	public function actionIndex()
+	{
+		$searchModel = new IssueSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+		return $this->render('index', [
+			'searchModel' => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
+	}
 	
 	 /**
      * Render fail statistics.
