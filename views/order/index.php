@@ -78,6 +78,11 @@ $this->params['breadcrumbs'][] = $this->title;
 				'filter' => Html::activeDropDownList($searchModel, 'status', OrderStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
 			],
 			[
+				'label' => 'Fecha de Ingreso',
+				'value' => 'enteredOrderStatus.create_datetime',
+				'format' => 'datetime'
+			],
+			[
 				'attribute' => 'comment',
 				'contentOptions' => ['style' => 'width: 400px; max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'],
 			],
