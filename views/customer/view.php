@@ -2,9 +2,10 @@
 
 use app\models\IssueStatus;
 use app\models\IssueType;
+use app\models\Order;
 use app\models\OrderStatus;
 use kartik\select2\Select2;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
@@ -74,9 +75,20 @@ $this->params['breadcrumbs'][] = $this->title;
 				]),
 			],
 			[
-				'label' => 'Estado',
+				'class' => 'kartik\grid\EditableColumn',
 				'value' => 'orderStatus.statusLabel',
 				'filter' => Html::activeDropDownList($orderSearchModel, 'status', OrderStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
+				'editableOptions' => function ($model, $key, $index) {
+					return[
+						'inputType' => 'dropDownList',
+						'data' => OrderStatus::statusLabels(),
+						'model' => $model,
+						'attribute' => 'status',
+						'formOptions' => [
+							'action' => ['/order/view/', 'id' => $model->id],
+						],
+					];
+				},
 			],
 			[
 				'attribute' => 'comment',
@@ -135,9 +147,20 @@ $this->params['breadcrumbs'][] = $this->title;
 				'filter' => Html::activeDropDownList($issueSearchModel, 'issue_type_id', IssueType::getIdNameArray(), ['class' => 'form-control', 'prompt' => 'Elegir asunto']),
 			],
 			[
-				'label' => 'Estado',
+				'class' => 'kartik\grid\EditableColumn',
 				'value' => 'issueStatus.statusLabel',
 				'filter' => Html::activeDropDownList($issueSearchModel, 'status', IssueStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
+				'editableOptions' => function ($model, $key, $index) {
+					return[
+						'inputType' => 'dropDownList',
+						'data' => IssueStatus::statusLabels(),
+						'model' => $model,
+						'attribute' => 'status',
+						'formOptions' => [
+							'action' => ['/issue/view/', 'id' => $model->id],
+						],
+					];
+				},
 			],
 			[
 				'label' => 'Fecha de Ingreso',
