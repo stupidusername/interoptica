@@ -74,9 +74,15 @@ class IssueSearch extends Issue
         ]);
 		
 		if ($this->status != null) {
-			$query->innerJoinWith(['issueStatuses' => function ($query) {
+			// STATUS_OPEN should match STATUS_OPEN_URGENT too
+			if ($this->status == IssueStatus::STATUS_OPEN) {
+				$status = [IssueStatus::STATUS_OPEN, IssueStatus::STATUS_OPEN_URGENT];
+			} else {
+				$status = $this->status;
+			}
+			$query->innerJoinWith(['issueStatuses' => function ($query) use ($status) {
 				$subQuery = IssueStatus::getLastStatuses();
-				$query->andWhere([IssueStatus::tableName() . '.id' => $subQuery, 'status' => $this->status]);
+				$query->andWhere([IssueStatus::tableName() . '.id' => $subQuery, 'status' => $status]);
 			}]);
 		}
 
