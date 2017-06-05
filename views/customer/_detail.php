@@ -21,6 +21,7 @@ DetailView::widget([
 			'attribute' => 'tax_situation',
 			'value' => $model->taxSituationLabel,
 		],
+		'tax_situation_category',
 		'address',
 		'zip_code',
 		'province',

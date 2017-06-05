@@ -21,6 +21,8 @@ use app\models\Zone;
 
     <?= $form->field($model, 'tax_situation')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'tax_situation_category')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'address')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'zip_code')->textInput(['maxlength' => true]) ?>

@@ -19,7 +19,7 @@ class CustomerSearch extends Customer
     {
         return [
             [['id', 'gecom_id'], 'integer'],
-            [['name', 'tax_situation', 'address', 'zip_code', 'locality', 'phone_number', 'doc_number'], 'safe'],
+            [['name', 'tax_situation', 'tax_situation_category', 'address', 'zip_code', 'locality', 'phone_number', 'doc_number'], 'safe'],
         ];
     }
 
@@ -65,6 +65,7 @@ class CustomerSearch extends Customer
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'tax_situation', $this->tax_situation])
+            ->andFilterWhere(['like', 'tax_situation_category', $this->tax_situation_category])
             ->andFilterWhere(['like', 'address', $this->address])
             ->andFilterWhere(['like', 'zip_code', $this->zip_code])
             ->andFilterWhere(['like', 'locality', $this->locality])

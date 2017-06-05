@@ -14,6 +14,7 @@ use yii\helpers\ArrayHelper;
  * @property string $name
  * @property integer $zone_id
  * @property string $tax_situation
+ * @property string $tax_situation_category
  * @property string $address
  * @property string $zip_code
  * @property string $province
@@ -59,7 +60,7 @@ class Customer extends \yii\db\ActiveRecord
         return [
             [['gecom_id'], 'integer'],
 			[['gecom_id'], 'unique'],
-            [['name', 'tax_situation', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'doc_number'], 'string', 'max' => 255],
+            [['name', 'tax_situation', 'tax_situation_category', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'doc_number'], 'string', 'max' => 255],
 			[['gecom_id', 'name'], 'required'],
 			[['zone_id'], 'exist', 'targetClass' => Zone::className(), 'targetAttribute' => 'id'],
         ];
@@ -76,6 +77,7 @@ class Customer extends \yii\db\ActiveRecord
             'name' => 'Nombre',
 			'zone_id' => 'ID Zona',
             'tax_situation' => 'Situación Impositiva',
+            'tax_situation_category' => 'Categoría',
             'address' => 'Dirección',
             'zip_code' => 'Código Postal',
 			'province' => 'Provincia',
