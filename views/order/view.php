@@ -215,7 +215,8 @@ OrderAsset::register($this);
 	<?php Pjax::begin(['id' => 'productsGridview']); ?>
 	<?=
 	GridView::widget([
-		'summary' => 'Totales: <b>{totalCount}</b> productos. <b>' . $model->totalQuantity . '</b> piezas. <b>' . Yii::$app->formatter->asCurrency($model->subtotal) . '</b>.',
+		'summary' => 'Productos: <b>{totalCount}</b>. Piezas: <b>' . $model->totalQuantity . '</b>. Subtotal: <b>' . Yii::$app->formatter->asCurrency($model->subtotal) . 
+		'</b>. Total: <b>' . Yii::$app->formatter->asCurrency($model->total) . '</b>',
 		'columns' => [
 			'product.gecom_desc',
 			[
