@@ -92,7 +92,7 @@ OrderAsset::register($this);
 				],
 				[
 					'label' => 'Cliente',
-					'value' => $model->customer->name,
+					'value' => $model->customer->displayName,
 				],
 				[
 					'label' => 'Estado',
