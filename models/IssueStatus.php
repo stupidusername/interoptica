@@ -23,6 +23,10 @@ class IssueStatus extends \yii\db\ActiveRecord
 	const STATUS_PENDING_RESPONSE = 3;
 	const STATUS_CUSTOMER_OWES_MERCHANDISE = 4;
 	const STATUS_CLOSED = 5;
+	const STATUS_PACKAGING = 6;
+	const STATUS_WAITING_FOR_TRANSPORT = 7;
+	const STATUS_SENT = 8;
+	const STATUS_DELIVERED = 9;
 	
     /**
      * @inheritdoc
@@ -70,6 +74,10 @@ class IssueStatus extends \yii\db\ActiveRecord
 			self::STATUS_PENDING_RESPONSE => 'Pendiente respuesta',
 			self::STATUS_CUSTOMER_OWES_MERCHANDISE => 'Debe mercadería',
 			self::STATUS_CLOSED => 'Cerrado',
+			self::STATUS_PACKAGING => 'Embalaje',
+			self::STATUS_WAITING_FOR_TRANSPORT => 'Esperando transporte',
+			self::STATUS_SENT => 'Enviado',
+			self::STATUS_DELIVERED => 'Entregado',
 		];
 	}
 	

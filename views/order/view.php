@@ -31,9 +31,9 @@ $clientPendingOrdersQuery = Order::find()->andWhere(['and', ['!=', 'order.id', $
 $clientPendingOrders = $clientPendingOrdersQuery->all();
 
 $statusIds = ArrayHelper::getColumn(IssueStatus::getLastStatuses()->all(), 'id');
-$clientPendingIssuesQuery = Issue::find()->andWhere(['and', ['!=', 'issue.id', $model->id], ['=', 'customer_id', $model->customer_id]])
+$clientPendingIssuesQuery = Issue::find()->andWhere(['customer_id' => $model->customer_id])
 		->innerJoinWith(['issueType', 'issueStatus' => function ($query) use ($statusIds) {
-			$query->andWhere(['and', ['in', 'issue_status.id', $statusIds], ['not in', 'status', [IssueStatus::STATUS_CLOSED]]]);
+			$query->andWhere(['and', ['in', 'issue_status.id', $statusIds], ['<', 'status', IssueStatus::STATUS_CLOSED]]);
 		}])->orderBy('issue.id');
 $clientPendingIssues = $clientPendingIssuesQuery->all();
 
