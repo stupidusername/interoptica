@@ -106,7 +106,7 @@ foreach ($commentLines as $k => $commentLine) {
 			<td class="tr12 td13"><p class="p0">
 				<?= $model->customer->taxSituationLabel . ($model->customer->tax_situation_category ? ' (' . $model->customer->tax_situation_category . ')' : '') ?>
 			</p></td>
-			<td class="tr12 td17"><p class="p0">Transporte:</p></td>
+			<td class="tr12 td17"><p class="p0">Transporte: <?= $model->transport ? $model->transport->name : '' ?></p></td>
 			<td class="tr12 td2"><p class="p0">Detalle:</p></td>
 		</tr>
 	</tbody>
