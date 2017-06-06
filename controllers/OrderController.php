@@ -255,7 +255,7 @@ class OrderController extends Controller
 			'format' => Pdf::FORMAT_A4,
 			'orientation' => Pdf::ORIENT_LANDSCAPE,
 			'marginTop' => 0,
-			'destination' => Pdf::DEST_DOWNLOAD,
+			'destination' => Pdf::DEST_BROWSER,
 			'content' => $content,
 			'cssFile' => '@webroot/css/pdf.css',
 			'options' => [
