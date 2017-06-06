@@ -109,6 +109,10 @@ OrderAsset::register($this);
 					]),
 				],
 				[
+					'label' => 'Transporte',
+					'value' => $model->transport->name,
+				],
+				[
 					'attribute' => 'discount_percentage',
 					'format' => 'percent',
 					'value' => function ($model) {

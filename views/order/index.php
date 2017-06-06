@@ -20,6 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
 		<?= Html::a('Crear Pedido', ['create'], ['class' => 'btn btn-success']) ?>
+		<?= Html::a('Administrar Transportes', ['transport/index'], ['class' => 'btn btn-primary']) ?>
     </p>
 	
 	<?=

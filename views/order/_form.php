@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use app\models\Customer;
 use app\models\OrderStatus;
+use app\models\Transport;
 use app\models\User;
 use kartik\money\MaskMoney;
 use kartik\select2\Select2;
@@ -35,12 +36,14 @@ use kartik\select2\Select2;
 	<?php if (!$model->isNewRecord && Yii::$app->user->identity->isAdmin): ?>
 		<?= $form->field($model, 'user_id')->label('Usuario')->dropDownList(User::getIdNameArray(), ['prompt' => 'Elegir usuario']) ?>
 	<?php endif; ?>
-	
+
     <?= $form->field($model, 'discount_percentage')->widget(MaskMoney::classname(), ['pluginOptions' => ['prefix' => '']]) ?>
 	
 	<?php if (!$model->isNewRecord): ?>
 		<?= $form->field($model, 'status')->dropDownList(OrderStatus::statusLabels(), ['prompt' => 'Elegir estado']); ?>
 	<?php endif; ?>
+
+	<?= $form->field($model, 'transport_id')->label('Transporte')->dropDownList(Transport::getIdNameArray(), ['prompt' => 'Elegir transporte']); ?>
 
     <?= $form->field($model, 'comment')->textarea(['rows' => 6]) ?>
 

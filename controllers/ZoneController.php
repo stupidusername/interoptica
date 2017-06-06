@@ -18,32 +18,32 @@ use dektrium\user\filters\AccessRule;
  */
 class ZoneController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors()
+	{
+		return [
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'delete' => ['POST'],
+				],
+			],
 			'access' => [
-                'class' => AccessControl::className(),
-                'ruleConfig' => [
-                    'class' => AccessRule::className(),
-                ],
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['admin'],
-                    ],
-                ],
-            ],
-        ];
-    }
+				'class' => AccessControl::className(),
+				'ruleConfig' => [
+					'class' => AccessRule::className(),
+				],
+				'rules' => [
+					[
+						'allow' => true,
+						'roles' => ['admin'],
+					],
+				],
+			],
+		];
+	}
 
     /**
      * Lists all Zone models.

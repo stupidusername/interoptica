@@ -11,11 +11,13 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property integer $id
  * @property integer $user_id
  * @property integer $customer_id
+ * @property integer $transport_id
  * @property string $discount_percentage
  * @property string $comment
  * @property integer $deleted
  *
  * @property Customer $customer
+ * @property Transport $transport
  * @property User $user
  * @property OrderProduct[] $orderProducts
  * @property Product[] $products
@@ -45,7 +47,9 @@ class Order extends \yii\db\ActiveRecord
         return 'order';
     }
 	
-	/** @inheritdoc */
+	/**
+	 * @inheritdoc
+	 */
 	public function behaviors() {
 		return [
 			'softDeleteBehavior' => [
@@ -57,12 +61,14 @@ class Order extends \yii\db\ActiveRecord
 			],
 		];
 	}
-	
-	/** @inheritdoc */
+
+	/**
+	 * @inheritdoc
+	 */
 	public static function find()
-    {
-        return parent::find()->where(['or', ['deleted' => null], ['deleted' => 0]]);
-    }
+	{
+		return parent::find()->where(['or', ['deleted' => null], ['deleted' => 0]]);
+	}
 	
 	/**
 	 * @inheritdoc
@@ -110,19 +116,20 @@ class Order extends \yii\db\ActiveRecord
 		$this->restoreStock();
 	}
 	
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        $rules = [
-            [['customer_id'], 'integer'],
-            [['discount_percentage'], 'number', 'min' => 0, 'max' => 100],
-            [['comment'], 'string'],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		$rules = [
+			[['customer_id', 'transport_id'], 'integer'],
+			[['discount_percentage'], 'number', 'min' => 0, 'max' => 100],
+			[['comment'], 'string'],
+			[['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
+			[['transport_id'], 'exist', 'skipOnError' => true, 'targetClass' => Transport::className(), 'targetAttribute' => ['transport_id' => 'id']],
 			[['customer_id'], 'required'],
 			[['status'], 'required', 'on' => self::SCENARIO_UPDATE],
-        ];
+		];
 		// Allow to edit user_id if user is admin
 		if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAdmin) {
 			$rules[] = [['user_id'], 'required', 'on' => self::SCENARIO_UPDATE];
@@ -130,7 +137,7 @@ class Order extends \yii\db\ActiveRecord
 			$rules[] = [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id'], 'on' => self::SCENARIO_UPDATE];
 		}
 		return $rules;
-    }
+	}
 	
 	/**
 	 * @inheritdoc
@@ -141,20 +148,21 @@ class Order extends \yii\db\ActiveRecord
 		return $scenarios;
 	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'user_id' => 'ID Usuario',
-            'customer_id' => 'ID Cliente',
-            'discount_percentage' => 'Porcentaje de Descuento',
-            'comment' => 'Comentario',
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'id' => 'ID',
+			'user_id' => 'ID Usuario',
+			'customer_id' => 'ID Cliente',
+			'transport_id' => 'ID Transporte',
+			'discount_percentage' => 'Porcentaje de Descuento',
+			'comment' => 'Comentario',
 			'status' => 'Estado',
-        ];
-    }
+		];
+	}
 
     /**
      * @return \yii\db\ActiveQuery
@@ -170,6 +178,13 @@ class Order extends \yii\db\ActiveRecord
     public function getCustomer()
     {
         return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTransport() {
+	    return $this->hasOne(Transport::className(), ['id' => 'transport_id']);
     }
 
     /**
@@ -196,7 +211,7 @@ class Order extends \yii\db\ActiveRecord
         return $this->hasMany(OrderStatus::className(), ['order_id' => 'id']);
     }
 	
-	/**
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getOrderStatus()
@@ -204,7 +219,7 @@ class Order extends \yii\db\ActiveRecord
         return $this->hasOne(OrderStatus::className(), ['order_id' => 'id'])->orderBy(['id' => SORT_DESC]);
     }
 	
-	/**
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getEnteredOrderStatus()
