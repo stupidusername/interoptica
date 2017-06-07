@@ -66,6 +66,7 @@ IssueAsset::register($this);
             ],
         ]) ?>
 		<?= Html::a('Crear Etiqueta', ['get-envelope', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+		<?= Html::a('Crear Envio', ['/delivery/create-issue-delivery', 'issueId' => $model->id], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= DetailView::widget([

@@ -24,58 +24,54 @@ class OrderController extends Controller
 {
 	public $model = null;
 	
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors()
+	{
+		return [
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'delete' => ['POST'],
 					'delete-entry' => ['POST'],
-                ],
-            ],
+				],
+			],
 			'access' => [
-                'class' => AccessControl::className(),
-                'ruleConfig' => [
-                    'class' => AuthorRule::className(),
+				'class' => AccessControl::className(),
+				'ruleConfig' => [
+					'class' => AuthorRule::className(),
 					'modelField' => 'model',
 					'authorIdAttribute' => 'user_id',
 					'allow' => true,
-                ],
-                'rules' => [
-                    [
-                        'actions' => ['update', 'delete'],
+				],
+				'rules' => [
+					[
+						'actions' => ['update', 'delete'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('id'));
 						},
 						'roles' => ['admin', 'author'],
-                    ],
+					],
 					[
-                        'actions' => ['add-entry', 'update-entry', 'delete-entry'],
+						'actions' => ['add-entry', 'update-entry', 'delete-entry'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('orderId'));
 						},
 						'roles' => ['admin', 'author'],
-                    ],
-                    [
-						'actions' => ['index', 'view', 'export-txt', 'export-pdf'],
-                        'roles' => ['@'],
-                    ],
+					],
 					[
-						'actions' => ['create'],
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
+						'actions' => ['index', 'view', 'create', 'export-txt', 'export-pdf'],
+						'roles' => ['@'],
+					],
+				],
+			],
 			'status' => [
-                'class' => OrderStatusRule::className(),
-                'only' => ['delete', 'add-entry', 'update-entry', 'delete-entry'],
-            ],
-        ];
-    }
+				'class' => OrderStatusRule::className(),
+				'only' => ['delete', 'add-entry', 'update-entry', 'delete-entry'],
+			],
+		];
+	}
 
     /**
      * Lists all Order models.

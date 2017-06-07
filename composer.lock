@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "228d86f8d47cf7001d7e991d3fe2f8b6",
+    "content-hash": "c6d76c9b8d1d79da0862d68e279137a4",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -364,6 +364,52 @@
                 "markdown-extra"
             ],
             "time": "2016-09-14T20:40:20+00:00"
+        },
+        {
+            "name": "codeonyii/yii2-at-least-validator",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/code-on-yii/yii2-at-least-validator.git",
+                "reference": "509ee0a705c848c90f7f688177d3b5ad0fe18e68"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/code-on-yii/yii2-at-least-validator/zipball/509ee0a705c848c90f7f688177d3b5ad0fe18e68",
+                "reference": "509ee0a705c848c90f7f688177d3b5ad0fe18e68",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "2.0.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.7.0"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "codeonyii\\yii2validators\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache 2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sidney Lins",
+                    "email": "slinstj@gmail.com"
+                }
+            ],
+            "description": "Validates at least one (or more) attributes.",
+            "homepage": "https://github.com/code-on-yii/yii2-at-least-validator",
+            "keywords": [
+                "at least",
+                "validation",
+                "validator",
+                "yii2"
+            ],
+            "time": "2016-11-29T03:46:18+00:00"
         },
         {
             "name": "dektrium/yii2-user",
