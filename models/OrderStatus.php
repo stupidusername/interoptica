@@ -19,12 +19,16 @@ class OrderStatus extends \yii\db\ActiveRecord
 {
 	const STATUS_ENTERED = 0;
 	const STATUS_COLLECT = 1;
-	const STATUS_PENDING_PUT_TOGETHER = 2;
-	const STATUS_PUT_TOGETHER = 3;
-	const STATUS_BILLING = 4;
-	const STATUS_PACKAGING = 5;
-	const STATUS_SENT = 6;
-	const STATUS_DELIVERED = 7;
+	const STATUS_COLLECT_REVISION = 2;
+	const STATUS_ADMINISTRATION = 3;
+	const STATUS_PENDING_PUT_TOGETHER = 4;
+	const STATUS_PUT_TOGETHER = 5;
+	const STATUS_PUT_TOGETHER_PRINTED = 6;
+	const STATUS_BILLING = 7;
+	const STATUS_PACKAGING = 8;
+	const STATUS_WAITING_FOR_TRANSPORT = 9;
+	const STATUS_SENT = 10;
+	const STATUS_DELIVERED = 11;
 	
     /**
      * @inheritdoc
@@ -67,11 +71,15 @@ class OrderStatus extends \yii\db\ActiveRecord
 	public static function statusLabels() {
 		return [
 			self::STATUS_ENTERED => 'Ingresado',
-			self::STATUS_COLLECT => 'Cobranzas',
+			self::STATUS_COLLECT => 'Crédito',
+			self::STATUS_COLLECT_REVISION => 'Revisión crédito',
+			self::STATUS_ADMINISTRATION => 'Administración',
 			self::STATUS_PENDING_PUT_TOGETHER => 'Armado pendiente',
 			self::STATUS_PUT_TOGETHER => 'Armado',
+			self::STATUS_PUT_TOGETHER_PRINTED => 'Armado impreso',
 			self::STATUS_BILLING => 'Facturación',
 			self::STATUS_PACKAGING => 'Embalaje',
+			self::STATUS_WAITING_FOR_TRANSPORT => 'Esperando transporte',
 			self::STATUS_SENT => 'Enviado',
 			self::STATUS_DELIVERED => 'Entregado',
 		];

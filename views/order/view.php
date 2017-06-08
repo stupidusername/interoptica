@@ -26,7 +26,7 @@ $addEntryUrl = Url::to(['add-entry', 'orderId' => $model->id]);
 $statusIds = ArrayHelper::getColumn(OrderStatus::getLastStatuses()->all(), 'id');
 $clientPendingOrdersQuery = Order::find()->andWhere(['and', ['!=', 'order.id', $model->id], ['=', 'customer_id', $model->customer_id]])
 		->innerJoinWith(['orderStatus' => function ($query) use ($statusIds) {
-			$query->andWhere(['and', ['in', 'order_status.id', $statusIds], ['not in', 'status', [OrderStatus::STATUS_SENT, OrderStatus::STATUS_DELIVERED]]]);
+			$query->andWhere(['and', ['in', 'order_status.id', $statusIds], ['<', 'status', OrderStatus::STATUS_SENT]]);
 		}])->orderBy('order.id');
 $clientPendingOrders = $clientPendingOrdersQuery->all();
 
@@ -59,7 +59,8 @@ OrderAsset::register($this);
 		<div class="error-summary">
 			<?php if (count($clientPendingOrders)): ?>
 				<h4>El cliente tiene <?= count($clientPendingOrders) ?> pedido(s) en proceso.</h4>
-			<?php elseif (count($clientPendingIssues)): ?>
+			<?php endif; ?>
+			<?php if (count($clientPendingIssues)): ?>
 				<h4>El cliente tiene <?= count($clientPendingIssues) ?> reclamo(s) en proceso.</h4>
 			<?php endif; ?>
 		</div>
