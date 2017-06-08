@@ -79,7 +79,6 @@ OrderAsset::register($this);
 		<?= Html::a('Exportar TXT', ['export-txt', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
 		<?= Html::a('Exportar PDF', ['export-pdf', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
 		<?= Html::a('Crear Reclamo', ['/issue/create', 'orderId' => $model->id], ['class' => 'btn btn-success']) ?>
-		<?= Html::a('Crear Envio', ['/delivery/create-order-delivery', 'orderId' => $model->id], ['class' => 'btn btn-success']) ?>
     </p>
 
 	<div id="orderDetail" style="display: none;">

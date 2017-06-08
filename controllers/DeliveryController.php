@@ -50,7 +50,7 @@ class DeliveryController extends Controller
 						'roles' => ['admin', 'author'],
 					],
 					[
-						'actions' => ['index', 'create-order-delivery', 'create-issue-delivery'],
+						'actions' => ['index'],
 						'roles' => ['@'],
 					],
 				],
