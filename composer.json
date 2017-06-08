@@ -38,8 +38,7 @@
 	    "kartik-v/yii2-widget-select2": "@dev",
 	    "kartik-v/yii2-editable": "*",
 	    "miloschuman/yii2-highcharts-widget": "dev-master",
-	    "yiisoft/yii2-jui": "~2.0.0",
-        "codeonyii/yii2-at-least-validator": "^1.1"
+	    "yiisoft/yii2-jui": "~2.0.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

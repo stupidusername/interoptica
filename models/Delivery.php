@@ -2,30 +2,36 @@
 
 namespace app\models;
 
-use codeonyii\yii2validators\AtLeastValidator;
 use Yii;
 use yii\base\Exception;
+use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
  * This is the model class for table "delivery".
  *
  * @property integer $id
  * @property integer $user_id
- * @property integer $order_id
- * @property integer $issue_id
  * @property string $transport
  * @property integer $deleted
  *
  * @property User $user
- * @property Issue $issue
- * @property Order $order
  * @property integer $type
  * @property string $typeLabel
+ * @property DeliveryStatus[] $deliveryStatuses
+ * @property DeliveryStatus $deliveryStatus
+ * @property DeliveryStatus $enteredDeliveryStatus
+ * @property Order[] $orders
+ * @property Issue[] $issues
  */
 class Delivery extends \yii\db\ActiveRecord
 {
-	const TYPE_ORDER = 0;
-	const TYPE_ISSUE = 1;
+	const SCENARIO_UPDATE = 'update';
+	
+	/**
+	 * The last order status saved
+	 * @var integer
+	 */
+	public $status;
 
 	/**
 	 * @inheritdoc
@@ -34,6 +40,82 @@ class Delivery extends \yii\db\ActiveRecord
 	{
 		return 'delivery';
 	}
+	
+	/** 
+	* @inheritdoc 
+	*/
+	public function behaviors() {
+		return [
+			'softDeleteBehavior' => [
+				'class' => SoftDeleteBehavior::className(),
+				'softDeleteAttributeValues' => [
+					'deleted' => true
+				],
+				'replaceRegularDelete' => true
+			],
+		];
+	}
+	
+	/**
+	* @inheritdoc
+	*/
+	public static function find() {
+		return parent::find()->where(['or', [self::tableName() . '.deleted' => null], [self::tableName() . '.deleted' => 0]]);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function beforeSave($insert) {
+		if (parent::beforeSave($insert)) {
+			if ($insert) {
+				$this->user_id = Yii::$app->user->id;
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function afterSave($insert, $changedAttributes) {
+		if ($insert) {
+			$this->status = DeliveryStatus::STATUS_WAITING_FOR_TRANSPORT;
+		}
+		$oldStatus = $this->deliveryStatus;
+		// Save delivery status if there was a change
+		if ($this->status != DeliveryStatus::STATUS_ERROR && (!$oldStatus || $oldStatus->status != $this->status)) {
+			$deliveryStatus = new DeliveryStatus();
+			$deliveryStatus->delivery_id = $this->id;
+			$deliveryStatus->user_id = Yii::$app->user->id;
+			$deliveryStatus->status = $this->status;
+			$deliveryStatus->create_datetime = gmdate('Y-m-d H:i:s');
+			$deliveryStatus->save(false);
+			$this->updateEntriesStatus();
+		}
+		parent::afterSave($insert, $changedAttributes);
+	}
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function afterFind() {
+		$this->status = $this->deliveryStatus ? $this->deliveryStatus->status : null;
+		// Set error status if any entry differs from the delivery
+		foreach ($this->orders as $order) {
+			if ($this->status !== array_search($order->status, self::orderStatusMap()) {
+				$this->status = DeliveryStatus::STATUS_ERROR;
+			}
+		}
+		foreach ($this->issues as $issue) {
+			if ($this->status !== array_search($issue->status, self::issueStatusMap()) {
+				$this->status = DeliveryStatus::STATUS_ERROR;
+			}
+		}
+		parent::afterFind();
+	}
 
 	/**
 	 * @inheritdoc
@@ -41,15 +123,13 @@ class Delivery extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['order_id', 'issue_id', 'deleted'], 'integer'],
 			[['transport'], 'string', 'max' => 255],
-			[['issue_id'], 'exist', 'skipOnError' => true, 'targetClass' => Issue::className(), 'targetAttribute' => ['issue_id' => 'id']],
-			[['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
-			[['order_id', 'issue_id'], AtLeastValidator::className(), 'in' => ['order_id', 'issue_id']],
-			[['order_id', 'issue_id'], 'unique'],
+			[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+			[['status'], 'required', 'on' => SCENARIO_UPDATE],
+			[['transport'], 'required', 'when' => function() { return $this->status >= Delivery::STATUS_SENT; }],
 		];
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -72,19 +152,8 @@ class Delivery extends \yii\db\ActiveRecord
 		return [
 			'id' => 'ID',
 			'user_id' => 'ID Usuario',
-			'order_id' => 'ID Pedido',
-			'issue_id' => 'ID Reclamo',
+			'status' => 'Estado',
 			'transport' => 'Transporte',
-		];
-	}
-
-	/**
-	 * @return string[]
-	 */
-	public static function typeLabels() {
-		return [
-			self::TYPE_ORDER => 'Pedido',
-			self::TYPE_ISSUE => 'Reclamo',
 		];
 	}
 
@@ -94,38 +163,75 @@ class Delivery extends \yii\db\ActiveRecord
 	public function getUser() {
 		return $this->hasOne(User::className(), ['id' => 'user_id']);
 	}
-
+	
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getIssue()
+	public function getDeliveryStatuses()
 	{
-		return $this->hasOne(Issue::className(), ['id' => 'issue_id']);
+		return $this->hasMany(DeliveryStatus::className(), ['delivery_id' => 'id']);
 	}
 
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getOrder()
+	public function getDeliveryStatus()
 	{
-		return $this->hasOne(Order::className(), ['id' => 'order_id']);
+		return $this->hasOne(DeliveryStatus::className(), ['delivery_id' => 'id'])->orderBy(['id' => SORT_DESC]);
 	}
 
 	/**
-	 * @return integer
+	 * @return \yii\db\ActiveQuery
 	 */
-	public function getType() {
-		if ($this->order_id !== null xor $this->issue_id !== null) {
-			return $this->order_id !== null ? self::TYPE_ORDER : TYPE_ISSUE;
-		} else {
-			throw new Exception('Delivery::order_id and Delivery::issue_id cannot be used at the same time.');
+	public function getEnteredDeliveryStatus()
+	{
+		return $this->hasOne(DeliveryStatus::className(), ['delivery_id' => 'id'])->andWhere(['status' => DeliveryStatus::STATUS_WAITING_FOR_TRANSPORT]);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getOrders() {
+		return $this->hasMany(Order::className(), ['id' => 'order_id'])->viaTable(DeliveryOrder::tableName(), ['delivery_id' => 'id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getIssues() {
+		return $this->hasMany(Issue::className(), ['id' => 'issue_id'])->viaTable(DeliveryIssue::tableName(), ['delivery_id' => 'id']);
+	}
+
+	/**
+	 * @return integer[]
+	 */
+	public static function orderStatusMap() {
+		return [
+			DeliveryStatus::STATUS_WAITING_FOR_TRANSPORT => OrderStatus::STATUS_WAITING_FOR_TRANSPORT,
+			DeliveryStatus::STATUS_SENT => OrderStatus::STATUS_SENT,
+			DeliveryStatus::STATUS_DELIVERED => Orderstatus::STATUS_DELIVERED,
+		];
+	}
+
+	/**
+	 * @return integer[]
+	 */
+	public static function statusStatusMap() {
+		return [
+			DeliveryStatus::STATUS_WAITING_FOR_TRANSPORT => IssueStatus::STATUS_WAITING_FOR_TRANSPORT,
+			DeliveryStatus::STATUS_SENT => IssueStatus::STATUS_SENT,
+			DeliveryStatus::STATUS_DELIVERED => IssueStatus::STATUS_DELIVERED,
+		];
+	}
+
+	private function updateEntriesStatus() {
+		foreach ($this->orders as $order) {
+			$order->status = self::orderStatusMap()[$this->status];
+			$order->save();
 		}
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getTypeLabel() {
-		return self::typeLabels()[$this->type];
+		foreach ($this->issues as $issue) {
+			$issue->status = self::issueStatusMap()[$this->status];
+			$issue->save();
+		}
 	}
 }

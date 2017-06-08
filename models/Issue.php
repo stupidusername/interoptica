@@ -32,7 +32,7 @@ class Issue extends \yii\db\ActiveRecord
 	const SCENARIO_UPDATE = 'update';
 	
 	/**
-	 * The last order status saved
+	 * The last issue status saved
 	 * @var integer
 	 */
 	public $status;
@@ -58,12 +58,13 @@ class Issue extends \yii\db\ActiveRecord
 		];
 	}
 	
-	/** @inheritdoc */
-	public static function find()
-    {
-        return parent::find()->where(['or', [self::tableName() . '.deleted' => null], [self::tableName() . '.deleted' => 0]]);
-    }
-	
+	/**
+	* @inheritdoc
+	*/
+	public static function find() {
+		return parent::find()->where(['or', [self::tableName() . '.deleted' => null], [self::tableName() . '.deleted' => 0]]);
+	}
+
 	/**
 	 * @inheritdoc
 	 */
