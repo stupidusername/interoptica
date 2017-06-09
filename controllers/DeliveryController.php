@@ -5,6 +5,8 @@ namespace app\controllers;
 use Yii;
 use app\filters\AuthorRule;
 use app\models\Delivery;
+use app\models\DeliveryIssue;
+use app\models\DeliveryOrder;
 use app\models\DeliverySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -43,17 +45,21 @@ class DeliveryController extends Controller
 				],
 				'rules' => [
 					[
-						'actions' => ['delete'],
+						'actions' => ['edit', 'delete', 'add-order', 'add-issue', 'delete-order', 'delete-issue'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('id'));
 						},
 						'roles' => ['admin', 'author'],
 					],
 					[
-						'actions' => ['index'],
+						'actions' => ['index', 'create', 'view'],
 						'roles' => ['@'],
 					],
 				],
+			],
+			'status' => [
+				'class' => DeliveryStatusRule::className(),
+				'only' => ['edit', 'delete', 'add-order', 'add-issue', 'delete-order', 'delete-issue'],
 			],
 		];
 	}
@@ -96,6 +102,38 @@ class DeliveryController extends Controller
 	protected function findModel($id) {
 		if ($this->model || ($this->model = Delivery::findOne($id)) !== null) {
 			return $this->model;
+		} else {
+			throw new NotFoundHttpException('The requested page does not exist.');
+		}
+	}	
+	
+	/**
+	 * Finds the DeliveryOrder model.
+	 * If the model is not found, a 404 HTTP exception will be thrown.
+	 * @param integer $deliveryId
+	 * @param integer $orderId
+	 * @return DeliveryOrder the loaded model
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	protected function findDeliveryOrderModel($deliveryId, $orderId) {
+		if (($model = DeliveryOrder::findOne(['delivery_id' => $deliveryId, 'order_id' => $orderId])) !== null) {
+			return $model;
+		} else {
+			throw new NotFoundHttpException('The requested page does not exist.');
+		}
+	}
+
+	/**
+	 * Finds the DeliveryIssue model.
+	 * If the model is not found, a 404 HTTP exception will be thrown.
+	 * @param integer $deliveryId
+	 * @param integer $issueId
+	 * @return DeliveryIssue the loaded model
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	protected function findDeliveryIssueModel($deliveryId, $issueId) {
+		if (($model = DeliveryIssue::findOne(['delivery_id' => $deliveryId, 'issue_id' => $issueId])) !== null) {
+			return $model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
 		}

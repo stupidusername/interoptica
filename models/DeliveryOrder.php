@@ -29,7 +29,7 @@ class DeliveryOrder extends \yii\db\ActiveRecord
 	 */
 	public function afterSave($insert, $changedAttributes) {
 		if ($insert) {
-			$this->order->status = OrderStatus::STATUS_WAITING_FOR_TRANSPORT;
+			$this->order->status = Delivery::orderStatusMap()[$this->delivery->status];
 			$this->order->save();
 		}
 		parent::afterSave($insert, $changedAttributes);
@@ -45,7 +45,12 @@ class DeliveryOrder extends \yii\db\ActiveRecord
 			[['delivery_id', 'order_id'], 'required'],
 			[['delivery_id'], 'exist', 'skipOnError' => true, 'targetClass' => Delivery::className(), 'targetAttribute' => ['delivery_id' => 'id']],
 			[['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
-			[['order_id'], 'unique', 'when' => function() { return count(self::find()->andWhere(['order_id' => $this->issue_id])->innerJoinWith('delivery')); }],
+			[
+				['order_id'],
+				'unique',
+				'when' => function() { return count(self::find()->andWhere(['order_id' => $this->order_id])->innerJoinWith('delivery')); },
+				'message' => 'Este pedido ya se encuentra asociado a un envio.',
+			],
 			[['order_id'], 'unique', 'targetAttribute' => ['delivery_id', 'order_id'], 'message' => 'El pedido ya se encuentra en el envio.'],
 		];
 	}
