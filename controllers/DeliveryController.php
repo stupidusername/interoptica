@@ -29,16 +29,19 @@ class DeliveryController extends Controller
 	 */
 	public function actions() {
 		return ArrayHelper::merge(parent::actions(), [
-			'edit' => [
+			'edit-status' => [
 				'class' => EditableColumnAction::className(),
 				'modelClass' => Delivery::className(),
-				'scenario' => Delivery::SCENARIO_GRID,
+				'scenario' => Delivery::SCENARIO_EDIT,
 				'outputValue' => function ($model, $attribute, $key, $index) {
-					if ($attribute == 'status') {
-						return $model->statusLabel;
-					}
+					return $model->status->statusLabel;
 				},
-			]
+			],
+			'edit-transport' => [
+				'class' => EditableColumnAction::className(),
+				'modelClass' => Delivery::className(),
+				'scenario' => Delivery::SCENARIO_EDIT,
+			],
 		]);
 	}
 
@@ -64,9 +67,16 @@ class DeliveryController extends Controller
 				],
 				'rules' => [
 					[
-						'actions' => ['edit', 'delete', 'add-order', 'add-issue', 'delete-order', 'delete-issue'],
+						'actions' => ['edit-status', 'edit-transport', 'delete'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('id'));
+						},
+						'roles' => ['admin', 'author'],
+					],
+					[
+						'actions' => ['add-order', 'add-issue', 'delete-order', 'delete-issue'],
+						'model' => function() {
+							return $this->findModel(Yii::$app->request->getQueryParam('deliveryId'));
 						},
 						'roles' => ['admin', 'author'],
 					],
@@ -78,7 +88,7 @@ class DeliveryController extends Controller
 			],
 			'status' => [
 				'class' => DeliveryStatusRule::className(),
-				'only' => ['edit', 'delete', 'add-order', 'add-issue', 'delete-order', 'delete-issue'],
+				'only' => ['edit-transport', 'add-order', 'add-issue', 'delete-order', 'delete-issue'],
 			],
 		];
 	}
@@ -117,7 +127,7 @@ class DeliveryController extends Controller
 	 */
 	public function actionCreate()
 	{
-		(new Order())->save();
+		(new Delivery())->save();
 
 		return $this->redirect(['index']);
 	}
