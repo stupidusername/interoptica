@@ -25,7 +25,7 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  */
 class Delivery extends \yii\db\ActiveRecord
 {
-	const SCENARIO_UPDATE = 'update';
+	const SCENARIO_EDIT = 'edit';
 	
 	/**
 	 * The last order status saved
@@ -125,7 +125,7 @@ class Delivery extends \yii\db\ActiveRecord
 		return [
 			[['transport'], 'string', 'max' => 255],
 			[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
-			[['status'], 'required', 'on' => SCENARIO_UPDATE],
+			[['status'], 'required', 'on' => SCENARIO_EDIT],
 			[['transport'], 'required', 'when' => function() { return $this->status >= Delivery::STATUS_SENT; }],
 		];
 	}

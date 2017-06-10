@@ -205,7 +205,6 @@ class OrderController extends Controller
 	
 	/**
      * Deletes an existing OrderProduct model.
-     * If deletion is successful, the browser will be redirected to the 'view' page.
      * @param integer $orderId
 	 * @param integer $productId
      * @return mixed

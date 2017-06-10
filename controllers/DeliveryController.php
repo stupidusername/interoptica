@@ -8,6 +8,7 @@ use app\models\Delivery;
 use app\models\DeliveryIssue;
 use app\models\DeliveryOrder;
 use app\models\DeliverySearch;
+use kartik\grid\EditableColumnAction;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -22,6 +23,24 @@ class DeliveryController extends Controller
 	 * @var \app\models\Delivery
 	 */
 	public $model;
+
+	/**
+	 * @inheritdoc
+	 */
+	public function actions() {
+		return ArrayHelper::merge(parent::actions(), [
+			'edit' => [
+				'class' => EditableColumnAction::className(),
+				'modelClass' => Delivery::className(),
+				'scenario' => Delivery::SCENARIO_GRID,
+				'outputValue' => function ($model, $attribute, $key, $index) {
+					if ($attribute == 'status') {
+						return $model->statusLabel;
+					}
+				},
+			]
+		]);
+	}
 
 	/**
 	 * @inheritdoc
@@ -80,6 +99,30 @@ class DeliveryController extends Controller
 	}
 
 	/**
+	 * Displays a single Delivery model.
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionView($id)
+	{
+		return $this->render('view', [
+			'model' => $this->findModel($id),
+		]);
+	}
+
+	/**
+	 * Creates a new Delivery model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 * @return mixed
+	 */
+	public function actionCreate()
+	{
+		(new Order())->save();
+
+		return $this->redirect(['index']);
+	}
+
+	/**
 	 * Deletes an existing Delivery model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id
@@ -90,6 +133,70 @@ class DeliveryController extends Controller
 		$this->findModel($id)->delete();
 
 		return $this->redirect(['index']);
+	}
+
+	/**
+	 * Adds an order to an existing Delivery.
+	 * @param integer $deliveryId
+	 */
+	public function actionAddOrder($deliveryId) {
+		$delivery = $this->findModel($deliveryId);
+		$model = new DeliveryOrder();
+		$model->delivery_id = $delivery->id;
+
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			Yii::$app->response->format = Response::FORMAT_JSON;
+			return ['success' => true];
+		} else {
+			return $this->renderAjax('add-entry', [
+				'model' => $model,
+			]);
+		}
+	}
+
+	/**
+	 * Adds an issue to an existing Delivery.
+	 * @param integer $deliveryId
+	 */
+	public function actionAddIssue($issueId) {
+		$delivery = $this->findModel($deliveryId);
+		$model = new DeliveryIssue();
+		$model->delivery_id = $delivery->id;
+
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			Yii::$app->response->format = Response::FORMAT_JSON;
+			return ['success' => true];
+		} else {
+			return $this->renderAjax('add-entry', [
+				'model' => $model,
+			]);
+		}
+	}
+
+	/**
+	 * Deletes an existing DeliveryOrder model.
+	 * @param integer $deliveryId
+	 * @param integer $orderId
+	 * @return mixed
+	 */
+	public function actionDeleteOrder($deliveryId, $orderId)
+	{
+		$this->findDeliveryOrderModel($deliveryId, $orderId)->delete();
+		Yii::$app->response->format = Response::FORMAT_JSON;
+		return ['success' => true];
+	}
+
+	/**
+	 * Deletes an existing DeliveryIssue model.
+	 * @param integer $deliveryId
+	 * @param integer $issueId
+	 * @return mixed
+	 */
+	public function actionDeleteIssue($deliveryId, $issueId)
+	{
+		$this->findDeliveryIssueModel($deliveryId, $issueId)->delete();
+		Yii::$app->response->format = Response::FORMAT_JSON;
+		return ['success' => true];
 	}
 
 	/**
@@ -106,7 +213,7 @@ class DeliveryController extends Controller
 			throw new NotFoundHttpException('The requested page does not exist.');
 		}
 	}	
-	
+
 	/**
 	 * Finds the DeliveryOrder model.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
