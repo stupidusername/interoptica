@@ -105,12 +105,12 @@ class Delivery extends \yii\db\ActiveRecord
 		$this->status = $this->deliveryStatus ? $this->deliveryStatus->status : null;
 		// Set error status if any entry differs from the delivery
 		foreach ($this->orders as $order) {
-			if ($this->status !== array_search($order->status, self::orderStatusMap()) {
+			if ($this->status !== array_search($order->status, self::orderStatusMap())) {
 				$this->status = DeliveryStatus::STATUS_ERROR;
 			}
 		}
 		foreach ($this->issues as $issue) {
-			if ($this->status !== array_search($issue->status, self::issueStatusMap()) {
+			if ($this->status !== array_search($issue->status, self::issueStatusMap())) {
 				$this->status = DeliveryStatus::STATUS_ERROR;
 			}
 		}
@@ -125,23 +125,9 @@ class Delivery extends \yii\db\ActiveRecord
 		return [
 			[['transport'], 'string', 'max' => 255],
 			[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
-			[['status'], 'required', 'on' => SCENARIO_EDIT],
+			[['status'], 'required', 'on' => self::SCENARIO_EDIT],
 			[['transport'], 'required', 'when' => function() { return $this->status >= Delivery::STATUS_SENT; }],
 		];
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function beforeSave($insert) {
-		if (parent::beforeSave($insert)) {
-			if ($insert) {
-				$this->user_id = Yii::$app->user->id;
-			}
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	/**

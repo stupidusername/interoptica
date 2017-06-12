@@ -62,8 +62,8 @@ class DeliveryIssue extends \yii\db\ActiveRecord
 	{
 		return [
 			'id' => 'ID',
-			'delivery_id' => 'Delivery ID',
-			'issue_id' => 'Issue ID',
+			'delivery_id' => 'ID Envio',
+			'issue_id' => 'ID Reclamo',
 		];
 	}
 

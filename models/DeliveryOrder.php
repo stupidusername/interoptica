@@ -62,8 +62,8 @@ class DeliveryOrder extends \yii\db\ActiveRecord
 	{
 		return [
 			'id' => 'ID',
-			'delivery_id' => 'Delivery ID',
-			'order_id' => 'Order ID',
+			'delivery_id' => 'ID Envio',
+			'order_id' => 'ID Pedido',
 		];
 	}
 
