@@ -129,9 +129,10 @@ class DeliveryController extends Controller
 	 */
 	public function actionCreate()
 	{
-		(new Delivery())->save();
+		$model = new Delivery();
+		$model->save();
 
-		return $this->redirect(['index']);
+		return $this->redirect(['view', 'id' => $model->id]);
 	}
 
 	/**

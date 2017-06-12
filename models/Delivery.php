@@ -126,7 +126,7 @@ class Delivery extends \yii\db\ActiveRecord
 			[['transport'], 'string', 'max' => 255],
 			[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
 			[['status'], 'required', 'on' => self::SCENARIO_EDIT],
-			[['transport'], 'required', 'when' => function() { return $this->status >= Delivery::STATUS_SENT; }],
+			[['transport'], 'required', 'when' => function() { return $this->status >= DeliveryStatus::STATUS_SENT; }],
 		];
 	}
 

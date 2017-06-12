@@ -11,6 +11,7 @@ use Yii;
  * @property integer $delivery_id
  * @property integer $status
  * @property string $create_datetime
+ * @property integer $user_id
  *
  * @property string $statusLabel
  * @property Delivery $delivery
@@ -39,6 +40,7 @@ class DeliveryStatus extends \yii\db\ActiveRecord
 			[['delivery_id', 'status'], 'integer'],
 			[['create_datetime'], 'safe'],
 			[['delivery_id'], 'exist', 'skipOnError' => true, 'targetClass' => Delivery::className(), 'targetAttribute' => ['delivery_id' => 'id']],
+			[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
 		];
 	}
 
@@ -52,6 +54,7 @@ class DeliveryStatus extends \yii\db\ActiveRecord
 			'delivery_id' => 'ID Entrega',
 			'status' => 'Estado',
 			'create_datetime' => 'Fecha',
+			'user_id' => 'ID Usuario',
 		];
 	}
 
@@ -60,10 +63,10 @@ class DeliveryStatus extends \yii\db\ActiveRecord
 	 */
 	public static function statusLabels() {
 		return [
-			self::TYPE_ERROR => 'Error',
-			self::TYPE_WAITING_FOR_TRASNPORT => 'Esperando transporte',
-			self::TYPE_SENT => 'Enviado',
-			self::TYPE_DELIVERED => 'Entregado',
+			self::STATUS_ERROR => 'Error',
+			self::STATUS_WAITING_FOR_TRANSPORT => 'Esperando transporte',
+			self::STATUS_SENT => 'Enviado',
+			self::STATUS_DELIVERED => 'Entregado',
 		];
 	}
 
@@ -88,5 +91,13 @@ class DeliveryStatus extends \yii\db\ActiveRecord
 	 */
 	public static function getLastStatuses() {
 		return self::find()->select(['id' => 'max(id)'])->asArray()->groupBy('delivery_id');
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getUser()
+	{
+		return $this->hasOne(User::className(), ['id' => 'user_id']);
 	}
 }

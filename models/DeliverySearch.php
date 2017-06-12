@@ -18,7 +18,7 @@ class DeliverySearch extends Delivery
 	public function rules()
 	{
 		return [
-			[['id', 'status'], 'integer'],
+			[['id', 'status', 'user_id'], 'integer'],
 			[['transport'], 'safe'],
 		];
 	}
@@ -60,6 +60,7 @@ class DeliverySearch extends Delivery
 		// grid filtering conditions
 		$query->andFilterWhere([
 			'id' => $this->id,
+			'user_id' => $this->user_id,
 		]);
 
 		$query->andFilterWhere(['like', 'transport', $this->transport]);
