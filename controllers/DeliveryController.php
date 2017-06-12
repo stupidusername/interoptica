@@ -161,7 +161,7 @@ class DeliveryController extends Controller
 			Yii::$app->response->format = Response::FORMAT_JSON;
 			return ['success' => true];
 		} else {
-			return $this->renderAjax('add-entry', [
+			return $this->renderAjax('add-order', [
 				'model' => $model,
 			]);
 		}
@@ -180,7 +180,7 @@ class DeliveryController extends Controller
 			Yii::$app->response->format = Response::FORMAT_JSON;
 			return ['success' => true];
 		} else {
-			return $this->renderAjax('add-entry', [
+			return $this->renderAjax('add-issue', [
 				'model' => $model,
 			]);
 		}
