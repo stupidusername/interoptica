@@ -81,4 +81,12 @@ class DeliveryStatus extends \yii\db\ActiveRecord
 	public function getStatusLabel() {
 		return self::statusLabels()[$this->status];
 	}
+
+	/**
+	 * Get last status of each delivery
+	 * @return \yii\db\ActiveQuery
+	 */
+	public static function getLastStatuses() {
+		return self::find()->select(['id' => 'max(id)'])->asArray()->groupBy('delivery_id');
+	}
 }

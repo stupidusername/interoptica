@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\DeliverySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Deliveries';
+$this->title = 'Envios';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="delivery-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Delivery', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Envio', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -25,8 +25,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'order_id',
-            'issue_id',
             'transport',
             'deleted',
 

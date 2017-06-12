@@ -11,7 +11,7 @@ use Yii;
  * This rule only allows to edit entries of deliveries that are
  * in a DeliveryStatus::STATUS_WAITING_FOR_TRANSPORT state
  */
-class IssueStatusRule extends ActionFilter
+class DeliveryStatusRule extends ActionFilter
 {
     /**
      * This method is invoked right before an action is to be executed (after all possible filters.)
