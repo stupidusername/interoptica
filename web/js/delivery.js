@@ -1,44 +1,41 @@
 $(document).ready(function () {
 	
+	var addEntryUrl;
+
 	var focus = function () {
 		var timer = setInterval(function () {
-			if ($('#orderproduct-product_id').hasClass('select2-hidden-accessible')) {
+			var field = $('#deliveryorder-order_id');
+			if (!field) {
+				field = $('#deliveryissue-issue_id');
+			}
+			if (field.hasClass('select2-hidden-accessible')) {
 				$('.select2-selection').focus();
-				$('#orderproduct-product_id').on('select2:select', function () {
-					$('#orderproduct-quantity').focus();
-				});
 				clearInterval(timer);
 			}
 		}, 25);
 	};
 	
-	var setUpUpdateButtons = function (domElem) {
-		domElem.on('click', '.productUpdate', function (event) {
-			event.preventDefault();
-			$("#addEntry").kbModalAjax({url: $(this).attr('href')});
-			$('#addEntry').modal('show');
-		});
-	};
-	
-	var addEntryUrl = $('#addEntryButton').attr('url');
 	
 	var showAddEntryModal = function() {
 		$('#addEntry').kbModalAjax({url: addEntryUrl}); $('#addEntry').modal('show');
 	};
 	
-	$('#addEntryButton').on('click', function () {
+	$('.addEntryButton').on('click', function () {
+		addEntryUrl = $(this).attr('url');
 		showAddEntryModal();
 	});
 	
 	// refresh order details periodically
 	setInterval(function () {
-		$.pjax.reload({container: '#orderSummary'}).done(function() {
-			$.pjax.reload({container: '#pendingGridview'});
+		$.pjax.reload({container: '#deliveryDetail'}).done(function() {
+			$.pjax.reload({container: '#entriesGridviews'});
 		});
 	}, 30000);
 	
 	$('#addEntry').on('kbModalSubmitSuccess', function (event, xhr, settings) {
-		$.pjax.reload({container: '#productsGridview'});
+		$.pjax.reload({container: '#entriesGridviews'}).done(function() {
+			$.pjax.reload({container: '#deliveryDetail'});
+		});
 		showAddEntryModal();
 	});
 	
@@ -51,20 +48,18 @@ $(document).ready(function () {
 		setUpUpdateButtons($('#addEntry'));
 	});
 
-	$(document).on('click', '.productDelete', function (event) {
+	$(document).on('click', '.entryDelete', function (event) {
 		event.preventDefault();
 		var url = $(this).attr('href');
 		jQuery.ajax({
 			type: 'POST',
 			url: url,
 			success: function (data, status, xhr) {
-				$.pjax.reload({container: '#productsGridview'});
+				$.pjax.reload({container: '#entriesGridviews'});
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				alert(jqXHR.responseText);
 			}
 		});
 	});
-	
-	setUpUpdateButtons($(document));
 });

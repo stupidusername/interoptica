@@ -171,7 +171,7 @@ class DeliveryController extends Controller
 	 * Adds an issue to an existing Delivery.
 	 * @param integer $deliveryId
 	 */
-	public function actionAddIssue($issueId) {
+	public function actionAddIssue($deliveryId) {
 		$delivery = $this->findModel($deliveryId);
 		$model = new DeliveryIssue();
 		$model->delivery_id = $delivery->id;

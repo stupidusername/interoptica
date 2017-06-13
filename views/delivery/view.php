@@ -102,6 +102,21 @@ GridView::widget([
 			'class' => 'yii\grid\ActionColumn',
 			'template' => '{delete}',
 		],
+		[
+			'class' => 'yii\grid\ActionColumn',
+			'template' => '{delete}',
+			'urlCreator' => function ($action, $model, $key, $index, $actionColumn) {
+				switch ($action) {
+				case 'delete':
+					return Url::to(['delete-order', 'deliveryId' => $model->delivery_id, 'orderId' => $model->product_id]);
+				}
+			},
+			'buttons' => [
+				'delete' => function ($url, $model, $key) {
+					return Html::a(Html::tag('span', '', ['class' => "glyphicon glyphicon-trash"]), $url, ['class' => 'entryDelete']);
+				},
+			],
+		],
 	],
 	'dataProvider' => new ActiveDataProvider([
 		'query' => $model->getOrders()->with(['orderStatus', 'customer'])->orderBy(['id' => SORT_DESC]),
@@ -114,7 +129,7 @@ GridView::widget([
 		<h3>Reclamos</h3>
 
 	<p>
-		<?= Html::button('Agregar Producto', ['class' => 'btn btn-success addEntryButton', 'url' => "$addIssueUrl"]) ?>
+		<?= Html::button('Agregar Reclamo', ['class' => 'btn btn-success addEntryButton', 'url' => "$addIssueUrl"]) ?>
 	</p>
 
 <?=
@@ -140,7 +155,7 @@ GridView::widget([
 			},
 			'buttons' => [
 				'delete' => function ($url, $model, $key) {
-					return Html::a(Html::tag('span', '', ['class' => "glyphicon glyphicon-trash"]), $url, ['class' => 'productDelete']);
+					return Html::a(Html::tag('span', '', ['class' => "glyphicon glyphicon-trash"]), $url, ['class' => 'entryDelete']);
 				},
 			],
 		],
