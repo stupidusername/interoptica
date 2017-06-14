@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\filters\AuthorRule;
 use app\filters\IssueStatusRule;
+use app\models\Customer;
 use app\models\Issue;
 use app\models\IssueComment;
 use app\models\IssueProduct;
@@ -25,54 +26,54 @@ use yii\web\Response;
 class IssueController extends Controller
 {
 	public $model = null;
-	
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
+
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors()
+	{
+		return [
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'delete' => ['POST'],
+				],
+			],
 			'access' => [
-                'class' => AccessControl::className(),
-                'ruleConfig' => [
-                    'class' => AuthorRule::className(),
+				'class' => AccessControl::className(),
+				'ruleConfig' => [
+					'class' => AuthorRule::className(),
 					'modelField' => 'model',
 					'authorIdAttribute' => 'user_id',
 					'allow' => true,
-                ],
-                'rules' => [
-                    [
-                        'actions' => ['update', 'delete'],
+				],
+				'rules' => [
+					[
+						'actions' => ['update', 'delete'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('id'));
 						},
 						'roles' => ['admin', 'author'],
-                    ],
+					],
 					[
-                        'actions' => ['add-entry', 'update-entry', 'delete-entry'],
+						'actions' => ['add-entry', 'update-entry', 'delete-entry'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('issueId'));
 						},
 						'roles' => ['admin', 'author'],
-                    ],
+					],
 					[
-						'actions' => ['index', 'view', 'statistics', 'fail-summary', 'create', 'add-comment', 'get-envelope'],
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
+						'actions' => ['index', 'view', 'statistics', 'fail-summary', 'create', 'add-comment', 'get-envelope', 'list'],
+						'roles' => ['@'],
+					],
+				],
+			],
 			'status' => [
-                'class' => IssueStatusRule::className(),
-                'only' => ['delete', 'add-entry', 'update-entry', 'delete-entry'],
-            ],
-        ];
-    }
+				'class' => IssueStatusRule::className(),
+				'only' => ['delete', 'add-entry', 'update-entry', 'delete-entry'],
+			],
+		];
+	}
 
 	/**
 	 * Lists all Issue models.
@@ -89,47 +90,47 @@ class IssueController extends Controller
 			'dataProvider' => $dataProvider,
 		]);
 	}
-	
-	 /**
-     * Render fail statistics.
-     * @return mixed
-     */
-    public function actionStatistics()
-    {
-        return $this->render('statistics');
-    }
-	
+
 	/**
-     * Lists all IssueProduct models.
-     * @return mixed
-     */
-    public function actionFailSummary()
-    {
-        $searchModel = new IssueProductSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+	 * Render fail statistics.
+	 * @return mixed
+	 */
+	public function actionStatistics()
+	{
+		return $this->render('statistics');
+	}
+
+	/**
+	 * Lists all IssueProduct models.
+	 * @return mixed
+	 */
+	public function actionFailSummary()
+	{
+		$searchModel = new IssueProductSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
-		
+
 		// data provider used for export
 		$exportDataProvider = $dataProvider;
 		if (Yii::$app->request->isPost) {
 			$exportDataProvider = $searchModel->search(Yii::$app->request->queryParams);
 			$exportDataProvider->pagination->pageSize = 0;
 		}
-		
-        return $this->render('fail-summary', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-			'exportDataProvider' => $exportDataProvider,
-        ]);
-    }
 
-    /**
-     * Displays a single Issue model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
+		return $this->render('fail-summary', [
+			'searchModel' => $searchModel,
+			'dataProvider' => $dataProvider,
+			'exportDataProvider' => $exportDataProvider,
+		]);
+	}
+
+	/**
+	 * Displays a single Issue model.
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionView($id)
+	{
 		$model = $this->findModel($id);
 		if (Yii::$app->request->isPost) {
 			$model->scenario = Issue::SCENARIO_VIEW;
@@ -143,20 +144,20 @@ class IssueController extends Controller
 			echo $out;
 			return;
 		}
-		
-        return $this->render('view', [
-            'model' => $model,
-        ]);
-    }
 
-    /**
-     * Creates a new Issue model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
+		return $this->render('view', [
+			'model' => $model,
+		]);
+	}
+
+	/**
+	 * Creates a new Issue model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $orderId
-     * @return mixed
-     */
-    public function actionCreate($orderId = null)
-    {
+	 * @return mixed
+	 */
+	public function actionCreate($orderId = null)
+	{
 		$model = new Issue();
 		$order = Order::findOne($orderId);
 		if ($order) {
@@ -164,47 +165,47 @@ class IssueController extends Controller
 			$model->order_id = $order->id;
 		}
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['view', 'id' => $model->id]);
+		} else {
+			return $this->render('create', [
+				'model' => $model,
+			]);
+		}
+	}
 
-    /**
-     * Updates an existing Issue model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
+	/**
+	 * Updates an existing Issue model.
+	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionUpdate($id)
+	{
+		$model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['view', 'id' => $model->id]);
+		} else {
+			return $this->render('update', [
+				'model' => $model,
+			]);
+		}
+	}
 
-    /**
-     * Deletes an existing Issue model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
+	/**
+	 * Deletes an existing Issue model.
+	 * If deletion is successful, the browser will be redirected to the 'index' page.
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionDelete($id)
+	{
+		$this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
-    }
-	
+		return $this->redirect(['index']);
+	}
+
 	/**
 	 * Adds a product to an existing Issue.
 	 * @param integer $issueId
@@ -213,17 +214,17 @@ class IssueController extends Controller
 		$issue = $this->findModel($issueId);
 		$model = new IssueProduct();
 		$model->issue_id = $issue->id;
-		
+
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['success' => true];
-        } else {
-            return $this->renderAjax('add-entry', [
-                'model' => $model,
-            ]);
-        }
+			Yii::$app->response->format = Response::FORMAT_JSON;
+			return ['success' => true];
+		} else {
+			return $this->renderAjax('add-entry', [
+				'model' => $model,
+			]);
+		}
 	}
-	
+
 	/**
 	 * Updates an existing IssueProduct model.
 	 * @param integer $issueId
@@ -231,30 +232,30 @@ class IssueController extends Controller
 	 */
 	public function actionUpdateEntry($issueId, $productId) {
 		$model = $this->findIssueProductModel($issueId, $productId);
-		
+
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['success' => true];
-        } else {
-            return $this->renderAjax('update-entry', [
-                'model' => $model,
-            ]);
-        }
+			Yii::$app->response->format = Response::FORMAT_JSON;
+			return ['success' => true];
+		} else {
+			return $this->renderAjax('update-entry', [
+				'model' => $model,
+			]);
+		}
 	}
-	
+
 	/**
-     * Deletes an existing IssueProduct model.
-     * If deletion is successful, the browser will be redirected to the 'view' page.
-     * @param integer $issueId
+	 * Deletes an existing IssueProduct model.
+	 * If deletion is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $issueId
 	 * @param integer $productId
-     * @return mixed
-     */
-    public function actionDeleteEntry($issueId, $productId)
-    {
-        $this->findIssueProductModel($issueId, $productId)->delete();
+	 * @return mixed
+	 */
+	public function actionDeleteEntry($issueId, $productId)
+	{
+		$this->findIssueProductModel($issueId, $productId)->delete();
 		Yii::$app->response->format = Response::FORMAT_JSON;
-        return ['success' => true];
-    }
+		return ['success' => true];
+	}
 
 	/**
 	 * Adds a comment to an existing Issue.
@@ -264,17 +265,17 @@ class IssueController extends Controller
 		$issue = $this->findModel($issueId);
 		$model = new IssueComment();
 		$model->issue_id = $issue->id;
-		
+
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['success' => true];
-        } else {
-            return $this->renderAjax('add-comment', [
-                'model' => $model,
-            ]);
-        }
+			Yii::$app->response->format = Response::FORMAT_JSON;
+			return ['success' => true];
+		} else {
+			return $this->renderAjax('add-comment', [
+				'model' => $model,
+			]);
+		}
 	}
-	
+
 	/**
 	 * Gets the envelope for a given issue.
 	 * @param integer $id
@@ -301,37 +302,65 @@ class IssueController extends Controller
 		// return the pdf output as per the destination setting
 		return $pdf->render();
 	}
-	
-    /**
-     * Finds the Issue model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Issue the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if ($this->model || ($this->model = Issue::findOne($id)) !== null) {
-            return $this->model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
-	
+
 	/**
-     * Finds the IssueProduct model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $issueId
+	 * Finds the Issue model based on its primary key value.
+	 * If the model is not found, a 404 HTTP exception will be thrown.
+	 * @param integer $id
+	 * @return Issue the loaded model
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	protected function findModel($id)
+	{
+		if ($this->model || ($this->model = Issue::findOne($id)) !== null) {
+			return $this->model;
+		} else {
+			throw new NotFoundHttpException('The requested page does not exist.');
+		}
+	}
+
+	/**
+	 * Finds the IssueProduct model based on its primary key value.
+	 * If the model is not found, a 404 HTTP exception will be thrown.
+	 * @param integer $issueId
 	 * @param integer $productId
-     * @return IssueProduct the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findIssueProductModel($issueId, $productId)
-    {
-        if (($model = IssueProduct::findOne(['issue_id' => $issueId, 'product_id' => $productId])) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
+	 * @return IssueProduct the loaded model
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	protected function findIssueProductModel($issueId, $productId)
+	{
+		if (($model = IssueProduct::findOne(['issue_id' => $issueId, 'product_id' => $productId])) !== null) {
+			return $model;
+		} else {
+			throw new NotFoundHttpException('The requested page does not exist.');
+		}
+	}
+
+	/**
+	 * Builds a response for Select2 issue widget on delivery view
+	 * @param string $q
+	 * @return JSON
+	 */
+	public function actionList($q = '') {
+		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		$issuesArray = Issue::find()->andWhere([
+			'or', 
+			[Issue::tableName() . '.id' => $q],
+			[Customer::tableName() . '.gecom_id' => $q],
+			['like', Customer::tableName() . '.name', $q],
+		])->innerJoinWith([
+			'customer',
+			'issueStatus' => function ($query) {
+				$query->andWhere(['<', 'status', IssueStatus::STATUS_WAITING_FOR_TRANSPORT]);
+			}
+		])->orderBy(['id' => SORT_DESC])->asArray()->all();
+
+		$results = array_map(function ($array) {
+			return [
+				'id' => $array['id'],
+				'text' => 'Reclamo: ' . $array['id'] . ' (' . IssueStatus::statusLabels()[$array['issueStatus']['status']]  . ') - Cliente: ' . $array['customer']['name']];
+		}, $issuesArray);
+		$out = ['results' => $results];
+		return $out;
+	}
 }

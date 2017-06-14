@@ -32,21 +32,21 @@ class Order extends \yii\db\ActiveRecord
 	 */
 	const SCENARIO_VIEW = 'view';
 	const SCENARIO_UPDATE = 'update';
-	
+
 	/**
 	 * The last order status saved
 	 * @var integer 
 	 */
 	public $status;
-	
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'order';
-    }
-	
+
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName()
+	{
+		return 'order';
+	}
+
 	/**
 	 * @inheritdoc
 	 */
@@ -67,9 +67,9 @@ class Order extends \yii\db\ActiveRecord
 	 */
 	public static function find()
 	{
-		return parent::find()->where(['or', ['deleted' => null], ['deleted' => 0]]);
+		return parent::find()->where(['or', [self::tableName() . '.deleted' => null], [self::tableName() . '.deleted' => 0]]);
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -103,7 +103,7 @@ class Order extends \yii\db\ActiveRecord
 		}
 		parent::afterSave($insert, $changedAttributes);
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -111,11 +111,11 @@ class Order extends \yii\db\ActiveRecord
 		$this->status = $this->orderStatus ? $this->orderStatus->status : null;
 		parent::afterFind();
 	}
-	
+
 	public function afterSoftDelete() {
 		$this->restoreStock();
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -138,7 +138,7 @@ class Order extends \yii\db\ActiveRecord
 		}
 		return $rules;
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -164,69 +164,70 @@ class Order extends \yii\db\ActiveRecord
 		];
 	}
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUser()
-    {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
-    }
-	
 	/**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCustomer()
-    {
-        return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
-    }
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getUser()
+	{
+		return $this->hasOne(User::className(), ['id' => 'user_id']);
+	}
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTransport() {
-	    return $this->hasOne(Transport::className(), ['id' => 'transport_id']);
-    }
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getCustomer()
+	{
+		return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
+	}
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrderProducts()
-    {
-        return $this->hasMany(OrderProduct::className(), ['order_id' => 'id']);
-    }
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getTransport() {
+		return $this->hasOne(Transport::className(), ['id' => 'transport_id']);
+	}
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProducts()
-    {
-        return $this->hasMany(Product::className(), ['id' => 'product_id'])->viaTable('order_product', ['order_id' => 'id']);
-    }
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getOrderProducts()
+	{
+		return $this->hasMany(OrderProduct::className(), ['order_id' => 'id']);
+	}
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrderStatuses()
-    {
-        return $this->hasMany(OrderStatus::className(), ['order_id' => 'id']);
-    }
-	
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrderStatus()
-    {
-        return $this->hasOne(OrderStatus::className(), ['order_id' => 'id'])->orderBy(['id' => SORT_DESC]);
-    }
-	
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getEnteredOrderStatus()
-    {
-        return $this->hasOne(OrderStatus::className(), ['order_id' => 'id'])->andWhere(['status' => OrderStatus::STATUS_ENTERED]);
-    }
-	
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getProducts()
+	{
+		return $this->hasMany(Product::className(), ['id' => 'product_id'])->viaTable('order_product', ['order_id' => 'id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getOrderStatuses()
+	{
+		return $this->hasMany(OrderStatus::className(), ['order_id' => 'id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getOrderStatus()
+	{
+		$subquery = OrderStatus::find()->select('MAX(id)')->groupBy('order_id');
+		return $this->hasOne(OrderStatus::className(), ['order_id' => 'id'])->andWhere([OrderStatus::tableName() . '.id' => $subquery]);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getEnteredOrderStatus()
+	{
+		return $this->hasOne(OrderStatus::className(), ['order_id' => 'id'])->andWhere(['status' => OrderStatus::STATUS_ENTERED]);
+	}
+
 	/**
 	 * @return integer
 	 */
@@ -237,7 +238,7 @@ class Order extends \yii\db\ActiveRecord
 		}
 		return $quantity;
 	}
-	
+
 	/**
 	 * @return float
 	 */
@@ -248,7 +249,7 @@ class Order extends \yii\db\ActiveRecord
 		}
 		return $subtotal;
 	}
-	
+
 	/**
 	 * @return float
 	 */
@@ -260,14 +261,14 @@ class Order extends \yii\db\ActiveRecord
 		}
 		return $value;
 	}
-	
+
 	/**
 	 * @return float
 	 */
 	public function getTotal() {
 		return ($this->subtotal - $this->discountedFromSubtotal) * (1 + (float) Yii::$app->params['iva'] / 100);
 	}
-	
+
 	/**
 	 * Content for the exported txt file
 	 * @return string
@@ -280,15 +281,15 @@ class Order extends \yii\db\ActiveRecord
 		$orderProducts = $this->getOrderProducts()->with(['product'])->all();
 		foreach ($orderProducts as $orderProduct) {
 			$line = str_pad($date, 13) .
-					str_pad($customerGecomId, 11) .
-					str_pad($orderProduct->quantity . $orderProduct->product->gecom_code, 19) .
-					str_pad(Yii::$app->formatter->asCurrency($orderProduct->price, ''), 9) .
-					$userGecomId;
+				str_pad($customerGecomId, 11) .
+				str_pad($orderProduct->quantity . $orderProduct->product->gecom_code, 19) .
+				str_pad(Yii::$app->formatter->asCurrency($orderProduct->price, ''), 9) .
+				$userGecomId;
 			$output .= $line . "\n";
 		}
 		return $output;
 	}
-	
+
 	/**
 	 * Name for the exported txt file
 	 * @return string
@@ -296,7 +297,7 @@ class Order extends \yii\db\ActiveRecord
 	public function getTxtName() {
 		return 'nota_pedido_' . $this->id . '.txt';
 	}
-	
+
 	/**
 	 * Restores the stock to product table in case of record deletion.
 	 */

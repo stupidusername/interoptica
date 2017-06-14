@@ -95,20 +95,20 @@ GridView::widget([
 	'columns' => [
 		'id',
 		[
+			'label' => 'Cliente',
+			'value' => 'customer.displayName',
+		],
+		[
 			'label' => 'Estado',
-			'value' => 'issueStatus.statusLabel',
+			'value' => 'orderStatus.statusLabel',
 		],
 		[
 			'class' => 'yii\grid\ActionColumn',
 			'template' => '{delete}',
-		],
-		[
-			'class' => 'yii\grid\ActionColumn',
-			'template' => '{delete}',
-			'urlCreator' => function ($action, $model, $key, $index, $actionColumn) {
+			'urlCreator' => function ($action, $order, $key, $index, $actionColumn) use ($model) {
 				switch ($action) {
 				case 'delete':
-					return Url::to(['delete-order', 'deliveryId' => $model->delivery_id, 'orderId' => $model->product_id]);
+					return Url::to(['delete-order', 'deliveryId' => $model->id, 'orderId' => $order->id]);
 				}
 			},
 			'buttons' => [
@@ -137,20 +137,24 @@ GridView::widget([
 	'columns' => [
 		'id',
 		[
+			'label' => 'Cliente',
+			'value' => 'customer.displayName',
+		],
+		[
 			'label' => 'Tipo',
 			'value' => 'issueType.name',
 		],
 		[
 			'label' => 'Estado',
-			'value' => 'orderStatus.statusLabel',
+			'value' => 'issueStatus.statusLabel',
 		],
 		[
 			'class' => 'yii\grid\ActionColumn',
 			'template' => '{delete}',
-			'urlCreator' => function ($action, $model, $key, $index, $actionColumn) {
+			'urlCreator' => function ($action, $issue, $key, $index, $actionColumn) use ($model) {
 				switch ($action) {
 				case 'delete':
-					return Url::to(['delete-issue', 'deliveryId' => $model->delivery_id, 'issueId' => $model->product_id]);
+					return Url::to(['delete-issue', 'deliveryId' => $model->id, 'issueId' => $model->id]);
 				}
 			},
 			'buttons' => [

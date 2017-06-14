@@ -23,17 +23,15 @@ $this->params['breadcrumbs'][] = ['label' => 'Pedidos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 $addEntryUrl = Url::to(['add-entry', 'orderId' => $model->id]);
-$statusIds = ArrayHelper::getColumn(OrderStatus::getLastStatuses()->all(), 'id');
 $clientPendingOrdersQuery = Order::find()->andWhere(['and', ['!=', 'order.id', $model->id], ['=', 'customer_id', $model->customer_id]])
-		->innerJoinWith(['orderStatus' => function ($query) use ($statusIds) {
-			$query->andWhere(['and', ['in', 'order_status.id', $statusIds], ['<', 'status', OrderStatus::STATUS_SENT]]);
+		->innerJoinWith(['orderStatus' => function ($query) {
+			$query->andWhere(['<', 'status', OrderStatus::STATUS_SENT]);
 		}])->orderBy('order.id');
 $clientPendingOrders = $clientPendingOrdersQuery->all();
 
-$statusIds = ArrayHelper::getColumn(IssueStatus::getLastStatuses()->all(), 'id');
 $clientPendingIssuesQuery = Issue::find()->andWhere(['customer_id' => $model->customer_id])
-		->innerJoinWith(['issueType', 'issueStatus' => function ($query) use ($statusIds) {
-			$query->andWhere(['and', ['in', 'issue_status.id', $statusIds], ['<', 'status', IssueStatus::STATUS_CLOSED]]);
+		->innerJoinWith(['issueType', 'issueStatus' => function ($query) {
+			$query->andWhere(['<', 'status', IssueStatus::STATUS_CLOSED]);
 		}])->orderBy('issue.id');
 $clientPendingIssues = $clientPendingIssuesQuery->all();
 

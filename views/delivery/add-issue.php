@@ -7,19 +7,18 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\OrderProduct */
+/* @var $model app\models\IssueProduct */
 
-$this->title = 'Añadir Pedido';
+$this->title = 'Añadir Reclamo';
 ?>
-<div class="delivery-order-create">
+<div class="delivery-issue-create">
 
 	<div id="modal-header">
 		<h3><?= Html::encode($this->title) ?></h3>
 	</div>
 
 	<div id="modal-body">
-
-<div class="delivery-order-form">
+<div class="delivery-issue-form">
 
 <?php $form = ActiveForm::begin([
 	'enableClientValidation' => false,
@@ -32,18 +31,19 @@ $this->title = 'Añadir Pedido';
 ]); ?>
 
 <?=
-	$form->field($model, 'order_id')->label('Pedido')->widget(Select2::classname(), [
-		'initValueText' => $model->order_id,
-		'options' => ['placeholder' => 'Ingresar número de pedido o cliente'],
+	$form->field($model, 'issue_id')->label('Reclamo')->widget(Select2::classname(), [
+		'initValueText' => $model->issue_id,
+		'options' => ['placeholder' => 'Ingresar número de reclamo o cliente'],
 		'pluginOptions' => [
 			'minimumInputLength' => 1,
 			'ajax' => [
-				'url' => Url::to('/order/list'),
+				'url' => Url::to('/issue/list'),
 			],
 		],
 	])
 ?>
 
+	</div>
 
     <div class="form-group">
 	<?= Html::submitButton('Añadir', ['class' => 'btn btn-success']) ?>
