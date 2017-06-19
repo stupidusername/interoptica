@@ -15,7 +15,7 @@ use yii\widgets\Pjax;
 /* @var $model app\models\Delivery */
 
 $this->title = 'Envio: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Entregas', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Envios', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 $addOrderUrl = Url::to(['add-order', 'deliveryId' => $model->id]);
@@ -200,7 +200,7 @@ GridView::widget([
 		],
 	],
 	'dataProvider' => new ActiveDataProvider([
-		'query' => $model->getIssues()->with(['issueStatus', 'customer'])->orderBy(['id' => SORT_DESC]),
+		'query' => $model->getIssues()->with(['issueStatus', 'customer', 'issueType'])->orderBy(['id' => SORT_DESC]),
 		'pagination' => false,
 		'sort' => false,
 	]),

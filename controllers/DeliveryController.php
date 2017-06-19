@@ -240,7 +240,13 @@ class DeliveryController extends Controller
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id) {
-		if ($this->model || ($this->model = Delivery::findOne($id)) !== null) {
+		if (!$this->model) {
+			$this->model = Delivery::find()->andWhere(['id' => $id])->with([
+				'orders.orderStatus',
+				'issues.issueStatus',
+			])->one();
+		}
+		if ($this->model !== null) {
 			return $this->model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');

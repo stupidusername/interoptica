@@ -41,7 +41,15 @@ class DeliverySearch extends Delivery
 	 */
 	public function search($params)
 	{
-		$query = Delivery::find();
+		$query = Delivery::find()->with([
+			'issues.customer',
+			'orders.customer',
+			'deliveryStatus',
+			'user',
+			'enteredDeliveryStatus',
+			'issues.issueStatus',
+			'orders.orderStatus',
+		]);
 
 		// add conditions that should always apply here
 
