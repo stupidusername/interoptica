@@ -18,6 +18,7 @@ $this->title = 'Añadir Reclamo';
 	</div>
 
 	<div id="modal-body">
+
 <div class="delivery-issue-form">
 
 <?php $form = ActiveForm::begin([
@@ -42,8 +43,6 @@ $this->title = 'Añadir Reclamo';
 		],
 	])
 ?>
-
-	</div>
 
     <div class="form-group">
 	<?= Html::submitButton('Añadir', ['class' => 'btn btn-success']) ?>

@@ -21,7 +21,7 @@ class DeliveryStatusRule extends ActionFilter
      */
     public function beforeAction($action)
     {
-        if (!in_array(Yii::$app->controller->model->status, [DeliveryStatus::STATUS_WAITING_FOR_TRANSPORT])) {
+        if (!in_array(Yii::$app->controller->model->status, [DeliveryStatus::STATUS_ERROR, DeliveryStatus::STATUS_WAITING_FOR_TRANSPORT])) {
 			$this->denyAccess();
 		}
 		return true;

@@ -29,7 +29,7 @@ class DeliveryIssue extends \yii\db\ActiveRecord
 	 */
 	public function afterSave($insert, $changedAttributes) {
 		if ($insert) {
-			$this->issue->status = Delivery::issueStatusMap()[$this->delivery->status];
+			$this->issue->status = Delivery::issueStatusMap()[$this->delivery->deliveryStatus->status];
 			$this->issue->save();
 		}
 		parent::afterSave($insert, $changedAttributes);
@@ -45,13 +45,13 @@ class DeliveryIssue extends \yii\db\ActiveRecord
 			[['delivery_id', 'issue_id'], 'required'],
 			[['delivery_id'], 'exist', 'skipOnError' => true, 'targetClass' => Delivery::className(), 'targetAttribute' => ['delivery_id' => 'id']],
 			[['issue_id'], 'exist', 'skipOnError' => true, 'targetClass' => Issue::className(), 'targetAttribute' => ['issue_id' => 'id']],
+			[['issue_id'], 'unique', 'targetAttribute' => ['delivery_id', 'issue_id'], 'message' => 'El reclamo ya se encuentra en el envio.'],
 			[
 				['issue_id'],
 				'unique',
-				'when' => function() { return count(self::find()->andWhere(['issue_id' => $this->issue_id])->innerJoinWith('delivery')); },
+				'when' => function() { return count(self::find()->andWhere(['issue_id' => $this->issue_id])->innerJoinWith('delivery')->all()); },
 				'message' => 'Este reclamo ya se encuentra asociado a un envio.',
 			],
-			[['issue_id'], 'unique', 'targetAttribute' => ['delivery_id', 'issue_id'], 'message' => 'El reclamo ya se encuentra en el envio.'],
 		];
 	}
 

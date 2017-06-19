@@ -5,11 +5,14 @@ $(document).ready(function () {
 	var focus = function () {
 		var timer = setInterval(function () {
 			var field = $('#deliveryorder-order_id');
-			if (!field) {
+			if (!field.length) {
 				field = $('#deliveryissue-issue_id');
 			}
 			if (field.hasClass('select2-hidden-accessible')) {
 				$('.select2-selection').focus();
+				field.on('select2:select', function () {
+					$('#addEntry :submit').focus();
+				});
 				clearInterval(timer);
 			}
 		}, 25);
@@ -27,22 +30,23 @@ $(document).ready(function () {
 		});
 	};
 
-	var reloadPjaxContainers = function() {
-		$.pjax.reload({container: '#deliveryDetail'}).done(function() {
-			$.pjax.reload({container: '#entriesGridviews'}).done(function() {
-				setUpButtons();
-			});
-		});
-	};
+	$('#deliveryDetail').on('pjax:complete', function() {
+		$.pjax.reload({container: '#entriesGridviews'});
+	});
 	
+	$('#entriesGridviews').on('pjax:complete', function() {
+		setUpButtons();
+	});
+
 	setUpButtons();
 
 	// refresh order details periodically
 	setInterval(function () {
+		$.pjax.reload({container: '#deliveryDetail'});
 	}, 30000);
 	
 	$('#addEntry').on('kbModalSubmitSuccess', function (event, xhr, settings) {
-		reloadPjaxContainers();
+		$.pjax.reload({container: '#entriesGridviews'});
 		showAddEntryModal();
 	});
 	
@@ -61,7 +65,7 @@ $(document).ready(function () {
 			type: 'POST',
 			url: url,
 			success: function (data, status, xhr) {
-				reloadPjaxContainers();
+				$.pjax.reload({container: '#entriesGridviews'});
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				alert(jqXHR.responseText);

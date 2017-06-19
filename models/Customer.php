@@ -25,14 +25,14 @@ use yii\helpers\ArrayHelper;
  */
 class Customer extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'customer';
-    }
-	
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName()
+	{
+		return 'customer';
+	}
+
 	/** @inheritdoc */
 	public function behaviors() {
 		return [
@@ -45,48 +45,48 @@ class Customer extends \yii\db\ActiveRecord
 			],
 		];
 	}
-	
+
 	/** @inheritdoc */
 	public static function find()
-    {
-        return parent::find()->where(['or', [self::tableName() . '.deleted' => null], [self::tableName() . '.deleted' => 0]]);
-    }
+	{
+		return parent::find()->where(['or', [self::tableName() . '.deleted' => null], [self::tableName() . '.deleted' => 0]]);
+	}
 
 	/**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['gecom_id'], 'integer'],
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		return [
+			[['gecom_id'], 'integer'],
 			[['gecom_id'], 'unique'],
-            [['name', 'tax_situation', 'tax_situation_category', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'doc_number'], 'string', 'max' => 255],
+			[['name', 'tax_situation', 'tax_situation_category', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'doc_number'], 'string', 'max' => 255],
 			[['gecom_id', 'name'], 'required'],
 			[['zone_id'], 'exist', 'targetClass' => Zone::className(), 'targetAttribute' => 'id'],
-        ];
-    }
+		];
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'gecom_id' => 'Gecom ID',
-            'name' => 'Nombre',
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'id' => 'ID',
+			'gecom_id' => 'Gecom ID',
+			'name' => 'Nombre',
 			'zone_id' => 'ID Zona',
-            'tax_situation' => 'Situación Impositiva',
-            'tax_situation_category' => 'Categoría',
-            'address' => 'Dirección',
-            'zip_code' => 'Código Postal',
+			'tax_situation' => 'Situación Impositiva',
+			'tax_situation_category' => 'Categoría',
+			'address' => 'Dirección',
+			'zip_code' => 'Código Postal',
 			'province' => 'Provincia',
-            'locality' => 'Localidad',
-            'phone_number' => 'Teléfonos',
-            'doc_number' => 'Nro. de Documento',
-        ];
-    }
-	
+			'locality' => 'Localidad',
+			'phone_number' => 'Teléfonos',
+			'doc_number' => 'Nro. de Documento',
+		];
+	}
+
 	/**
 	 * @return string[]
 	 */
@@ -98,7 +98,7 @@ class Customer extends \yii\db\ActiveRecord
 			'E' => 'Exento',
 		];
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -111,17 +111,17 @@ class Customer extends \yii\db\ActiveRecord
 	 */
 	public function getTaxSituationLabel() {
 		return isset(self::taxSituationLabels()[$this->tax_situation]) ?
-				self::taxSituationLabels()[$this->tax_situation] : $this->tax_situation;
+			self::taxSituationLabels()[$this->tax_situation] : $this->tax_situation;
 	}
 
 	/**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getZone()
-    {
-        return $this->hasOne(Zone::className(), ['id' => 'zone_id']);
-    }
-	
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getZone()
+	{
+		return $this->hasOne(Zone::className(), ['id' => 'zone_id']);
+	}
+
 	/**
 	 * Gets an id => name array.
 	 * return string[]

@@ -33,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'format' => 'raw',
 			'contentOptions' => ['style' => 'width: 100px;'],
 		],
+		'customerNames',
 		[
 			'label' => 'Usuario',
 			'value' => 'user.username',
@@ -52,7 +53,9 @@ $this->params['breadcrumbs'][] = $this->title;
 		],
 		[
 			'label' => 'Estado',
-			'value' => 'deliveryStatus.statusLabel',
+			'value' => function ($model, $key, $index, $column) {
+				return DeliveryStatus::statusLabels()[$model->status];
+			},
 			'filter' => Html::activeDropDownList($searchModel, 'status', DeliveryStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
 		],
 		[
@@ -60,8 +63,6 @@ $this->params['breadcrumbs'][] = $this->title;
 			'value' => 'enteredDeliveryStatus.create_datetime',
 			'format' => 'datetime'
 		],
-		'transport',
-
 		[
 			'class' => 'yii\grid\ActionColumn',
 			'template' => '{view} {delete}',

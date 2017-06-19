@@ -71,6 +71,15 @@ class DeliveryStatus extends \yii\db\ActiveRecord
 	}
 
 	/**
+	 * @return string
+	 */
+	public static function statusLabelsWithoutError() {
+		$labels = self::statusLabels();
+		unset($labels[self::STATUS_ERROR]);
+		return $labels;
+	}
+
+	/**
 	 * @return \yii\db\ActiveQuery
 	 */
 	public function getDelivery()

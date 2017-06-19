@@ -44,7 +44,6 @@ $this->title = 'Añadir Pedido';
 	])
 ?>
 
-
     <div class="form-group">
 	<?= Html::submitButton('Añadir', ['class' => 'btn btn-success']) ?>
     </div>

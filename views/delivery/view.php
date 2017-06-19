@@ -61,12 +61,16 @@ DeliveryAsset::register($this);
 				'inputType' => Editable::INPUT_DROPDOWN_LIST,
 				'model' => $model,
 				'attribute' => 'status',
-				'formOptions' => ['action' => 'edit-status'],
-				'data' => DeliveryStatus::statusLabels(),
-				'displayValue' => $model->deliveryStatus->statusLabel,
-				'pluginEvents' => [
-					'editableSuccess' => 'function () { $.pjax.reload({container: "#entriesGridview"}); }',
+				'formOptions' => [
+					'action' => ['edit-status', 'id' => $model->id],
+					'enableClientValidation' => false,
 				],
+				'data' => DeliveryStatus::statusLabelsWithoutError(),
+				'displayValue' => DeliveryStatus::statusLabels()[$model->status],
+				'pluginEvents' => [
+					'editableSuccess' => 'function () { $.pjax.reload({container: "#deliveryDetail"}); }',
+				],
+				'pjaxContainerId' => 'deliveryDetail',
 			]),
 		],
 		[
@@ -75,11 +79,42 @@ DeliveryAsset::register($this);
 			'value' => Editable::widget([
 				'model' => $model,
 				'attribute' => 'transport',
-				'formOptions' => ['action' => 'edit-transport'],
+				'formOptions' => [
+					'action' => ['edit-transport', 'id' => $model->id],
+					'enableClientValidation' => false,
+				],
+				'pjaxContainerId' => 'deliveryDetail',
 			]),
 		],
 	],
 ]) ?>
+
+		<h3>Seguimiento de Estados</h3>
+
+<?=
+GridView::widget([
+	'columns' => [
+		[
+			'attribute' => 'status',
+			'value' => 'statusLabel',
+		],
+		[
+			'label' => 'Usuario',
+			'attribute' => 'user.username'
+		],
+		[
+			'attribute' => 'create_datetime',
+			'format' => 'datetime'
+		],
+	],
+	'dataProvider' => new ActiveDataProvider([
+		'query' => $model->getDeliveryStatuses()->with(['user']),
+		'pagination' => false,
+		'sort' => false,
+	]),
+]);
+?>
+
 <?php Pjax::end() ?>
 
 <?php Pjax::begin(['id' => 'entriesGridviews']) ?>
@@ -154,7 +189,7 @@ GridView::widget([
 			'urlCreator' => function ($action, $issue, $key, $index, $actionColumn) use ($model) {
 				switch ($action) {
 				case 'delete':
-					return Url::to(['delete-issue', 'deliveryId' => $model->id, 'issueId' => $model->id]);
+					return Url::to(['delete-issue', 'deliveryId' => $model->id, 'issueId' => $issue->id]);
 				}
 			},
 			'buttons' => [

@@ -9,12 +9,14 @@ use app\models\Delivery;
 use app\models\DeliveryIssue;
 use app\models\DeliveryOrder;
 use app\models\DeliverySearch;
-use kartik\grid\EditableColumnAction;
+use app\models\DeliveryStatus;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\helpers\Json;
 
 /**
  * DeliveryController implements the CRUD actions for Delivery model.
@@ -29,34 +31,15 @@ class DeliveryController extends Controller
 	/**
 	 * @inheritdoc
 	 */
-	public function actions() {
-		return ArrayHelper::merge(parent::actions(), [
-			'edit-status' => [
-				'class' => EditableColumnAction::className(),
-				'modelClass' => Delivery::className(),
-				'scenario' => Delivery::SCENARIO_EDIT,
-				'outputValue' => function ($model, $attribute, $key, $index) {
-					return $model->status->statusLabel;
-				},
-			],
-			'edit-transport' => [
-				'class' => EditableColumnAction::className(),
-				'modelClass' => Delivery::className(),
-				'scenario' => Delivery::SCENARIO_EDIT,
-			],
-		]);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	public function behaviors()
 	{
 		return [
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'delete' => ['POST'],
+					'deleted' => ['POST'],
+					'edit-status' => ['POST'],
+					'edit-transport' => ['POST'],
 				],
 			],
 			'access' => [
@@ -90,7 +73,7 @@ class DeliveryController extends Controller
 			],
 			'status' => [
 				'class' => DeliveryStatusRule::className(),
-				'only' => ['edit-transport', 'add-order', 'add-issue', 'delete-order', 'delete-issue'],
+				'only' => ['add-order', 'add-issue', 'delete-order', 'delete-issue'],
 			],
 		];
 	}
@@ -120,6 +103,43 @@ class DeliveryController extends Controller
 		return $this->render('view', [
 			'model' => $this->findModel($id),
 		]);
+	}
+
+	/**
+	 * This action is ment to handle the request from the delivery status editable
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionEditStatus($id) {
+		$model = $this->findModel($id);
+		$model->scenario = Delivery::SCENARIO_EDIT;
+		$out = Json::encode(['output' => '', 'message' => '']);
+		if ($model->load(Yii::$app->request->post())) {
+			$model->save();
+			$output = DeliveryStatus::statusLabels()[$model->status];
+			$out = Json::encode(['output' => $output, 'message' => $model->getErrors('status')]);
+		}
+		// return ajax json encoded response and exit
+		echo $out;
+		return;
+	}
+	
+	/**
+	 * This action is ment to handle the request from the delivery transport editable
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionEditTransport($id) {
+		$model = $this->findModel($id);
+		$model->scenario = Delivery::SCENARIO_EDIT;
+		$out = Json::encode(['output' => '', 'message' => '']);
+		if ($model->load(Yii::$app->request->post())) {
+			$model->save();
+			$out = Json::encode(['output' => '', 'message' => $model->getErrors('transport')]);
+		}
+		// return ajax json encoded response and exit
+		echo $out;
+		return;
 	}
 
 	/**

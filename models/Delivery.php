@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\Exception;
+use yii\helpers\ArrayHelper;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -22,6 +23,8 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property DeliveryStatus $enteredDeliveryStatus
  * @property Order[] $orders
  * @property Issue[] $issues
+ *
+ * @property string customerNames
  */
 class Delivery extends \yii\db\ActiveRecord
 {
@@ -86,13 +89,15 @@ class Delivery extends \yii\db\ActiveRecord
 		}
 		$oldStatus = $this->deliveryStatus;
 		// Save delivery status if there was a change
-		if ($this->status != DeliveryStatus::STATUS_ERROR && (!$oldStatus || $oldStatus->status != $this->status)) {
-			$deliveryStatus = new DeliveryStatus();
-			$deliveryStatus->delivery_id = $this->id;
-			$deliveryStatus->user_id = Yii::$app->user->id;
-			$deliveryStatus->status = $this->status;
-			$deliveryStatus->create_datetime = gmdate('Y-m-d H:i:s');
-			$deliveryStatus->save(false);
+		if ($this->status != DeliveryStatus::STATUS_ERROR) {
+			if (!$oldStatus || $oldStatus->status != $this->status) {
+				$deliveryStatus = new DeliveryStatus();
+				$deliveryStatus->delivery_id = $this->id;
+				$deliveryStatus->user_id = Yii::$app->user->id;
+				$deliveryStatus->status = $this->status;
+				$deliveryStatus->create_datetime = gmdate('Y-m-d H:i:s');
+				$deliveryStatus->save(false);
+			}
 			$this->updateEntriesStatus();
 		}
 		parent::afterSave($insert, $changedAttributes);
@@ -127,6 +132,8 @@ class Delivery extends \yii\db\ActiveRecord
 			[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
 			[['status'], 'required', 'on' => self::SCENARIO_EDIT],
 			[['transport'], 'required', 'when' => function() { return $this->status >= DeliveryStatus::STATUS_SENT; }],
+			[['status'], 'validateStatus', 'on' => self::SCENARIO_EDIT],
+			[['transport'], 'validateTransport', 'on' => self::SCENARIO_EDIT],
 		];
 	}
 
@@ -140,6 +147,7 @@ class Delivery extends \yii\db\ActiveRecord
 			'user_id' => 'ID Usuario',
 			'status' => 'Estado',
 			'transport' => 'Transporte',
+			'customerNames' => 'Clientes',
 		];
 	}
 
@@ -202,7 +210,7 @@ class Delivery extends \yii\db\ActiveRecord
 	/**
 	 * @return integer[]
 	 */
-	public static function statusStatusMap() {
+	public static function issueStatusMap() {
 		return [
 			DeliveryStatus::STATUS_WAITING_FOR_TRANSPORT => IssueStatus::STATUS_WAITING_FOR_TRANSPORT,
 			DeliveryStatus::STATUS_SENT => IssueStatus::STATUS_SENT,
@@ -219,5 +227,30 @@ class Delivery extends \yii\db\ActiveRecord
 			$issue->status = self::issueStatusMap()[$this->status];
 			$issue->save();
 		}
+	}
+
+	public function validateStatus($attribute, $params, $validator) {
+		if($this->status >= DeliveryStatus::STATUS_SENT && !$this->transport) {
+			$this->addError($attribute, 'Transporte no puede estar vacío.');
+		}
+	}
+
+	public function validateTransport($attribute, $params, $validator) {
+		if($this->status >= DeliveryStatus::STATUS_SENT) {
+			$this->addError($attribute, 'No se puede editar un envio que no esta en estado ' . DeliveryStatus::statusLabels()[DeliveryStatus::STATUS_WAITING_FOR_TRANSPORT]);
+		}
+	}
+
+	public function getCustomerNames() {
+		$customers = [];
+		foreach ($this->orders as $order) {
+			$customer = $order->customer;
+			$customers[$customer->id] = $customer;
+		}
+		foreach ($this->issues as $issue) {
+			$customer = $issue->customer;
+			$customers[$customer->id] = $customer;
+		}
+		return implode(', ', ArrayHelper::getColumn($customers, ['name']));
 	}
 }
