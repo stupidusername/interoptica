@@ -68,14 +68,13 @@ $config = [
 			'emailChangeStrategy' => \dektrium\user\Module::STRATEGY_SECURE,
 			'confirmWithin' => 1209600, // confirm within 2 weeks
 			'recoverWithin' => 1209600,
-			'admins' => [
-				'admin',
-			],
+			'adminPermission' => 'admin',
 			'modelMap' => [
 				'User' => 'app\models\User',
 				'Profile' => 'app\models\Profile',
 			],
 		],
+		'rbac' => 'dektrium\rbac\RbacWebModule',
 		'gridview' =>  [
 			'class' => '\kartik\grid\Module',
 		],
