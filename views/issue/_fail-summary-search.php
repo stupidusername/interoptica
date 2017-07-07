@@ -9,11 +9,11 @@ use yii\jui\DatePicker;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\IssueProductSearch */
+/* @var $model app\models\FailSummary */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="issue-product-search">
+<div class="fail-summary-search">
 
     <?php $form = ActiveForm::begin([
         'method' => 'get',

@@ -5,10 +5,10 @@ namespace app\controllers;
 use app\filters\AuthorRule;
 use app\filters\IssueStatusRule;
 use app\models\Customer;
+use app\models\FailSummary;
 use app\models\Issue;
 use app\models\IssueComment;
 use app\models\IssueProduct;
-use app\models\IssueProductSearch;
 use app\models\IssueSearch;
 use app\models\IssueStatus;
 use app\models\Order;
@@ -106,9 +106,9 @@ class IssueController extends Controller
 	 */
 	public function actionFailSummary()
 	{
-		$searchModel = new IssueProductSearch();
+		$searchModel = new FailSummary();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-		$dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
+		$dataProvider->sort->defaultOrder = ['fail_id' => SORT_ASC];
 
 		// data provider used for export
 		$exportDataProvider = $dataProvider;
