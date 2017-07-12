@@ -83,6 +83,15 @@ class MonthlySummarySearch extends MonthlySummary
 			'user_id' => $this->user_id,
 		]);
 
+		if ($this->year) {
+			$query->andWhere(['>=', 'begin_date', $this->year . '-01-01']);
+			$query->andWhere(['<=', 'begin_date', $this->year . '-12-31']);
+		}
+
+		if ($this->month) {
+			$query->andWhere(['like', 'begin_date', '%-%' . $this->month . '-%', false]);
+		}
+
 		$query->with(['user']);
 
 		return $dataProvider;
