@@ -57,8 +57,6 @@ $this->params['breadcrumbs'][] = $this->title;
 			'format' => 'currency',
 		],
 		'objective',
-
-		['class' => 'yii\grid\ActionColumn'],
 	],
 ]); ?>
 </div>

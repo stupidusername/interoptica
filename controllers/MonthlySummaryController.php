@@ -41,6 +41,8 @@ class MonthlySummaryController extends Controller
 	 */
 	public function actionIndex()
 	{
+		MonthlySummary::createModels();
+
 		$searchModel = new MonthlySummarySearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
