@@ -57,6 +57,7 @@ AppAsset::register($this);
 	];
 	if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAdmin) {
 		$adminItems = [
+			['label' => 'Vendedores', 'url' => ['/monthly-summary/index']],
 			['label' => 'Usuarios', 'url' => ['/user/admin/index']],
 		];
 		array_splice($items, count($items) - 2, 0, $adminItems);
