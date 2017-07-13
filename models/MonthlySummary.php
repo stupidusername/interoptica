@@ -32,7 +32,7 @@ class MonthlySummary extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'objective'], 'integer'],
+            [['user_id', 'objective'], 'integer', 'min' => 0],
             [['begin_date'], 'date', 'format' => 'php: Y-m-d'],
             [['invoiced'], 'number'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],

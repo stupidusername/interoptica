@@ -3,7 +3,8 @@
 use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\GridView;
+use kartik\grid\EditableColumn;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\MonthlySummarySearch */
@@ -39,6 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		],
 		[
 			'attribute' => 'month',
+			'label' => 'Mes',
 			'value' => function ($model) {
 				return Yii::$app->formatter->asDate($model->begin_date, 'MMMM');
 			},
@@ -48,15 +50,25 @@ $this->params['breadcrumbs'][] = $this->title;
 		],
 		[
 			'attribute' => 'year',
+			'label' => 'Año',
 			'value' => function ($model) {
 				return Yii::$app->formatter->asDate($model->begin_date, 'yyyy');
 			},
 		],
 		[
+			'class' => EditableColumn::className(),
 			'attribute' => 'invoiced',
 			'format' => 'currency',
+			'editableOptions'=> [
+				'formOptions' => ['action' => ['edit']],
+				'inputType' => '\kartik\money\MaskMoney',
+			],
 		],
-		'objective',
+		[
+			'class' => EditableColumn::className(),
+			'attribute' => 'objective',
+			'editableOptions'=> ['formOptions' => ['action' => ['edit']]],
+		],
 	],
 ]); ?>
 </div>

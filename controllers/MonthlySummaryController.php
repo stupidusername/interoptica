@@ -2,11 +2,13 @@
 
 namespace app\controllers;
 
-use Yii;
 use app\models\MonthlySummary;
 use app\models\MonthlySummarySearch;
 use dektrium\user\filters\AccessRule;
+use kartik\grid\EditableColumnAction;
+use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
 /**
@@ -33,6 +35,18 @@ class MonthlySummaryController extends Controller
 				],
 			],
 		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function actions() {
+		return ArrayHelper::merge(parent::actions(), [
+			'edit' => [
+				'class' => EditableColumnAction::className(),
+				'modelClass' => MonthlySummary::className(),
+			],
+		]);
 	}
 
 	/**

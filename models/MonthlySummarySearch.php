@@ -43,17 +43,6 @@ class MonthlySummarySearch extends MonthlySummary
 	}
 
 	/**
-	 * @inheritdoc
-	 */
-	public function attributeLabels() {
-		$labels = [
-			'month' => 'Mes',
-			'year' => 'Año',
-		];
-		return parent::attributeLabels() + $labels;
-	}
-
-	/**
 	 * Creates data provider instance with search query applied
 	 *
 	 * @param array $params
@@ -62,7 +51,7 @@ class MonthlySummarySearch extends MonthlySummary
 	 */
 	public function search($params)
 	{
-		$query = self::find();
+		$query = MonthlySummary::find();
 
 		// add conditions that should always apply here
 
