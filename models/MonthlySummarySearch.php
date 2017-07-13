@@ -68,6 +68,7 @@ class MonthlySummarySearch extends MonthlySummary
 
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
+			'sort' => false,
 		]);
 
 		$this->load($params);
@@ -93,6 +94,8 @@ class MonthlySummarySearch extends MonthlySummary
 		}
 
 		$query->with(['user']);
+
+		$query->orderBy(['begin_date' => SORT_DESC, 'user_id' => SORT_ASC]);
 
 		return $dataProvider;
 	}
