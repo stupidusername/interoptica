@@ -1,46 +1,27 @@
 <?php
 
 use app\models\FailSummary;
-use app\models\Product;
 use miloschuman\highcharts\Highcharts;
-use yii\helpers\ArrayHelper;
 
+/* @var $model app\models\FailSummary */
+/* @var $failsByType app\models\FailSummary */
+/* @var $failsByProduct app\models\FailSummary */
 /* @var $this yii\web\View */
 
 $this->title = 'Estadísticas de Fallas';
 $this->params['breadcrumbs'][] = ['label' => 'Reclamos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-
-$productsOrderedByFailRate = Product::getProductsOrderedByFailRate(5);
-$categories = ArrayHelper::getColumn($productsOrderedByFailRate, 'gecom_desc');
-$percentages = ArrayHelper::getColumn($productsOrderedByFailRate, function ($product) {
-	return ($product['fails'] / $product['orders']) * 100;
-});
 ?>
 
-<?=
-Highcharts::widget([
-	'options' => [
-		'chart' => ['type' => 'bar'],
-		'title' => ['text' => 'Fallas / Ventas (Primeros 5)'],
-		'xAxis' => [
-			'categories' => $categories,
-		],
-		'legend' => ['reversed' => 'true'],
-		'plotOptions' => [
-			'series' => ['stacking' => 'normal'],
-		],
-		'series' => [
-				['name' => 'Porcentaje', 'data' => $percentages],
-		],
-	],
-]);
-?>
+<?php echo $this->render('_fail-summary-search', ['model' => $model]); ?>
+
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-6">
 
 <?php
-$model = new FailSummary;
-$fails = $model->search([], ['fail_id'])->query->all();
-$data = array_map(function ($elem) { return ['name' => $elem->fail->name, 'y' => (int) $elem->total_quantity]; }, $fails);
+$data = array_map(function ($elem) { return ['name' => $elem->fail->name, 'y' => (int) $elem->total_quantity]; }, $failsByType);
 ?>
 
 <?=
@@ -60,11 +41,12 @@ Highcharts::widget([
 	],
 ]);
 ?>
+		</div>
+
+		<div class="col-md-6">
 
 <?php
-$model = new FailSummary;
-$fails = $model->search([], ['product_id'])->query->orderBy(['total_quantity' => SORT_DESC])->limit(10)->all();
-$data = array_map(function ($elem) { return ['name' => $elem->product->gecom_desc, 'y' => (int) $elem->total_quantity]; }, $fails);
+$data = array_map(function ($elem) { return ['name' => $elem->product->gecom_desc, 'y' => (int) $elem->total_quantity]; }, $failsByProduct);
 ?>
 
 <?=
@@ -84,3 +66,6 @@ Highcharts::widget([
 	],
 ]);
 ?>
+		</div>
+	</div>
+</div>

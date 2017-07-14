@@ -97,7 +97,15 @@ class IssueController extends Controller
 	 */
 	public function actionStatistics()
 	{
-		return $this->render('statistics');
+		$model = new FailSummary();
+		$failsByType = $model->search(Yii::$app->request->queryParams, ['fail_id'])->query->all();
+		$failsByProduct = $model->search([], ['product_id'])->query->orderBy(['total_quantity' => SORT_DESC])->limit(10)->all();
+
+		return $this->render('statistics', [
+			'model' => $model,
+			'failsByType' => $failsByType,
+			'failsByProduct' => $failsByProduct,
+		]);
 	}
 
 	/**
