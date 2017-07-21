@@ -93,7 +93,7 @@ class FailSummary extends IssueProduct {
 			'product',
 			'issue.openIssueStatus' => function ($query) {
 				if ($this->fromDate) {
-					$query->andWhere(['>=', 'create_datetime', $this->fromDate]);
+					$query->andWhere(['>=', 'create_datetime', gmdate('Y-m-d', strtotime($this->fromDate))]);
 				}
 				if ($this->toDate) {
 					$toDate = gmdate('Y-m-d', strtotime($this->toDate . ' +1 day'));

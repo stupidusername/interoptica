@@ -23,12 +23,14 @@ class User extends BaseUser {
 		];
 		return $behaviors;
 	}
-	
-	/** @inheritdoc */
+
+	/**
+	 * @inheritdoc
+	 */
 	public static function find()
-    {
-        return parent::find()->where(['or', ['deleted' => null], ['deleted' => 0]]);
-    }
+	{
+		return parent::find()->where(['or', [self::tableName() . '.deleted' => null], [self::tableName() . '.deleted' => 0]]);
+	}
 
 	/** @inheritdoc */
 	public function scenarios() {

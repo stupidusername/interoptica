@@ -5,9 +5,10 @@ namespace app\controllers;
 use Yii;
 use app\models\Customer;
 use app\models\Order;
+use app\models\OrderProduct;
 use app\models\OrderStatus;
 use app\models\OrderSearch;
-use app\models\OrderProduct;
+use app\models\OrderSummary;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -60,6 +61,10 @@ class OrderController extends Controller
 							return $this->findModel(Yii::$app->request->getQueryParam('orderId'));
 						},
 						'roles' => ['admin', 'author'],
+					],
+					[
+						'actions' => ['statistics'],
+						'roles' => ['admin', 'management'],
 					],
 					[
 						'actions' => ['index', 'view', 'create', 'export-txt', 'export-pdf', 'list'],
@@ -266,6 +271,17 @@ class OrderController extends Controller
 
 		// return the pdf output as per the destination setting
 		return $pdf->render();
+	}
+
+	public function actionStatistics() {
+
+		$model = new OrderSummary();
+		$ordersBySalesman = $model->search(Yii::$app->request->queryParams)->query->all();
+
+		return $this->render('statistics', [
+			'model' => $model,
+			'ordersBySalesman' => $ordersBySalesman,
+		]);
 	}
 
 	/**
