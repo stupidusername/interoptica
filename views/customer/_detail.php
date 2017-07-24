@@ -13,6 +13,7 @@ DetailView::widget([
 		'id',
 		'gecom_id',
 		'name',
+		'email',
 		[
 			'label' => 'Zona',
 			'value' => $model->zone ? $model->zone->name : '',

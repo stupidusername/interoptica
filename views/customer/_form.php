@@ -16,6 +16,8 @@ use app\models\Zone;
     <?= $form->field($model, 'gecom_id')->textInput() ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 	
 	<?= $form->field($model, 'zone_id')->label('Zona')->dropDownList(Zone::getIdNameArray(), ['prompt' => 'Elegir zona']) ?>
 

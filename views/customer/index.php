@@ -30,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			],
             'gecom_id',
             'name',
+            'email',
 	    'address',
 	    'locality',
             ['class' => 'yii\grid\ActionColumn'],

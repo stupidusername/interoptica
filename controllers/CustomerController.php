@@ -174,7 +174,7 @@ class CustomerController extends Controller
 		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 		$customersArray = Customer::find()->andWhere(['or', ['gecom_id' => $q], ['like', 'name', $q]])->asArray()->all();
 		$results = array_map(function ($customerArray) {
-					return ['id' => $customerArray['id'], 'text' => $customerArray['name']];
+					return ['id' => $customerArray['id'], 'text' => $customerArray['name'], 'email' => $customerArray['email']];
 				}, $customersArray);
 		$out = ['results' => $results];
 		return $out;

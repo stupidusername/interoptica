@@ -1,6 +1,5 @@
 <?php
 
-use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
@@ -12,7 +11,7 @@ use kartik\money\MaskMoney;
 use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Order */
+/* @var $model app\models\OrderForm */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -22,7 +21,7 @@ use kartik\select2\Select2;
 
 	<?=
 	$form->field($model, 'customer_id')->label('Cliente')->widget(Select2::classname(), [
-		'initValueText' => $model->customer_id ? $model->customer->name : null,
+		'initValueText' => $model->customer_id ? Customer::findOne($model->customer_id)->name : null,
 		'options' => ['placeholder' => 'Elegir cliente'],
 		'pluginOptions' => [
 			'minimumInputLength' => 3,
@@ -30,8 +29,13 @@ use kartik\select2\Select2;
 				'url' => Url::to('/customer/list'),
 			],
 		],
+		'pluginEvents' => [
+			'select2:select' => 'function(e) { $("#orderform-customeremail").val(e.params.data.email); }',
+		],
 	])
 	?>
+
+    <?= $form->field($model, 'customerEmail') ?>
 
 	<?php if (!$model->isNewRecord && Yii::$app->user->identity->isAdmin): ?>
 		<?= $form->field($model, 'user_id')->label('Usuario')->dropDownList(User::getIdNameArray(), ['prompt' => 'Elegir usuario']) ?>

@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Customer;
 use app\models\Order;
+use app\models\OrderForm;
 use app\models\OrderProduct;
 use app\models\OrderStatus;
 use app\models\OrderSearch;
@@ -51,7 +52,7 @@ class OrderController extends Controller
 					[
 						'actions' => ['update', 'delete'],
 						'model' => function() {
-							return $this->findModel(Yii::$app->request->getQueryParam('id'));
+							return $this->findOrderFormModel(Yii::$app->request->getQueryParam('id'));
 						},
 						'roles' => ['admin', 'author'],
 					],
@@ -128,7 +129,7 @@ class OrderController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model = new Order();
+		$model = new OrderForm();
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->id]);
@@ -147,8 +148,8 @@ class OrderController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model = $this->findModel($id);
-		$model->scenario = Order::SCENARIO_UPDATE;
+		$model = $this->findOrderFormModel($id);
+		$model->scenario = OrderForm::SCENARIO_UPDATE;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->id]);
@@ -294,6 +295,22 @@ class OrderController extends Controller
 	protected function findModel($id)
 	{
 		if ($this->model || ($this->model = Order::findOne($id)) !== null) {
+			return $this->model;
+		} else {
+			throw new NotFoundHttpException('The requested page does not exist.');
+		}
+	}
+
+	/**
+	 * Finds the OrderForm model based on its primary key value.
+	 * If the model is not found, a 404 HTTP exception will be thrown.
+	 * @param integer $id
+	 * @return OrderForm the loaded model
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	protected function findOrderFormModel($id)
+	{
+		if ($this->model || ($this->model = OrderForm::findOne($id)) !== null) {
 			return $this->model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
