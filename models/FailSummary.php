@@ -65,7 +65,7 @@ class FailSummary extends IssueProduct {
 	 */
 	public function search($params, $groupBy = ['product_id', 'fail_id'])
 	{
-		$query = self::find()->select(['product_id', 'fail_id', 'total_quantity' => 'SUM(quantity)'])
+		$query = self::find()->select($groupBy + ['total_quantity' => 'SUM(quantity)'])
 			->groupBy($groupBy)->andWhere(['and', ['not', ['fail_id' => null]], ['not', ['quantity' => null]]]);
 
 		// add conditions that should always apply here
