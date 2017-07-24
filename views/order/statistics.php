@@ -39,6 +39,11 @@ Highcharts::widget([
 		'title' => ['text' => 'Ventas'],
 		'xAxis' => ['categories' => $weeks],
 		'yAxis' => ['title' => ['text' => 'Piezas vendidas']],
+		'plotOptions' => [
+			'column' => [
+				'dataLabels' => ['enabled' => true],
+			],
+		],
 		'series' => $series,
 	],
 ]);

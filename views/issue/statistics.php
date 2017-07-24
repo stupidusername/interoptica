@@ -31,7 +31,9 @@ Highcharts::widget([
 		'title' => ['text' => 'Fallas'],
 		'plotOptions' => [
 			'pie' => [
-				'dataLabels' => ['enabled' => false],
+				'dataLabels' => [
+					'enabled' => false,
+				],
 				'showInLegend' => true,
 			],
 		],
@@ -56,7 +58,9 @@ Highcharts::widget([
 		'title' => ['text' => 'Fallas por Producto (Primeros 10)'],
 		'plotOptions' => [
 			'pie' => [
-				'dataLabels' => ['enabled' => false],
+				'dataLabels' => [
+					'enabled' => false,
+				],
 				'showInLegend' => true,
 			],
 		],
