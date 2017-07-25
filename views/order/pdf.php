@@ -1,10 +1,8 @@
 <?php
 
-use Yii;
-
 /* @var \app\models\Order $model */
 
-const ENTRIES_PER_PAGE = 46;
+const ENTRIES_PER_PAGE = 36;
 
 // Prepare OrderProduct entries for table distribution
 $table = [];
