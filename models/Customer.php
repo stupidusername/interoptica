@@ -106,7 +106,7 @@ class Customer extends \yii\db\ActiveRecord
 	 * @return string
 	 */
 	public function getDisplayName() {
-		return implode(' - ', [$this->gecom_id, $this->name]);
+		return implode(' - ', [$this->gecom_id, $this->name, $this->locality]);
 	}
 
 	/**
