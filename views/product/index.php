@@ -1,9 +1,10 @@
 <?php
 
-use yii\helpers\Html;
-use yii\grid\GridView;
 use app\models\ProductsImportForm;
 use kartik\export\ExportMenu;
+use kartik\grid\EditableColumn;
+use kartik\grid\GridView;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ProductSearch */
@@ -29,10 +30,21 @@ $this->params['breadcrumbs'][] = $this->title;
 		'gecom_code',
 		'gecom_desc',
 		[
+			'class' => EditableColumn::className(),
 			'attribute' => 'price',
-			'format' => 'currency'
+			'format' => 'currency',
+			'editableOptions'=> [
+				'formOptions' => ['action' => ['edit']],
+				'inputType' => '\kartik\money\MaskMoney',
+			],
 		],
-		'stock',
+		[
+			'class' => EditableColumn::className(),
+			'attribute' => 'stock',
+			'editableOptions'=> [
+				'formOptions' => ['action' => ['edit']],
+			],
+		],
 	];
 	?>
 
