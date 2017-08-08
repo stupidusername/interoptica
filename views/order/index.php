@@ -88,6 +88,19 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute' => 'comment',
 				'contentOptions' => ['style' => 'width: 400px; max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'],
 			],
+			[
+				'label' => 'Piezas',
+				'value' => function ($model) {
+					return $model->totalQuantity;
+				},
+			],
+			[
+				'label' => 'Total',
+				'value' => function ($model) {
+					return $model->total;
+				},
+				'format' => 'currency',
+			],
 			['class' => 'yii\grid\ActionColumn'],
 		],
 	]);
