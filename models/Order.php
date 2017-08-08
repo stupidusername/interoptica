@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\helpers\MBStringHelper;
 use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
@@ -280,10 +281,10 @@ class Order extends \yii\db\ActiveRecord
 		$userGecomId = $this->user->gecom_id;
 		$orderProducts = $this->getOrderProducts()->with(['product'])->all();
 		foreach ($orderProducts as $orderProduct) {
-			$line = str_pad($date, 13) .
-				str_pad($customerGecomId, 11) .
-				str_pad($orderProduct->quantity . $orderProduct->product->gecom_code, 19) .
-				str_pad(Yii::$app->formatter->asCurrency($orderProduct->price, ''), 9) .
+			$line = MBStringHelper::mb_str_pad($date, 13) .
+				MBStringHelper::mb_str_pad($customerGecomId, 11) .
+				MBStringHelper::mb_str_pad($orderProduct->quantity . $orderProduct->product->gecom_code, 19) .
+				MBStringHelper::mb_str_pad(Yii::$app->formatter->asCurrency($orderProduct->price, ''), 9) .
 				$userGecomId;
 			$output .= $line . "\n";
 		}
