@@ -51,7 +51,15 @@ class ProductsImportForm extends Model {
 	 * @return string
 	 */
 	public function processValue($value) {
-		return mb_convert_encoding($value, ImportHelper::TO_ENCODING, 'ISO-8859-3');
+		switch ($this->scenario) {
+			case self::SCENARIO_PRICE:
+				$encoding = 'ISO-8859-3';
+				break;
+			case self::SCENARIO_STOCK:
+				$encoding = 'CP850';
+				break;
+		}
+		return mb_convert_encoding($value, ImportHelper::TO_ENCODING, $encoding);
 	}
 
 	/**
@@ -93,18 +101,18 @@ class ProductsImportForm extends Model {
 					};
 					break;
 				case self::SCENARIO_STOCK:
-					$delimiter = ',';
+					$delimiter = '`';
 					$startFromLine = 0;
 					$aditionalConfigs = [
 						[
 							'attribute' => 'stock',
 							'value' => function($line) {
-								return (int) $line[3];
+								return (int) $line[2];
 							},
 						],
 					];
 					$skipImport = function ($line) {
-						return !$line[0] || count($line) != 8;
+						return !$line[0] || count($line) != 3;
 					};
 					break;
 			}
