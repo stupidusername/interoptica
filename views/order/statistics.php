@@ -1,7 +1,10 @@
 <?php
 
+use app\models\OrderSearch;
 use app\models\User;
 use miloschuman\highcharts\Highcharts;
+use yii\helpers\Url;
+use yii\web\JsExpression;
 
 /* @var $model app\models\OrderSummary */
 /* @var $ordersBySalesman app\models\OrderSummary */
@@ -25,7 +28,7 @@ $userIds = Yii::$app->authManager->getUserIdsByRole('salesman');
 $users = User::find()->andWhere(['id' => $userIds])->indexBy('id')->all();
 $series = [];
 foreach ($userIds as $k => $id) {
-	$series[$k] = ['name' => $users[$id]->username, 'data' => []];
+	$series[$k] = ['name' => $users[$id]->username, 'data' => [], 'key' => $id];
 	foreach ($weeks as $week) {
 		$series[$k]['data'][] = isset($ordersBySalesman[$id . '-' . $week]) ? (int) $ordersBySalesman[$id . '-' . $week]->totalQuantity : 0;
 	}
@@ -42,6 +45,14 @@ Highcharts::widget([
 		'plotOptions' => [
 			'column' => [
 				'dataLabels' => ['enabled' => true],
+			],
+			'series' => [
+				'cursor' => 'pointer',
+				'point' => [
+					'events' => [
+						'click' => new JsExpression('function () { location.href = "' . Url::to(['index', 'OrderSearch' => ['user_id' => '']]) . '" + this.series.userOptions.key; }'),
+					],
+				],
 			],
 		],
 		'series' => $series,

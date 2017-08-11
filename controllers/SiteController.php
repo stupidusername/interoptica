@@ -54,6 +54,9 @@ class SiteController extends Controller {
 	 * @return string
 	 */
 	public function actionIndex() {
+		if (Yii::$app->user->can('management')) {
+			return $this->redirect(['order/statistics']);
+		}
 		return $this->render('index');
 	}
 
