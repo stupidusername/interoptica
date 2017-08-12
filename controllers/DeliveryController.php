@@ -112,7 +112,7 @@ class DeliveryController extends Controller
 	 */
 	public function actionEditStatus($id) {
 		$model = $this->findModel($id);
-		$model->scenario = Delivery::SCENARIO_EDIT;
+		$model->scenario = Delivery::SCENARIO_EDIT_STATUS;
 		$out = Json::encode(['output' => '', 'message' => '']);
 		if ($model->load(Yii::$app->request->post())) {
 			$model->save();
@@ -131,7 +131,7 @@ class DeliveryController extends Controller
 	 */
 	public function actionEditTransport($id) {
 		$model = $this->findModel($id);
-		$model->scenario = Delivery::SCENARIO_EDIT;
+		$model->scenario = Delivery::SCENARIO_EDIT_TRANSPORT;
 		$out = Json::encode(['output' => '', 'message' => '']);
 		if ($model->load(Yii::$app->request->post())) {
 			$model->save();
