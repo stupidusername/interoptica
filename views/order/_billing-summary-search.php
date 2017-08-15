@@ -1,16 +1,15 @@
 <?php
 
-use app\models\OrderSummary;
 use yii\helpers\Html;
 use yii\jui\DatePicker;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\OrderSummary */
+/* @var $model app\models\BillingSummary */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="order-summary-search">
+<div class="billing-summary-search">
 
 <?php $form = ActiveForm::begin([
 	'method' => 'get',
@@ -25,8 +24,6 @@ use yii\widgets\ActiveForm;
 	'dateFormat' => 'yyyy-MM-dd',
 	'options' => ['class' => 'form-control'],
 ]) ?>
-
-<?= $form->field($model, 'period')->dropDownList(OrderSummary::periodLabels()); ?>
 
     <div class="form-group">
 	<?= Html::submitButton('Buscar', ['class' => 'btn btn-primary']) ?>

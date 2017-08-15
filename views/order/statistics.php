@@ -6,8 +6,10 @@ use miloschuman\highcharts\Highcharts;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 
-/* @var $model app\models\OrderSummary */
+/* @var $orderModel app\models\OrderSummary */
 /* @var $ordersBySalesman app\models\OrderSummary */
+/* @var $billingModel app\models\BillingSummary */
+/* @var $billingBySalesman app\models\BillingSummary */
 /* @var $this yii\web\View */
 
 $this->title = 'Estadísticas';
@@ -15,14 +17,16 @@ $this->params['breadcrums'][] = ['label' => 'Pedidos', 'url' => ['index']];
 $this->params['breadcrums'][] = ['label' => $this->title];
 ?>
 
-<?php echo $this->render('_summary-search', ['model' => $model]); ?>
+<h2>Piezas Vendidas</h2>
+
+<?php echo $this->render('_summary-search', ['model' => $orderModel]); ?>
 
 <?php
 $periods = [];
-$period = $model->queryFromDate;
-while ($period < $model->queryToDate) {
+$period = $orderModel->queryFromDate;
+while ($period < $orderModel->queryToDate) {
 	$periods[] = $period;
-	switch ($model->period) {
+	switch ($orderModel->period) {
 	case OrderSummary::PERIOD_WEEK:
 		$period = gmdate('Y-m-d', strtotime('monday next week ' . $period));
 		break;
@@ -63,6 +67,43 @@ Highcharts::widget([
 						'click' => new JsExpression('function () { location.href = "' . Url::to(['index', 'OrderSearch' => ['user_id' => '']]) . '" + this.series.userOptions.key; }'),
 					],
 				],
+			],
+		],
+		'series' => $series,
+	],
+]);
+?>
+
+<h2>Facturación Mensual</h2>
+
+<?php echo $this->render('_billing-summary-search', ['model' => $billingModel]); ?>
+
+<?php
+$periods = [];
+$period = $billingModel->queryFromDate;
+while ($period < $billingModel->queryToDate) {
+	$periods[] = $period;
+	$period = gmdate('Y-m-d', strtotime('+1 month ' . $period));
+}
+$series = [];
+foreach ($userIds as $k => $id) {
+	$series[$k] = ['name' => $users[$id]->username, 'data' => [], 'key' => $id];
+	foreach ($periods as $period) {
+		$series[$k]['data'][] = isset($billingBySalesman[$id . '-' . $period]) ? (int) $billingBySalesman[$id . '-' . $period]->invoiced : 0;
+	}
+}
+?>
+
+<?=
+Highcharts::widget([
+	'options' => [
+		'chart' => ['type' => 'column'],
+		'title' => ['text' => 'Facturación'],
+		'xAxis' => ['categories' => $periods],
+		'yAxis' => ['title' => ['text' => 'Total facturado']],
+		'plotOptions' => [
+			'column' => [
+				'dataLabels' => ['enabled' => true],
 			],
 		],
 		'series' => $series,

@@ -82,8 +82,6 @@ class MonthlySummarySearch extends MonthlySummary
 			$query->andWhere(['like', 'begin_date', '%-%' . $this->month . '-%', false]);
 		}
 
-		$query->with(['user']);
-
 		$query->orderBy(['begin_date' => SORT_DESC, 'user_id' => SORT_ASC]);
 
 		return $dataProvider;

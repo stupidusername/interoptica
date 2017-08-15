@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\helpers\DateHelper;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -16,11 +17,6 @@ class OrderSummary extends Order {
 	 * @var integer
 	 */
 	public $totalQuantity;
-
-	/**
-	 * @var integer
-	 */
-	public $week;
 
 	/**
 	 * @var string
@@ -137,13 +133,13 @@ class OrderSummary extends Order {
 				if ($this->fromDate) {
 					switch ($this->period) {
 					case self::PERIOD_WEEK:
-						$this->queryFromDate = gmdate('Y-m-d', strtotime('monday next week -7 days' . $this->fromDate));
+						$this->queryFromDate = DateHelper::currentWeek($this->fromDate);
 						break;
 					case self::PERIOD_MONTH:
-						$this->queryFromDate = gmdate('Y-m-01', strtotime($this->fromDate));
+						$this->queryFromDate = DateHelper::currentMonth($this->fromDate);
 						break;
 					case self::PERIOD_YEAR:
-						$this->queryFromDate = gmdate('Y-01-01', strtotime($this->fromDate));
+						$this->queryFromDate = DateHelper::currentYear($this->fromDate);
 						break;
 					}
 					$query->andWhere(['>=', 'create_datetime', $this->queryFromDate]);
@@ -151,13 +147,13 @@ class OrderSummary extends Order {
 				if ($this->toDate) {
 					switch ($this->period) {
 					case self::PERIOD_WEEK:
-						$this->queryToDate = gmdate('Y-m-d', strtotime('monday next week ' . $this->toDate));
+						$this->queryToDate = DateHelper::nextWeek($this->toDate);
 						break;
 					case self::PERIOD_MONTH:
-						$this->queryToDate = gmdate('Y-m-01', strtotime('+1 month ' . $this->toDate));
+						$this->queryToDate = DateHelper::nextMonth($this->toDate);
 						break;
 					case self::PERIOD_YEAR:
-						$this->queryToDate = gmdate('Y-01-01', strtotime('+1 year ' . $this->toDate));
+						$this->queryToDate = DateHelper::nextYear($this->toDate);
 						break;
 					}
 					$query->andWhere(['<', 'create_datetime', $this->queryToDate]);
