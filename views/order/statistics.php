@@ -1,6 +1,6 @@
 <?php
 
-use app\models\OrderSearch;
+use app\models\OrderSummary;
 use app\models\User;
 use miloschuman\highcharts\Highcharts;
 use yii\helpers\Url;
@@ -18,19 +18,29 @@ $this->params['breadcrums'][] = ['label' => $this->title];
 <?php echo $this->render('_summary-search', ['model' => $model]); ?>
 
 <?php
-$weeks = [];
-$week = gmdate('Y-m-d', strtotime('monday ' . $model->fromDate));
-while ($week <= gmdate('Y-m-d', strtotime($model->toDate))) {
-	$weeks[] = $week;
-	$week = gmdate('Y-m-d', strtotime('monday next week ' . $week));
+$periods = [];
+$period = $model->queryFromDate;
+while ($period < $model->queryToDate) {
+	$periods[] = $period;
+	switch ($model->period) {
+	case OrderSummary::PERIOD_WEEK:
+		$period = gmdate('Y-m-d', strtotime('monday next week ' . $period));
+		break;
+	case OrderSummary::PERIOD_MONTH:
+		$period = gmdate('Y-m-d', strtotime('+1 month ' . $period));
+		break;
+	case OrderSummary::PERIOD_YEAR:
+		$period = gmdate('Y-m-d', strtotime('+1 year ' . $period));
+		break;
+	}
 }
 $userIds = Yii::$app->authManager->getUserIdsByRole('salesman');
 $users = User::find()->andWhere(['id' => $userIds])->indexBy('id')->all();
 $series = [];
 foreach ($userIds as $k => $id) {
 	$series[$k] = ['name' => $users[$id]->username, 'data' => [], 'key' => $id];
-	foreach ($weeks as $week) {
-		$series[$k]['data'][] = isset($ordersBySalesman[$id . '-' . $week]) ? (int) $ordersBySalesman[$id . '-' . $week]->totalQuantity : 0;
+	foreach ($periods as $period) {
+		$series[$k]['data'][] = isset($ordersBySalesman[$id . '-' . $period]) ? (int) $ordersBySalesman[$id . '-' . $period]->totalQuantity : 0;
 	}
 }
 ?>
@@ -40,7 +50,7 @@ Highcharts::widget([
 	'options' => [
 		'chart' => ['type' => 'column'],
 		'title' => ['text' => 'Ventas'],
-		'xAxis' => ['categories' => $weeks],
+		'xAxis' => ['categories' => $periods],
 		'yAxis' => ['title' => ['text' => 'Piezas vendidas']],
 		'plotOptions' => [
 			'column' => [

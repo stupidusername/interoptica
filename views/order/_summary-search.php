@@ -1,5 +1,6 @@
 <?php
 
+use app\models\OrderSummary;
 use yii\helpers\Html;
 use yii\jui\DatePicker;
 use yii\widgets\ActiveForm;
@@ -24,6 +25,8 @@ use yii\widgets\ActiveForm;
 	'dateFormat' => 'yyyy-MM-dd',
 	'options' => ['class' => 'form-control'],
 ]) ?>
+
+<?= $form->field($model, 'period')->dropDownList(OrderSummary::periodLabels()); ?>
 
     <div class="form-group">
 	<?= Html::submitButton('Buscar', ['class' => 'btn btn-primary']) ?>
