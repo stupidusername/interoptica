@@ -51,6 +51,12 @@ foreach ($userIds as $k => $id) {
 
 <?=
 Highcharts::widget([
+	'setupOptions' => [
+		'lang' => [
+			'decimalPoint' => ',',
+			'thousandsSep' => '.',
+		],
+	],
 	'options' => [
 		'chart' => ['type' => 'column'],
 		'title' => ['text' => 'Ventas'],
@@ -96,15 +102,24 @@ foreach ($userIds as $k => $id) {
 
 <?=
 Highcharts::widget([
+	'setupOptions' => [
+		'lang' => [
+			'decimalPoint' => ',',
+			'thousandsSep' => '.',
+		],
+	],
 	'options' => [
 		'chart' => ['type' => 'column'],
-		'title' => ['text' => 'Facturación'],
+		'title' => ['text' => 'Total facturado'],
 		'xAxis' => ['categories' => $periods],
-		'yAxis' => ['title' => ['text' => 'Total facturado']],
+		'yAxis' => ['title' => ['text' => '$']],
 		'plotOptions' => [
 			'column' => [
-				'dataLabels' => ['enabled' => true],
+				'dataLabels' => ['enabled' => true, 'format' => '$ {point.y:,.2f}'],
 			],
+		],
+		'tooltip' => [
+			'pointFormat' => '<span style="color:{point.color}">●</span> {series.name}: <b>$ {point.y:,.2f}</b><br/>',
 		],
 		'series' => $series,
 	],
