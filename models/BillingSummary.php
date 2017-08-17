@@ -39,7 +39,7 @@ class BillingSummary extends MonthlySummary {
 	 */
 	public function init() {
 		parent::init();
-		$this->fromDate = Yii::$app->formatter->asDate(strtotime('-1 month'), 'yyyy-MM-dd');
+		$this->fromDate = Yii::$app->formatter->asDate(time(), 'yyyy-MM-dd');
 		$this->toDate = Yii::$app->formatter->asDate(time(), 'yyyy-MM-dd');
 	}
 
