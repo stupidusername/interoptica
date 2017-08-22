@@ -210,7 +210,8 @@ class Issue extends \yii\db\ActiveRecord
 	 */
 	public function getOpenIssueStatus()
 	{
-		return $this->hasOne(IssueStatus::className(), ['issue_id' => 'id'])->andWhere(['status' => IssueStatus::STATUS_OPEN]);
+		$subquery = IssueStatus::find()->select('MIN(id)')->groupBy('issue_id');
+		return $this->hasOne(IssueStatus::className(), ['issue_id' => 'id'])->andWhere(['status' => IssueStatus::STATUS_OPEN, IssueStatus::tableName() . '.id' => $subquery]);
 	}
 
 	/**

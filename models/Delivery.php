@@ -172,7 +172,8 @@ class Delivery extends \yii\db\ActiveRecord
 	 */
 	public function getDeliveryStatus()
 	{
-		return $this->hasOne(DeliveryStatus::className(), ['delivery_id' => 'id'])->orderBy(['id' => SORT_DESC]);
+		$subquery = DeliveryStatus::find()->select('MAX(id)')->groupBy('delivery_id');
+		return $this->hasOne(DeliveryStatus::className(), ['delivery_id' => 'id'])->andWhere([DeliveryStatus::tableName() . '.id' => $subquery]);
 	}
 
 	/**
@@ -180,7 +181,8 @@ class Delivery extends \yii\db\ActiveRecord
 	 */
 	public function getEnteredDeliveryStatus()
 	{
-		return $this->hasOne(DeliveryStatus::className(), ['delivery_id' => 'id'])->andWhere(['status' => DeliveryStatus::STATUS_WAITING_FOR_TRANSPORT]);
+		$subquery = DeliveryStatus::find()->select('MIN(id)')->groupBy('delivery_id');
+		return $this->hasOne(DeliveryStatus::className(), ['delivery_id' => 'id'])->andWhere(['status' => DeliveryStatus::STATUS_WAITING_FOR_TRANSPORT, DeliveryStatus::tableName() . '.id' => $subquery]);
 	}
 
 	/**
