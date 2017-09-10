@@ -47,14 +47,19 @@ if ($orderModel->period == OrderSummary::PERIOD_MONTH) {
 		->andWhere(['user_id' => $userIds])->asArray()->indexBy(function ($row) { return $row['user_id'] . '-' . $row['period']; })->all();
 }
 $series = [];
+$totals = [];
 foreach ($userIds as $k => $id) {
 	$series[$k * 2] = ['type' => 'column', 'name' => $users[$id]->username, 'data' => [], 'key' => $id];
 	if ($orderModel->period == OrderSummary::PERIOD_MONTH) {
 		$series[$k * 2 + 1] = ['type' => 'errorbar', 'name' => 'Objetivo', 'data' => []];
 	}
 	foreach ($periods as $period) {
+		if (!isset($totals[$period])) {
+			$totals[$period] = 0;
+		}
 		$idx = $id . '-' . $period;
 		$quantity = isset($ordersBySalesman[$idx]) ? (int) $ordersBySalesman[$idx]->totalQuantity : 0;
+		$totals[$period] += $quantity;
 		$series[$k * 2]['data'][] = $quantity;
 		if ($orderModel->period == OrderSummary::PERIOD_MONTH) {
 			$objective = isset($objectives[$idx]) ? (int) $objectives[$idx]['objective'] : 0;
@@ -62,6 +67,7 @@ foreach ($userIds as $k => $id) {
 		}
 	}
 }
+$xAxisLabels = array_map(function ($period) use ($totals) { return $period . ' | Total: ' . $totals[$period]; }, $periods);
 ?>
 
 <?=
@@ -78,7 +84,7 @@ Highcharts::widget([
 	'options' => [
 		'chart' => ['type' => 'column'],
 		'title' => ['text' => 'Ventas'],
-		'xAxis' => ['categories' => $periods],
+		'xAxis' => ['categories' => $xAxisLabels],
 		'yAxis' => ['title' => ['text' => 'Piezas']],
 		'plotOptions' => [
 			'column' => [
