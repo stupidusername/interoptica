@@ -19,7 +19,7 @@ class DeliverySearch extends Delivery
 	{
 		return [
 			[['id', 'status', 'user_id'], 'integer'],
-			[['transport'], 'safe'],
+			[['transport', 'tracking_number'], 'safe'],
 		];
 	}
 
@@ -72,6 +72,7 @@ class DeliverySearch extends Delivery
 		]);
 
 		$query->andFilterWhere(['like', 'transport', $this->transport]);
+		$query->andFilterWhere(['like', 'tracking_number', $this->tracking_number]);
 
 		if ($this->status != null) {
 			$query->innerJoinWith(['deliveryStatuses' => function ($query) {

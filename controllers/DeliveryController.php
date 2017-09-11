@@ -10,6 +10,7 @@ use app\models\DeliveryIssue;
 use app\models\DeliveryOrder;
 use app\models\DeliverySearch;
 use app\models\DeliveryStatus;
+use kartik\grid\EditableColumnAction;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -37,7 +38,7 @@ class DeliveryController extends Controller
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'deleted' => ['POST'],
+					'delete' => ['POST'],
 					'edit-status' => ['POST'],
 					'edit-transport' => ['POST'],
 					'edit-tracking-number' => ['POST'],
@@ -52,6 +53,13 @@ class DeliveryController extends Controller
 					'allow' => true,
 				],
 				'rules' => [
+					[
+						'actions' => ['edit'],
+						'model' => function() {
+							return $this->findModel(Yii::$app->request->getBodyParam('editableKey'));
+						},
+						'roles' => ['admin', 'author'],
+					],
 					[
 						'actions' => ['edit-status', 'edit-transport', 'edit-tracking-number', 'delete'],
 						'model' => function() {
@@ -77,6 +85,20 @@ class DeliveryController extends Controller
 				'only' => ['add-order', 'add-issue', 'delete-order', 'delete-issue'],
 			],
 		];
+	}
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function actions() {
+		return ArrayHelper::merge(parent::actions(), [
+			// This actions is only used by the tracking number editable
+			'edit' => [
+				'class' => EditableColumnAction::className(),
+				'modelClass' => Delivery::className(),
+				'scenario' => Delivery::SCENARIO_EDIT_TRACKING_NUMBER,
+			],
+		]);
 	}
 
 	/**

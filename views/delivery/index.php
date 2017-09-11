@@ -1,10 +1,11 @@
 <?php
 
 use app\models\DeliveryStatus;
+use kartik\grid\EditableColumn;
+use kartik\grid\GridView;
 use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\DeliverySearch */
@@ -57,6 +58,14 @@ $this->params['breadcrumbs'][] = $this->title;
 				return DeliveryStatus::statusLabels()[$model->status];
 			},
 			'filter' => Html::activeDropDownList($searchModel, 'status', DeliveryStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
+		],
+		'transport',
+		[
+			'class' => EditableColumn::className(),
+			'attribute' => 'tracking_number',
+			'editableOptions'=> [
+				'formOptions' => ['action' => ['edit']],
+			],
 		],
 		[
 			'label' => 'Fecha de Ingreso',
