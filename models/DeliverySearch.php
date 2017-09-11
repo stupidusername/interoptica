@@ -13,12 +13,17 @@ use app\models\Delivery;
 class DeliverySearch extends Delivery
 {
 	/**
+	 * @var integer
+	 */
+	public $customerId;
+
+	/**
 	 * @inheritdoc
 	 */
 	public function rules()
 	{
 		return [
-			[['id', 'status', 'user_id'], 'integer'],
+			[['id', 'customerId', 'status', 'user_id'], 'integer'],
 			[['transport', 'tracking_number'], 'safe'],
 		];
 	}
@@ -42,13 +47,16 @@ class DeliverySearch extends Delivery
 	public function search($params)
 	{
 		$query = Delivery::find()->with([
-			'issues.customer',
-			'orders.customer',
 			'deliveryStatus',
 			'user',
 			'enteredDeliveryStatus',
 			'issues.issueStatus',
 			'orders.orderStatus',
+		]);
+
+		$query->joinWith([
+			'issues.customer issue_customer' => function ($query) { $query->where([]); },
+			'orders.customer order_customer' => function ($query) { $query->where([]); },
 		]);
 
 		// add conditions that should always apply here
@@ -67,12 +75,13 @@ class DeliverySearch extends Delivery
 
 		// grid filtering conditions
 		$query->andFilterWhere([
-			'id' => $this->id,
-			'user_id' => $this->user_id,
+			'delivery.id' => $this->id,
+			'delivery.user_id' => $this->user_id,
 		]);
 
 		$query->andFilterWhere(['like', 'transport', $this->transport]);
 		$query->andFilterWhere(['like', 'tracking_number', $this->tracking_number]);
+		$query->andFilterWhere(['or', ['issue_customer.id' => $this->customerId], ['order_customer.id' => $this->customerId]]);
 
 		if ($this->status != null) {
 			$query->innerJoinWith(['deliveryStatuses' => function ($query) {
@@ -82,5 +91,12 @@ class DeliverySearch extends Delivery
 		}
 
 		return $dataProvider;
+	}
+	
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getCustomer() {
+		return $this->hasOne(Customer::className(), ['id' => 'customerId']);
 	}
 }

@@ -34,7 +34,23 @@ $this->params['breadcrumbs'][] = $this->title;
 			'format' => 'raw',
 			'contentOptions' => ['style' => 'width: 100px;'],
 		],
-		'customerNames',
+		[
+			'label' => 'Clientes',
+			'value' => 'customerNames',
+			'filter' => Select2::widget([
+				'initValueText' => $searchModel->customerId ? $searchModel->customer->displayName : null,
+				'model' => $searchModel,
+				'attribute' => 'customerId',
+				'options' => ['placeholder' => 'Elegir cliente'],
+				'pluginOptions' => [
+					'allowClear' => true,
+					'minimumInputLength' => 3,
+					'ajax' => [
+						'url' => Url::to('/customer/list'),
+					],
+				],
+			]),
+		],
 		[
 			'label' => 'Usuario',
 			'value' => 'user.username',
