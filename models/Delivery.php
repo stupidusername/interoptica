@@ -13,6 +13,7 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property integer $id
  * @property integer $user_id
  * @property string $transport
+ * @property string $tracking_number
  * @property integer $deleted
  *
  * @property User $user
@@ -30,6 +31,7 @@ class Delivery extends \yii\db\ActiveRecord
 {
 	const SCENARIO_EDIT_STATUS = 'edit_status';
 	const SCENARIO_EDIT_TRANSPORT = 'edit_transport';
+	const SCENARIO_EDIT_TRACKING_NUMBER = 'edit_tracking_number';
 	
 	/**
 	 * The last order status saved
@@ -129,12 +131,13 @@ class Delivery extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['transport'], 'string', 'max' => 255],
+			[['transport', 'tracking_number'], 'string', 'max' => 255],
 			[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
 			[['status'], 'required', 'on' => self::SCENARIO_EDIT_STATUS],
 			[['transport'], 'required', 'when' => function() { return $this->status >= DeliveryStatus::STATUS_SENT; }],
 			[['status'], 'validateStatus', 'on' => self::SCENARIO_EDIT_STATUS],
 			[['transport'], 'validateTransport', 'on' => self::SCENARIO_EDIT_TRANSPORT],
+			[['tracking_number'], 'validateTrackingNumber', 'on' => self::SCENARIO_EDIT_TRACKING_NUMBER],
 		];
 	}
 
@@ -148,6 +151,7 @@ class Delivery extends \yii\db\ActiveRecord
 			'user_id' => 'ID Usuario',
 			'status' => 'Estado',
 			'transport' => 'Transporte',
+			'tracking_number' => 'Número de Guía',
 			'customerNames' => 'Clientes',
 		];
 	}
@@ -233,14 +237,20 @@ class Delivery extends \yii\db\ActiveRecord
 	}
 
 	public function validateStatus($attribute, $params, $validator) {
-		if($this->status >= DeliveryStatus::STATUS_SENT && !$this->transport) {
+		if ($this->status >= DeliveryStatus::STATUS_SENT && !$this->transport) {
 			$this->addError($attribute, 'Transporte no puede estar vacío.');
 		}
 	}
 
 	public function validateTransport($attribute, $params, $validator) {
-		if($this->status >= DeliveryStatus::STATUS_SENT) {
+		if ($this->status >= DeliveryStatus::STATUS_SENT) {
 			$this->addError($attribute, 'No se puede editar un envio que no esta en estado ' . DeliveryStatus::statusLabels()[DeliveryStatus::STATUS_WAITING_FOR_TRANSPORT]);
+		}
+	}
+
+	public function validateTrackingNumber($attribute, $params, $validator) {
+		if ($this->status >= DeliveryStatus::STATUS_DELIVERED) {
+			$this->addError($attribute, 'No se puede editar un envio que esta en estado ' . DeliveryStatus::statusLabels()[DeliveryStatus::STATUS_DELIVERED]);
 		}
 	}
 

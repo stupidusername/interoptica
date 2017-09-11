@@ -40,6 +40,7 @@ class DeliveryController extends Controller
 					'deleted' => ['POST'],
 					'edit-status' => ['POST'],
 					'edit-transport' => ['POST'],
+					'edit-tracking-number' => ['POST'],
 				],
 			],
 			'access' => [
@@ -52,7 +53,7 @@ class DeliveryController extends Controller
 				],
 				'rules' => [
 					[
-						'actions' => ['edit-status', 'edit-transport', 'delete'],
+						'actions' => ['edit-status', 'edit-transport', 'edit-tracking-number', 'delete'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('id'));
 						},
@@ -136,6 +137,24 @@ class DeliveryController extends Controller
 		if ($model->load(Yii::$app->request->post())) {
 			$model->save();
 			$out = Json::encode(['output' => '', 'message' => $model->getErrors('transport')]);
+		}
+		// return ajax json encoded response and exit
+		echo $out;
+		return;
+	}
+
+	/**
+	 * This action is ment to handle the request from the delivery tracking number editable
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionEditTrackingNumber($id) {
+		$model = $this->findModel($id);
+		$model->scenario = Delivery::SCENARIO_EDIT_TRACKING_NUMBER;
+		$out = Json::encode(['output' => '', 'message' => '']);
+		if ($model->load(Yii::$app->request->post())) {
+			$model->save();
+			$out = Json::encode(['output' => '', 'message' => $model->getErrors('tracking_number')]);
 		}
 		// return ajax json encoded response and exit
 		echo $out;

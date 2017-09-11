@@ -86,6 +86,19 @@ DeliveryAsset::register($this);
 				'pjaxContainerId' => 'deliveryDetail',
 			]),
 		],
+		[
+			'attribute' => 'tracking_number',
+			'format' => 'raw',
+			'value' => Editable::widget([
+				'model' => $model,
+				'attribute' => 'tracking_number',
+				'formOptions' => [
+					'action' => ['edit-tracking-number', 'id' => $model->id],
+					'enableClientValidation' => false,
+				],
+				'pjaxContainerId' => 'deliveryDetail',
+			]),
+		],
 	],
 ]) ?>
 
