@@ -221,4 +221,12 @@ class Issue extends \yii\db\ActiveRecord
 	{
 		return $this->hasMany(IssueComment::className(), ['issue_id' => 'id']);
 	}
+	
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getIssueInvoices()
+	{
+		return $this->hasMany(IssueInvoice::className(), ['issue_id' => 'id']);
+	}
 }

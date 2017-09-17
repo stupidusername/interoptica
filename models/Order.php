@@ -229,6 +229,14 @@ class Order extends \yii\db\ActiveRecord
 		$subquery = OrderStatus::find()->select('MIN(id)')->groupBy('order_id');
 		return $this->hasOne(OrderStatus::className(), ['order_id' => 'id'])->andWhere(['status' => OrderStatus::STATUS_ENTERED, OrderStatus::tableName() . '.id' => $subquery]);
 	}
+	
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getOrderInvoices()
+	{
+		return $this->hasMany(OrderInvoice::className(), ['order_id' => 'id']);
+	}
 
 	/**
 	 * @return integer
