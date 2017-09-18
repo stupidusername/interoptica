@@ -7,6 +7,7 @@ use app\models\Customer;
 use app\models\BillingSummary;
 use app\models\Order;
 use app\models\OrderForm;
+use app\models\OrderInvoice;
 use app\models\OrderProduct;
 use app\models\OrderStatus;
 use app\models\OrderSearch;
@@ -39,6 +40,7 @@ class OrderController extends Controller
 				'actions' => [
 					'delete' => ['POST'],
 					'delete-entry' => ['POST'],
+					'delete-invoice' => ['POST'],
 				],
 			],
 			'access' => [
@@ -63,6 +65,13 @@ class OrderController extends Controller
 							return $this->findModel(Yii::$app->request->getQueryParam('orderId'));
 						},
 						'roles' => ['admin', 'author'],
+					],
+					[
+						'actions' => ['add-invoice', 'delete-invoice'],
+						'model' => function() {
+							return $this->findModel(Yii::$app->request->getQueryParam('orderId'));
+						},
+						'roles' => ['admin', 'author', 'depot'],
 					],
 					[
 						'actions' => ['statistics'],
@@ -220,6 +229,38 @@ class OrderController extends Controller
 	public function actionDeleteEntry($orderId, $productId)
 	{
 		$this->findOrderProductModel($orderId, $productId)->delete();
+		Yii::$app->response->format = Response::FORMAT_JSON;
+		return ['success' => true];
+	}
+
+	/**
+	 * Adds an invoice  to an existing Order.
+	 * @param integer $orderId
+	 */
+	public function actionAddInvoice($orderId) {
+		$order = $this->findModel($orderId);
+		$model = new OrderInvoice();
+		$model->order_id = $order->id;
+
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			Yii::$app->response->format = Response::FORMAT_JSON;
+			return ['success' => true];
+		} else {
+			return $this->renderAjax('/invoice/add', [
+				'model' => $model,
+			]);
+		}
+	}
+
+	/**
+	 * Deletes an existing OrderInvoice model.
+	 * @param integer $orderId
+	 * @param integer $invoiceId
+	 * @return mixed
+	 */
+	public function actionDeleteInvoice($orderId, $invoiceId)
+	{
+		OrderInvoice::deleteAll(['id' => $invoiceId]);
 		Yii::$app->response->format = Response::FORMAT_JSON;
 		return ['success' => true];
 	}

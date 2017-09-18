@@ -41,6 +41,13 @@ Modal::begin([
 
 Modal::end();
 
+Modal::begin([
+	'id' => 'addInvoice',
+	'url' => Url::to(['add-invoice', 'issueId' => $model->id]),
+]);
+
+Modal::end();
+
 IssueAsset::register($this);
 ?>
 <div class="issue-view">
@@ -110,6 +117,40 @@ IssueAsset::register($this);
 		<?= $this->render('/customer/_detail', ['model' => $model->customer]) ?>
 		
 	</div>
+
+	<h3>Facturas</h3>
+	<p>
+		<?= Html::button('Agregar Factura', ['id' => 'addInvoiceButton', 'class' => 'btn btn-success']) ?>
+	</p>
+	<?php Pjax::begin(['id' => 'invoicesGridview']) ?>
+	<?=
+	GridView::widget([
+		'columns' => [
+			'number',
+			[
+				'class' => 'yii\grid\ActionColumn',
+				'template' => '{delete}',
+				'urlCreator' => function ($action, $model, $key, $index, $actionColumn) {
+					switch ($action) {
+						case 'delete':
+							return Url::to(['delete-invoice', 'issueId' => $model->issue_id, 'invoiceId' => $model->id]);
+					}
+				},
+				'buttons' => [
+					'delete' => function ($url, $model, $key) {
+						return Html::a(Html::tag('span', '', ['class' => "glyphicon glyphicon-trash"]), $url, ['class' => 'invoiceDelete']);
+					},
+				],
+			],
+		],
+		'dataProvider' => new ActiveDataProvider([
+			'query' => $model->getIssueInvoices(),
+			'pagination' => false,
+			'sort' => false,
+		]),
+	]);
+	?>
+	<?php Pjax::end() ?>
 	
 	<h3>Seguimiento de Estados</h3>
 

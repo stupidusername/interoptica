@@ -11,6 +11,10 @@ $(document).ready(function () {
 			}
 		}, 25);
 	};
+
+	var focusInvoice = function () {
+		$('#orderinvoice-number').focus();
+	};
 	
 	var setUpUpdateButtons = function (domElem) {
 		domElem.on('click', '.productUpdate', function (event) {
@@ -26,8 +30,16 @@ $(document).ready(function () {
 		$('#addEntry').kbModalAjax({url: addEntryUrl}); $('#addEntry').modal('show');
 	};
 	
+	var showAddInvoiceModal = function() {
+		$('#addInvoice').modal('show');
+	};
+
 	$('#addEntryButton').on('click', function () {
 		showAddEntryModal();
+	});
+
+	$('#addInvoiceButton').on('click', function () {
+		showAddInvoiceModal();
 	});
 	
 	// refresh order details periodically
@@ -42,8 +54,17 @@ $(document).ready(function () {
 		showAddEntryModal();
 	});
 	
-	$('#addEntry').on('kbModalShow', function (event, xhr, settings) {
+	$('#addInvoice').on('kbModalSubmitSuccess', function (event, xhr, settings) {
+		$.pjax.reload({container: '#invoicesGridview'});
+		$('#addInvoice').modal('hide');
+	});
+
+	$('#addEntry').on('shown.bs.modal', function (event, xhr, settings) {
 		focus();
+	});
+
+	$('#addInvoice').on('shown.bs.modal', function (event, xhr, settings) {
+		focusInvoice();
 	});
 	
 	$('#addEntry').on('kbModalSubmit', function (event, xhr, settings) {
@@ -66,5 +87,20 @@ $(document).ready(function () {
 		});
 	});
 	
+	$(document).on('click', '.invoiceDelete', function (event) {
+		event.preventDefault();
+		var url = $(this).attr('href');
+		jQuery.ajax({
+			type: 'POST',
+			url: url,
+			success: function (data, status, xhr) {
+				$.pjax.reload({container: '#invoicesGridview'});
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
+				alert(jqXHR.responseText);
+			}
+		});
+	});
+
 	setUpUpdateButtons($(document));
 });

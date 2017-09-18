@@ -45,6 +45,13 @@ Modal::begin([
 
 Modal::end(); 
 
+Modal::begin([
+	'id' => 'addInvoice',
+	'url' => Url::to(['add-invoice', 'orderId' => $model->id]),
+]);
+
+Modal::end();
+
 OrderAsset::register($this);
 ?>
 
@@ -121,6 +128,40 @@ OrderAsset::register($this);
 				'comment:ntext',
 			],
 		]) ?>
+
+		<h3>Facturas</h3>
+		<p>
+			<?= Html::button('Agregar Factura', ['id' => 'addInvoiceButton', 'class' => 'btn btn-success']) ?>
+		</p>
+		<?php Pjax::begin(['id' => 'invoicesGridview']) ?>
+		<?=
+		GridView::widget([
+			'columns' => [
+				'number',
+				[
+					'class' => 'yii\grid\ActionColumn',
+					'template' => '{delete}',
+					'urlCreator' => function ($action, $model, $key, $index, $actionColumn) {
+						switch ($action) {
+							case 'delete':
+								return Url::to(['delete-invoice', 'orderId' => $model->order_id, 'invoiceId' => $model->id]);
+						}
+					},
+					'buttons' => [
+						'delete' => function ($url, $model, $key) {
+							return Html::a(Html::tag('span', '', ['class' => "glyphicon glyphicon-trash"]), $url, ['class' => 'invoiceDelete']);
+						},
+					],
+				],
+			],
+			'dataProvider' => new ActiveDataProvider([
+				'query' => $model->getOrderInvoices(),
+				'pagination' => false,
+				'sort' => false,
+			]),
+		]);
+		?>
+		<?php Pjax::end() ?>
 
 		<?php Pjax::begin(['id' => 'pendingGridview']) ?>
 		<h3>Pedidos del mismo Cliente</h3>

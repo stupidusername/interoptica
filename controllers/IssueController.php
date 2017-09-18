@@ -8,6 +8,7 @@ use app\models\Customer;
 use app\models\FailSummary;
 use app\models\Issue;
 use app\models\IssueComment;
+use app\models\IssueInvoice;
 use app\models\IssueProduct;
 use app\models\IssueSearch;
 use app\models\IssueStatus;
@@ -20,6 +21,7 @@ use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+
 /**
  * IssueController implements the CRUD actions for Issue model.
  */
@@ -37,6 +39,7 @@ class IssueController extends Controller
 				'class' => VerbFilter::className(),
 				'actions' => [
 					'delete' => ['POST'],
+					'delete-invoice' => ['POST'],
 				],
 			],
 			'access' => [
@@ -61,6 +64,13 @@ class IssueController extends Controller
 							return $this->findModel(Yii::$app->request->getQueryParam('issueId'));
 						},
 						'roles' => ['admin', 'author'],
+					],
+					[
+						'actions' => ['add-invoice', 'delete-invoice'],
+						'model' => function() {
+							return $this->findModel(Yii::$app->request->getQueryParam('issueId'));
+						},
+						'roles' => ['admin', 'author', 'depot'],
 					],
 					[
 						'actions' => ['index', 'view', 'statistics', 'fail-summary', 'create', 'add-comment', 'get-envelope', 'list'],
@@ -261,6 +271,38 @@ class IssueController extends Controller
 	public function actionDeleteEntry($issueId, $productId)
 	{
 		$this->findIssueProductModel($issueId, $productId)->delete();
+		Yii::$app->response->format = Response::FORMAT_JSON;
+		return ['success' => true];
+	}
+	
+	/**
+	 * Adds an invoice  to an existing Issue.
+	 * @param integer $issueId
+	 */
+	public function actionAddInvoice($issueId) {
+		$issue = $this->findModel($issueId);
+		$model = new IssueInvoice();
+		$model->issue_id = $issue->id;
+
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			Yii::$app->response->format = Response::FORMAT_JSON;
+			return ['success' => true];
+		} else {
+			return $this->renderAjax('/invoice/add', [
+				'model' => $model,
+			]);
+		}
+	}
+
+	/**
+	 * Deletes an existing IssueInvoice model.
+	 * @param integer $issueId
+	 * @param integer $invoiceId
+	 * @return mixed
+	 */
+	public function actionDeleteInvoice($issueId, $invoiceId)
+	{
+		IssueInvoice::deleteAll(['id' => $invoiceId]);
 		Yii::$app->response->format = Response::FORMAT_JSON;
 		return ['success' => true];
 	}
