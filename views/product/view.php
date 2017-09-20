@@ -36,6 +36,10 @@ $this->params['breadcrumbs'][] = $this->title;
 				'format' => 'currency',
 			],
             'stock',
+	    [
+		    'attribute' => 'extra',
+		    'value' => $model->extra ? 'Sí' : 'No',
+	    ],
         ],
     ]) ?>
 

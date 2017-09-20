@@ -113,7 +113,8 @@ class OrderSummary extends Order {
 			self::PERIOD_YEAR => 'SUBDATE(DATE(order_status.create_datetime), DAYOFYEAR(order_status.create_datetime) - 1)',
 		];
 		$query = self::find()->select(['order.user_id', 'totalQuantity' => 'SUM(order_product.quantity)', 'period' => $sqlPeriodFunctions[$this->period]])
-			->andWhere(['order.user_id' => $userIds])->with(['orderStatus'])->groupBy(['order.user_id', 'period'])->indexBy(function ($row) { return $row['user_id'] . '-' . $row['period']; });
+			->andWhere(['order.user_id' => $userIds])->andWhere(['or', ['extra' => null], ['extra' => 0]])->with(['orderStatus'])->groupBy(['order.user_id', 'period'])
+			->indexBy(function ($row) { return $row['user_id'] . '-' . $row['period']; });
 
 		// add conditions that should always apply here
 
@@ -159,7 +160,7 @@ class OrderSummary extends Order {
 					$query->andWhere(['<', 'create_datetime', $this->queryToDate]);
 				}
 			},
-			'orderProducts']);
+			'orderProducts.product']);
 
 		return $dataProvider;
 	}

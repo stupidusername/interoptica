@@ -45,6 +45,12 @@ $this->params['breadcrumbs'][] = $this->title;
 				'formOptions' => ['action' => ['edit']],
 			],
 		],
+		[
+			'attribute' => 'extra',
+			'value' => function($model) {
+				return $model->extra ? 'Sí' : 'No';
+			},
+		],
 	];
 	?>
 

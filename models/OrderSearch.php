@@ -46,7 +46,7 @@ class OrderSearch extends Order
 	 */
 	public function search($params)
 	{
-		$query = Order::find()->with(['user', 'customer', 'orderStatus', 'enteredOrderStatus', 'orderProducts']);
+		$query = Order::find()->with(['user', 'customer', 'orderStatus', 'enteredOrderStatus', 'orderProducts.product']);
 
 		// add conditions that should always apply here
 

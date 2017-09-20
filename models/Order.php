@@ -244,7 +244,9 @@ class Order extends \yii\db\ActiveRecord
 	public function getTotalQuantity() {
 		$quantity = 0;
 		foreach ($this->orderProducts as $orderProduct) {
-			$quantity += $orderProduct->quantity;
+			if (!$orderProduct->product->extra) {
+				$quantity += $orderProduct->quantity;
+			}
 		}
 		return $quantity;
 	}

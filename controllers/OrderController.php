@@ -341,7 +341,7 @@ class OrderController extends Controller
 	 */
 	protected function findModel($id)
 	{
-		if ($this->model || ($this->model = Order::findOne($id)) !== null) {
+		if ($this->model || ($this->model = Order::find()->andWhere(['id' => $id])->with('orderProducts.product')->one()) !== null) {
 			return $this->model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');

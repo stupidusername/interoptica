@@ -20,6 +20,8 @@ use kartik\money\MaskMoney;
     <?= $form->field($model, 'price')->widget(MaskMoney::classname()) ?>
 
     <?= $form->field($model, 'stock')->textInput() ?>
+ 
+    <?= $form->field($model, 'extra')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
