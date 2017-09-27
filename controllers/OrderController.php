@@ -120,7 +120,7 @@ class OrderController extends Controller
 			if ($model->load(Yii::$app->request->post())) {
 				$model->save();
 				$output = OrderStatus::statusLabels()[$model->status];
-				$out = Json::encode(['output' => $output, 'message' => $model->getErrors()]);
+				$out = Json::encode(['output' => $output, 'message' => $model->getErrors('status')]);
 			}
 			// return ajax json encoded response and exit
 			echo $out;

@@ -29,40 +29,40 @@ class OrderStatus extends \yii\db\ActiveRecord
 	const STATUS_WAITING_FOR_TRANSPORT = 9;
 	const STATUS_SENT = 10;
 	const STATUS_DELIVERED = 11;
-	
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'order_status';
-    }
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['order_id', 'status'], 'integer'],
-            [['create_datetime'], 'safe'],
-            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
-        ];
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName()
+	{
+		return 'order_status';
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'order_id' => 'ID Pedido',
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		return [
+			[['order_id', 'status'], 'integer'],
+			[['create_datetime'], 'safe'],
+			[['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
+		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'id' => 'ID',
+			'order_id' => 'ID Pedido',
 			'user_id' => 'ID Usuario',
-            'status' => 'Estado',
-            'create_datetime' => 'Fecha',
-        ];
-    }
+			'status' => 'Estado',
+			'create_datetime' => 'Fecha',
+		];
+	}
 
 	/**
 	 * Status labels
@@ -84,30 +84,30 @@ class OrderStatus extends \yii\db\ActiveRecord
 			self::STATUS_DELIVERED => 'Entregado',
 		];
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function getStatusLabel() {
 		return self::statusLabels()[$this->status];
 	}
-	
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrder()
-    {
-        return $this->hasOne(Order::className(), ['id' => 'order_id']);
-	}
-	
+
 	/**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUser()
-    {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getOrder()
+	{
+		return $this->hasOne(Order::className(), ['id' => 'order_id']);
 	}
-	
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getUser()
+	{
+		return $this->hasOne(User::className(), ['id' => 'user_id']);
+	}
+
 	/**
 	 * Get last status of each order
 	 * @return \yii\db\ActiveQuery
