@@ -13,20 +13,21 @@ use yii\validators\UniqueValidator;
  * @property integer $product_id
  * @property string $price
  * @property integer $quantity
+ * @property integer $ignore_stock
  *
  * @property Order $order
  * @property Product $product
  */
 class OrderProduct extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'order_product';
-    }
-	
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName()
+	{
+		return 'order_product';
+	}
+
 	/**
 	 * @inheritdoc
 	 */
@@ -54,7 +55,7 @@ class OrderProduct extends \yii\db\ActiveRecord
 		$this->product->updateCounters(['stock' => -$this->quantity]);
 		parent::afterSave($insert, $changedAttributes);
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -64,56 +65,56 @@ class OrderProduct extends \yii\db\ActiveRecord
 	}
 
 	/**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['product_id', 'quantity'], 'required'],
-            [['product_id'], 'integer'],
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		return [
+			[['product_id', 'quantity'], 'required'],
+			[['product_id'], 'integer'],
 			[['quantity'], 'integer', 'min' => 1],
-            [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
+			[['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
 			[['product_id'], 'uniqueEntry'],
 			[['quantity'], 'inStock'],
-        ];
-    }
+		];
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'order_id' => 'ID Pedido',
-            'product_id' => 'ID Producto',
-            'price' => 'Precio',
-            'quantity' => 'Cantidad',
-        ];
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'order_id' => 'ID Pedido',
+			'product_id' => 'ID Producto',
+			'price' => 'Precio',
+			'quantity' => 'Cantidad',
+		];
+	}
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrder()
-    {
-        return $this->hasOne(Order::className(), ['id' => 'order_id']);
-    }
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getOrder()
+	{
+		return $this->hasOne(Order::className(), ['id' => 'order_id']);
+	}
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProduct()
-    {
-        return $this->hasOne(Product::className(), ['id' => 'product_id'])->where([]);
-    }
-	
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getProduct()
+	{
+		return $this->hasOne(Product::className(), ['id' => 'product_id'])->where([]);
+	}
+
 	/**
 	 * @return float
 	 */
 	public function getSubtotal() {
 		return $this->price * $this->quantity;
 	}
-	
+
 	/**
 	 * Validates that entered quantity it's available
 	 * @param string $attribute the attribute currently being validated
@@ -129,7 +130,7 @@ class OrderProduct extends \yii\db\ActiveRecord
 			$this->addError($attribute, "El stock de este producto es de $realStock y tienen que quedar " . Product::STOCK_MIN. ".");
 		}
 	}
-	
+
 	/**
 	 * Validates that entered entry it's unique
 	 * @param string $attribute the attribute currently being validated
@@ -145,7 +146,7 @@ class OrderProduct extends \yii\db\ActiveRecord
 		if ($this->hasErrors($attribute)) {
 			$this->clearErrors($attribute);
 			$this->addError($attribute, 'El producto ya se encuentra en el pedido. ' .
-					Html::a('Editar', ['/order/update-entry', 'orderId' => $this->order_id, 'productId' => $this->product_id], ['class' => 'productUpdate']) . '.');
+				Html::a('Editar', ['/order/update-entry', 'orderId' => $this->order_id, 'productId' => $this->product_id], ['class' => 'productUpdate']) . '.');
 		}
 	}
 
