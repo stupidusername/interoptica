@@ -158,6 +158,7 @@ GridView::widget([
 			'label' => 'Estado',
 			'value' => 'orderStatus.statusLabel',
 		],
+		'invoiceNumbers',
 		[
 			'class' => 'yii\grid\ActionColumn',
 			'template' => '{delete}',
@@ -175,7 +176,7 @@ GridView::widget([
 		],
 	],
 	'dataProvider' => new ActiveDataProvider([
-		'query' => $model->getOrders()->with(['orderStatus', 'customer'])->orderBy(['id' => SORT_DESC]),
+		'query' => $model->getOrders()->with(['orderStatus', 'customer', 'orderInvoices'])->orderBy(['id' => SORT_DESC]),
 		'pagination' => false,
 		'sort' => false,
 	]),
@@ -204,6 +205,7 @@ GridView::widget([
 			'label' => 'Estado',
 			'value' => 'issueStatus.statusLabel',
 		],
+		'invoiceNumbers',
 		[
 			'class' => 'yii\grid\ActionColumn',
 			'template' => '{delete}',
@@ -221,7 +223,7 @@ GridView::widget([
 		],
 	],
 	'dataProvider' => new ActiveDataProvider([
-		'query' => $model->getIssues()->with(['issueStatus', 'customer', 'issueType'])->orderBy(['id' => SORT_DESC]),
+		'query' => $model->getIssues()->with(['issueStatus', 'customer', 'issueType', 'issueInvoices'])->orderBy(['id' => SORT_DESC]),
 		'pagination' => false,
 		'sort' => false,
 	]),

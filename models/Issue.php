@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "issue".
@@ -22,6 +23,8 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property User $user
  * @property IssueProduct[] $issueProducts
  * @property IssueStatus[] $issueStatuses
+ * @property IssueInvoice[] $issueInvoices
+ * @property string $invoiceNumbers
  */
 class Issue extends \yii\db\ActiveRecord
 {
@@ -145,6 +148,7 @@ class Issue extends \yii\db\ActiveRecord
 			'order_id' => 'ID Pedido',
 			'issue_type_id' => 'ID Tipo',
 			'contact' => 'Contacto',
+			'invoiceNumbers' => 'Facturas',
 		];
 	}
 
@@ -228,5 +232,12 @@ class Issue extends \yii\db\ActiveRecord
 	public function getIssueInvoices()
 	{
 		return $this->hasMany(IssueInvoice::className(), ['issue_id' => 'id']);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getInvoiceNumbers() {
+		return implode(', ', ArrayHelper::getColumn($this->issueInvoices, 'number'));
 	}
 }

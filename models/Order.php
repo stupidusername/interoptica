@@ -5,6 +5,7 @@ namespace app\models;
 use app\helpers\MBStringHelper;
 use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "order".
@@ -25,6 +26,8 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property OrderStatus[] $orderStatuses
  * @property OrderStatus $orderStatus
  * @property OrderStatus $enteredOrderStatus
+ * @property OrderInvoice[] $orderInvoices
+ * @property string $invoiceNumbers
  */
 class Order extends \yii\db\ActiveRecord
 {
@@ -163,6 +166,7 @@ class Order extends \yii\db\ActiveRecord
 			'discount_percentage' => 'Porcentaje de Descuento',
 			'comment' => 'Comentario',
 			'status' => 'Estado',
+			'invoiceNumbers' => 'Facturas',
 		];
 	}
 
@@ -237,6 +241,13 @@ class Order extends \yii\db\ActiveRecord
 	public function getOrderInvoices()
 	{
 		return $this->hasMany(OrderInvoice::className(), ['order_id' => 'id']);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getInvoiceNumbers() {
+		return implode(', ', ArrayHelper::getColumn($this->orderInvoices, 'number'));
 	}
 
 	/**
