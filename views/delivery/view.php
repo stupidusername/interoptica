@@ -2,6 +2,7 @@
 
 use app\assets\DeliveryAsset;
 use app\models\DeliveryStatus;
+use app\models\Transport;
 use app\widgets\modal\Modal;
 use kartik\editable\Editable;
 use yii\data\ActiveDataProvider;
@@ -74,14 +75,21 @@ DeliveryAsset::register($this);
 			]),
 		],
 		[
-			'attribute' => 'transport',
+			'attribute' => 'transport_id',
+			'label' => 'Transporte',
 			'format' => 'raw',
 			'value' => Editable::widget([
+				'inputType' => Editable::INPUT_DROPDOWN_LIST,
 				'model' => $model,
-				'attribute' => 'transport',
+				'attribute' => 'transport_id',
 				'formOptions' => [
 					'action' => ['edit-transport', 'id' => $model->id],
 					'enableClientValidation' => false,
+				],
+				'data' => Transport::getIdNameArray(),
+				'displayValue' => $model->transport_id ? Transport::getIdNameArray()[$model->transport_id] : '',
+				'pluginEvents' => [
+					'editableSuccess' => 'function () { $.pjax.reload({container: "#deliveryDetail"}); }',
 				],
 				'pjaxContainerId' => 'deliveryDetail',
 			]),

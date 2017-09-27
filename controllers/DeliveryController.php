@@ -10,6 +10,7 @@ use app\models\DeliveryIssue;
 use app\models\DeliveryOrder;
 use app\models\DeliverySearch;
 use app\models\DeliveryStatus;
+use app\models\Transport;
 use kartik\grid\EditableColumnAction;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -158,7 +159,8 @@ class DeliveryController extends Controller
 		$out = Json::encode(['output' => '', 'message' => '']);
 		if ($model->load(Yii::$app->request->post())) {
 			$model->save();
-			$out = Json::encode(['output' => '', 'message' => $model->getErrors('transport')]);
+			$output = Transport::getIdNameArray()[$model->transport_id];
+			$out = Json::encode(['output' => $output, 'message' => $model->getErrors('transport')]);
 		}
 		// return ajax json encoded response and exit
 		echo $out;

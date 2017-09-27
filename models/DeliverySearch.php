@@ -24,7 +24,7 @@ class DeliverySearch extends Delivery
 	{
 		return [
 			[['id', 'customerId', 'status', 'user_id'], 'integer'],
-			[['transport', 'tracking_number'], 'safe'],
+			[['tracking_number'], 'safe'],
 		];
 	}
 
@@ -79,7 +79,6 @@ class DeliverySearch extends Delivery
 			'delivery.user_id' => $this->user_id,
 		]);
 
-		$query->andFilterWhere(['like', 'transport', $this->transport]);
 		$query->andFilterWhere(['like', 'tracking_number', $this->tracking_number]);
 		$query->andFilterWhere(['or', ['issue_customer.id' => $this->customerId], ['order_customer.id' => $this->customerId]]);
 

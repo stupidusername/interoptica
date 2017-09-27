@@ -12,7 +12,7 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  *
  * @property integer $id
  * @property integer $user_id
- * @property string $transport
+ * @property integer $transport_id
  * @property string $tracking_number
  * @property integer $deleted
  *
@@ -24,6 +24,7 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property DeliveryStatus $enteredDeliveryStatus
  * @property Order[] $orders
  * @property Issue[] $issues
+ * @property Transport $transport
  *
  * @property string customerNames
  */
@@ -131,10 +132,12 @@ class Delivery extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['transport', 'tracking_number'], 'string', 'max' => 255],
+			[['tracking_number'], 'string', 'max' => 255],
+			[['transport_id'], 'integer'],
 			[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
 			[['status'], 'required', 'on' => self::SCENARIO_EDIT_STATUS],
-			[['transport'], 'required', 'when' => function() { return $this->status >= DeliveryStatus::STATUS_SENT; }],
+			[['transport_id'], 'required', 'when' => function() { return $this->status >= DeliveryStatus::STATUS_SENT; }],
+			[['transport_id'], 'exist', 'skipOnError' => true, 'targetClass' => Transport::className(), 'targetAttribute' => ['transport_id' => 'id']],
 			[['status'], 'validateStatus', 'on' => self::SCENARIO_EDIT_STATUS],
 			[['transport'], 'validateTransport', 'on' => self::SCENARIO_EDIT_TRANSPORT],
 			[['tracking_number'], 'validateTrackingNumber', 'on' => self::SCENARIO_EDIT_TRACKING_NUMBER],
@@ -150,7 +153,7 @@ class Delivery extends \yii\db\ActiveRecord
 			'id' => 'ID',
 			'user_id' => 'ID Usuario',
 			'status' => 'Estado',
-			'transport' => 'Transporte',
+			'transport_id' => 'ID Transporte',
 			'tracking_number' => 'Número de Guía',
 			'customerNames' => 'Clientes',
 		];
@@ -161,6 +164,13 @@ class Delivery extends \yii\db\ActiveRecord
 	 */
 	public function getUser() {
 		return $this->hasOne(User::className(), ['id' => 'user_id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getTransport() {
+		return $this->hasOne(Transport::className(), ['id' => 'transport_id']);
 	}
 	
 	/**

@@ -1,6 +1,7 @@
 <?php
 
 use app\models\DeliveryStatus;
+use app\models\Transport;
 use kartik\grid\EditableColumn;
 use kartik\grid\GridView;
 use kartik\select2\Select2;
@@ -13,6 +14,8 @@ use yii\helpers\Url;
 
 $this->title = 'Envios';
 $this->params['breadcrumbs'][] = $this->title;
+
+$transports = Transport::getIdNameArray();
 ?>
 <div class="delivery-index">
 
@@ -75,7 +78,12 @@ $this->params['breadcrumbs'][] = $this->title;
 			},
 			'filter' => Html::activeDropDownList($searchModel, 'status', DeliveryStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
 		],
-		'transport',
+		[
+			'label' => 'Transporte',
+			'value' => function ($model) use ($transports) {
+				return $model->transport_id ? $transports[$model->transport_id] : '';
+			},
+		],
 		[
 			'class' => EditableColumn::className(),
 			'attribute' => 'tracking_number',
