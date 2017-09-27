@@ -261,6 +261,9 @@ OrderAsset::register($this);
 	GridView::widget([
 		'summary' => 'Productos: <b>{totalCount}</b>. Piezas: <b>' . $model->totalQuantity . '</b>. Subtotal: <b>' . Yii::$app->formatter->asCurrency($model->subtotal) . 
 		'</b>. Total: <b>' . Yii::$app->formatter->asCurrency($model->total) . '</b>',
+		'rowOptions' => function ($model, $index, $widget, $grid) {
+			return $model->ignore_stock ? ['style'=>"font-weight: bold;"] : [];
+		},
 		'columns' => [
 			'product.gecom_desc',
 			[
@@ -268,6 +271,12 @@ OrderAsset::register($this);
 				'format' => 'currency',
 			],
 			'quantity',
+			[
+				'attribute' => 'ignore_stock',
+				'value' => function ($model) {
+					return $model->ignore_stock ? 'Sí' : 'No';
+				},
+			],
 			[
 				'class' => 'yii\grid\ActionColumn',
 				'template' => '{update} {delete}',
