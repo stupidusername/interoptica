@@ -158,6 +158,19 @@ GridView::widget([
 			'label' => 'Estado',
 			'value' => 'orderStatus.statusLabel',
 		],
+		[
+			'label' => 'Piezas',
+			'value' => function ($model) {
+				return $model->totalQuantity;
+			},
+		],
+		[
+			'label' => 'Total',
+			'value' => function ($model) {
+				return $model->total;
+			},
+			'format' => 'currency',
+		],
 		'invoiceNumbers',
 		[
 			'class' => 'yii\grid\ActionColumn',
@@ -176,7 +189,7 @@ GridView::widget([
 		],
 	],
 	'dataProvider' => new ActiveDataProvider([
-		'query' => $model->getOrders()->with(['orderStatus', 'customer', 'orderInvoices'])->orderBy(['id' => SORT_DESC]),
+		'query' => $model->getOrders()->with(['orderStatus', 'customer', 'orderInvoices', 'orderProducts.product'])->orderBy(['id' => SORT_DESC]),
 		'pagination' => false,
 		'sort' => false,
 	]),
