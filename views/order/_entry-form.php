@@ -36,7 +36,9 @@ use app\models\Product;
 	])
 	?>
 
-	<?= $form->field($model, 'quantity') ?>	
+	<?= $form->field($model, 'quantity') ?>
+
+	<?= $form->field($model, 'ignore_stock')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Añadir' : 'Guardar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

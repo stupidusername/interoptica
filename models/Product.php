@@ -155,6 +155,17 @@ class Product extends \yii\db\ActiveRecord
 			return $product['fails'] > 0 && $product['orders'] > 0;
 		});
 	}
+
+	/**
+	 * Updates product stock
+	 */
+	public function updateStock($quantity) {
+		if (is_null($this->stock)) {
+			$this->stock = 0;
+			$this->save(false);
+		}
+		$this->updateCounters(['stock' => $quantity]);
+	}
 }
 
 class ProductQuery extends yii\db\ActiveQuery

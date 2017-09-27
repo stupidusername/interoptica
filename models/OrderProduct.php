@@ -50,9 +50,9 @@ class OrderProduct extends \yii\db\ActiveRecord
 		if (!$insert) {
 			// Restore stock during update
 			$oldProduct = Product::findOne($changedAttributes['product_id']);
-			$oldProduct->updateCounters(['stock' => $changedAttributes['quantity']]);
+			$oldProduct->updateStock($changedAttributes['quantity']);
 		}
-		$this->product->updateCounters(['stock' => -$this->quantity]);
+		$this->product->updateStock(-$this->quantity);
 		parent::afterSave($insert, $changedAttributes);
 	}
 
@@ -75,7 +75,8 @@ class OrderProduct extends \yii\db\ActiveRecord
 			[['quantity'], 'integer', 'min' => 1],
 			[['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
 			[['product_id'], 'uniqueEntry'],
-			[['quantity'], 'inStock'],
+			[['quantity'], 'inStock', 'when' => function ($model) { return !$this->ignore_stock; }],
+			[['ignore_stock'], 'boolean'],
 		];
 	}
 
@@ -89,6 +90,7 @@ class OrderProduct extends \yii\db\ActiveRecord
 			'product_id' => 'ID Producto',
 			'price' => 'Precio',
 			'quantity' => 'Cantidad',
+			'ignore_stock' => 'Ignorar límite de stock',
 		];
 	}
 
@@ -154,6 +156,6 @@ class OrderProduct extends \yii\db\ActiveRecord
 	 * Restores stock to products table in case of record deletion.
 	 */
 	public function restoreStock() {
-		$this->product->updateCounters(['stock' => $this->quantity]);
+		$this->product->updateStock($this->quantity);
 	}
 }
