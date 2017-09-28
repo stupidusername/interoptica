@@ -54,6 +54,7 @@ $transports = Transport::getIdNameArray();
 				],
 			]),
 		],
+		'invoiceNumbers',
 		[
 			'label' => 'Usuario',
 			'value' => 'user.username',

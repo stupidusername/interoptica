@@ -27,6 +27,7 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property Transport $transport
  *
  * @property string customerNames
+ * @property string invoiceNumbers
  */
 class Delivery extends \yii\db\ActiveRecord
 {
@@ -156,6 +157,7 @@ class Delivery extends \yii\db\ActiveRecord
 			'transport_id' => 'ID Transporte',
 			'tracking_number' => 'Número de Guía',
 			'customerNames' => 'Clientes',
+			'invoiceNumbers' => 'Facturas',
 		];
 	}
 
@@ -275,5 +277,20 @@ class Delivery extends \yii\db\ActiveRecord
 			$customers[$customer->id] = $customer;
 		}
 		return implode(', ', ArrayHelper::getColumn($customers, ['name']));
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getInvoiceNumbers() {
+		$invoiceNumbersArray = [];
+		foreach ($this->orders as $order) {
+			if ($order->invoiceNumbers) $invoiceNumbersArray[] = $order->invoiceNumbers;
+		}
+		foreach ($this->issues as $issue) {
+			if ($issue->invoiceNumbers) $invoiceNumbersArray[] = $issue->invoiceNumbers;
+		}
+		return implode(', ', $invoiceNumbersArray);
+
 	}
 }

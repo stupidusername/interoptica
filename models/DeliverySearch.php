@@ -18,13 +18,18 @@ class DeliverySearch extends Delivery
 	public $customerId;
 
 	/**
+	 * @var string
+	 */
+	public $invoiceNumbers;
+
+	/**
 	 * @inheritdoc
 	 */
 	public function rules()
 	{
 		return [
 			[['id', 'customerId', 'status', 'user_id'], 'integer'],
-			[['tracking_number'], 'safe'],
+			[['tracking_number', 'invoiceNumbers'], 'safe'],
 		];
 	}
 
@@ -52,6 +57,8 @@ class DeliverySearch extends Delivery
 			'enteredDeliveryStatus',
 			'issues.issueStatus',
 			'orders.orderStatus',
+			'issues.issueInvoices',
+			'orders.orderInvoices',
 		]);
 
 		$query->joinWith([
@@ -87,6 +94,20 @@ class DeliverySearch extends Delivery
 				$subQuery = DeliveryStatus::getLastStatuses();
 				$query->andWhere([DeliveryStatus::tableName() . '.id' => $subQuery, 'status' => $this->status]);
 			}]);
+		}
+
+		if ($this->invoiceNumbers) {
+			$query1 = DeliveryIssue::find()->select('delivery_id')->innerJoinWith([
+				'issue.issueInvoices' => function ($query) {
+					$query->andWhere(['like', 'number', $this->invoiceNumbers]);
+				},
+			]);
+			$query2 = DeliveryOrder::find()->select('delivery_id')->innerJoinWith([
+				'order.orderInvoices' => function ($query) {
+					$query->andWhere(['like', 'number', $this->invoiceNumbers]);
+				},
+			]);
+			$query->andWhere(['or', ['delivery.id' => $query1], ['delivery.id' => $query2]]);
 		}
 
 		return $dataProvider;
