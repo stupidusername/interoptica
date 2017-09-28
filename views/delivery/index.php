@@ -2,6 +2,7 @@
 
 use app\models\DeliveryStatus;
 use app\models\Transport;
+use kartik\editable\Editable;
 use kartik\grid\EditableColumn;
 use kartik\grid\GridView;
 use kartik\select2\Select2;
@@ -16,6 +17,8 @@ $this->title = 'Envios';
 $this->params['breadcrumbs'][] = $this->title;
 
 $transports = Transport::getIdNameArray();
+$statusLabelsWithoutError = DeliveryStatus::statusLabelsWithoutError();
+$statusLabels = DeliveryStatus::statusLabels();
 ?>
 <div class="delivery-index">
 
@@ -73,16 +76,36 @@ $transports = Transport::getIdNameArray();
 			]),
 		],
 		[
+			'class' => EditableColumn::className(),
 			'label' => 'Estado',
-			'value' => function ($model, $key, $index, $column) {
-				return DeliveryStatus::statusLabels()[$model->status];
-			},
+			'attribute' => 'status',
 			'filter' => Html::activeDropDownList($searchModel, 'status', DeliveryStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
+			'editableOptions' => function ($model) use ($statusLabelsWithoutError, $statusLabels) {
+				return [
+					'inputType' => Editable::INPUT_DROPDOWN_LIST,
+					'formOptions' => [
+						'action' => ['edit-status', 'id' => $model->id],
+						'enableClientValidation' => false,
+					],
+					'data' => $statusLabelsWithoutError,
+					'displayValue' => $statusLabels[$model->status],
+				];
+			},
 		],
 		[
+			'class' => EditableColumn::className(),
 			'label' => 'Transporte',
-			'value' => function ($model) use ($transports) {
-				return $model->transport_id ? $transports[$model->transport_id] : '';
+			'attribute' => 'transport_id',
+			'editableOptions' => function ($model) use ($transports) {
+				return [
+					'inputType' => Editable::INPUT_DROPDOWN_LIST,
+					'formOptions' => [
+						'action' => ['edit-transport', 'id' => $model->id],
+						'enableClientValidation' => false,
+					],
+					'data' => $transports,
+					'displayValue' => $model->transport_id ? $transports[$model->transport_id] : '',
+				];
 			},
 		],
 		[

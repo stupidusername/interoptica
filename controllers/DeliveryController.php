@@ -138,7 +138,14 @@ class DeliveryController extends Controller
 		$model = $this->findModel($id);
 		$model->scenario = Delivery::SCENARIO_EDIT_STATUS;
 		$out = Json::encode(['output' => '', 'message' => '']);
-		if ($model->load(Yii::$app->request->post())) {
+		$editableIndex = Yii::$app->request->post('editableIndex', null);
+		if ($editableIndex !== null) {
+			$postModel = Yii::$app->request->post("Delivery")[$editableIndex];
+		} else {
+			$postModel = Yii::$app->request->post('Delivery');
+		}
+		if ($postModel) {
+			$model->setAttributes($postModel);
 			$model->save();
 			$output = DeliveryStatus::statusLabels()[$model->status];
 			$out = Json::encode(['output' => $output, 'message' => $model->getErrors('status')]);
@@ -157,7 +164,14 @@ class DeliveryController extends Controller
 		$model = $this->findModel($id);
 		$model->scenario = Delivery::SCENARIO_EDIT_TRANSPORT;
 		$out = Json::encode(['output' => '', 'message' => '']);
-		if ($model->load(Yii::$app->request->post())) {
+		$editableIndex = Yii::$app->request->post('editableIndex', null);
+		if ($editableIndex !== null) {
+			$postModel = Yii::$app->request->post("Delivery")[$editableIndex];
+		} else {
+			$postModel = Yii::$app->request->post('Delivery');
+		}
+		if ($postModel) {
+			$model->setAttributes($postModel);
 			$model->save();
 			$output = Transport::getIdNameArray()[$model->transport_id];
 			$out = Json::encode(['output' => $output, 'message' => $model->getErrors('transport')]);
