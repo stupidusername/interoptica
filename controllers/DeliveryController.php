@@ -202,12 +202,28 @@ class DeliveryController extends Controller
 	/**
 	 * Creates a new Delivery model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 * @param int[] $orderIds
+	 * @param int[] $issueIds
 	 * @return mixed
 	 */
-	public function actionCreate()
+	public function actionCreate(array $orderIds = [], array $issueIds = [])
 	{
 		$model = new Delivery();
 		$model->save();
+
+		foreach ($orderIds as $id) {
+			$entry = new DeliveryOrder();
+			$entry->order_id = $id;
+			$entry->delivery_id = $model->id;
+			$entry->save();
+		}
+
+		foreach ($issueIds as $id) {
+			$entry = new DeliveryIssue();
+			$entry->issue_id = $id;
+			$entry->delivery_id = $model->id;
+			$entry->save();
+		}
 
 		return $this->redirect(['view', 'id' => $model->id]);
 	}

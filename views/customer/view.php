@@ -1,5 +1,6 @@
 <?php
 
+use app\assets\CustomerViewAsset;
 use app\models\IssueStatus;
 use app\models\IssueType;
 use app\models\Order;
@@ -20,6 +21,8 @@ use yii\widgets\Pjax;
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Clientes', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+CustomerViewAsset::register($this);
 ?>
 <div class="customer-view">
 
@@ -35,8 +38,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
+	
 
     <?= $this->render('_detail', ['model' => $model]) ?>
+	
+	<p>
+		<?= Html::a('Crear Envio', ['/delivery/create'], ['class' => 'btn btn-success', 'id' => 'createDelivery']) ?>
+	</p>
 	
 	<h2>Pedidos</h2>
 	
@@ -93,6 +101,15 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'attribute' => 'comment',
 				'contentOptions' => ['style' => 'width: 400px; max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'],
+			],
+			[
+				'label' => 'Enviar ' . Html::a('<span id="order_clear" class="glyphicon glyphicon-remove"></span>'),
+				'encodeLabel' => false,
+				'format' => 'raw',
+				'value' => function ($model, $key, $index, $column) {
+					return Html::a('<span id="order_uncheck_' . $model->id . '" style="display: none;" class="order_uncheck glyphicon glyphicon-check"></span>') .
+							Html::a('<span id="order_check_' . $model->id . '" style="display: block;" class="order_check glyphicon glyphicon-unchecked"></span>');
+				},
 			],
 			[
 				'class' => 'yii\grid\ActionColumn',
@@ -166,6 +183,15 @@ $this->params['breadcrumbs'][] = $this->title;
 				'label' => 'Fecha de Ingreso',
 				'value' => 'openIssueStatus.create_datetime',
 				'format' => 'datetime'
+			],
+			[
+				'label' => 'Enviar ' . Html::a('<span id="issue_clear" class="glyphicon glyphicon-remove"></span>'),
+				'encodeLabel' => false,
+				'format' => 'raw',
+				'value' => function ($model, $key, $index, $column) {
+					return Html::a('<span id="issue_uncheck_' . $model->id . '" style="display: none;" class="issue_uncheck glyphicon glyphicon-check"></span>') .
+							Html::a('<span id="issue_check_' . $model->id . '" style="display: block;" class="issue_check glyphicon glyphicon-unchecked"></span>');
+				},
 			],
 
             [
