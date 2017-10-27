@@ -65,7 +65,7 @@ class Product extends \yii\db\ActiveRecord
 			[['gecom_code', 'gecom_desc'], 'string', 'max' => 255],
 			[['gecom_code', 'gecom_desc'], 'unique'],
 			[['variant_id'], 'exist', 'skipOnError' => true, 'targetClass' => Variant::className(), 'targetAttribute' => ['variant_id' => 'id']],
-			[['gecom_code', 'gecom_desc', 'price', 'extra'], 'required']
+			[['gecom_code', 'gecom_desc', 'price'], 'required']
 		];
 	}
 
