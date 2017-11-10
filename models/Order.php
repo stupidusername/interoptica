@@ -131,7 +131,7 @@ class Order extends \yii\db\ActiveRecord
 			[['comment'], 'string'],
 			[['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
 			[['transport_id'], 'exist', 'skipOnError' => true, 'targetClass' => Transport::className(), 'targetAttribute' => ['transport_id' => 'id']],
-			[['customer_id'], 'required'],
+			[['customer_id', 'transport_id'], 'required'],
 			[['status'], 'required', 'on' => self::SCENARIO_UPDATE],
 			[['status'], 'requireInvoice'],
 		];
