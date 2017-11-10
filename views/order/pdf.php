@@ -6,7 +6,10 @@ const ENTRIES_PER_PAGE = 34;
 
 // Prepare OrderProduct entries for table distribution
 $table = [];
-foreach ($model->orderProducts as $k => $orderProduct) {
+
+$orderProducts = $model->getOrderProducts()->joinWith(['product'])->orderBy(['gecom_desc' => SORT_ASC])->all();
+
+foreach ($orderProducts as $k => $orderProduct) {
 	$page = $k / ENTRIES_PER_PAGE;
 	$row = $k % (ENTRIES_PER_PAGE / 2);
 	$column = $k % ENTRIES_PER_PAGE >= ENTRIES_PER_PAGE / 2 ? 1 : 0;
