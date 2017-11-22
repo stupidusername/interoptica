@@ -26,6 +26,9 @@ use yii\helpers\ArrayHelper;
  */
 class Customer extends \yii\db\ActiveRecord
 {
+
+	const SCENARIO_CREATE = 'create';
+
 	/**
 	 * @inheritdoc
 	 */
@@ -64,6 +67,7 @@ class Customer extends \yii\db\ActiveRecord
 			[['email'], 'email'],
 			[['name', 'tax_situation', 'tax_situation_category', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'doc_number'], 'string', 'max' => 255],
 			[['name'], 'required'],
+			[['email', 'zone_id', 'tax_situation', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'doc_number'], 'required', 'on' => self::SCENARIO_CREATE],
 			[['zone_id'], 'exist', 'targetClass' => Zone::className(), 'targetAttribute' => 'id'],
 		];
 	}

@@ -39,7 +39,7 @@ class CustomerController extends Controller
                 ],
                 'rules' => [
 					[
-						'actions' => ['index', 'view', 'list'],
+						'actions' => ['index', 'create', 'view', 'list'],
 						'roles' => ['@'],
 						'allow' => true,
 					],
@@ -75,19 +75,19 @@ class CustomerController extends Controller
     public function actionView($id)
     {
 		$model = $this->findModel($id);
-		
+
 		$orderSearchModel = new OrderSearch();
 		$orderSearchModel->customer_id = $model->id;
 		$orderDataProvider = $orderSearchModel->search(Yii::$app->request->queryParams);
 		$orderDataProvider->sort->defaultOrder = ['id' => SORT_DESC];
 		$orderDataProvider->pagination->pageSize = 5;
-		
+
 		$issueSearchModel = new IssueSearch();
 		$issueSearchModel->customer_id = $model->id;
 		$issueDataProvider = $issueSearchModel->search(Yii::$app->request->queryParams);
 		$issueDataProvider->sort->defaultOrder = ['id' => SORT_DESC];
 		$issueDataProvider->pagination->pageSize = 5;
-		
+
         return $this->render('view', [
             'model' => $model,
 			'orderSearchModel' => $orderSearchModel,
@@ -104,7 +104,7 @@ class CustomerController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Customer();
+        $model = new Customer(['scenario' => Customer::SCENARIO_CREATE]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -146,7 +146,7 @@ class CustomerController extends Controller
 
         return $this->redirect(['index']);
     }
-	
+
 	/**
 	 * Renders import customers page.
 	 * @return mixed
@@ -164,7 +164,7 @@ class CustomerController extends Controller
 
 		return $this->render('import', ['model' => $model]);
 	}
-	
+
 	/**
 	 * Builds a response for Select2 customer widgets
 	 * @param string $q
