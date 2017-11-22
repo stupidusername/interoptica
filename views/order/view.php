@@ -43,7 +43,7 @@ Modal::begin([
 	],
 ]);
 
-Modal::end(); 
+Modal::end();
 
 Modal::begin([
 	'id' => 'addInvoice',
@@ -71,7 +71,7 @@ OrderAsset::register($this);
 		</div>
 	<?php endif; ?>
 	<?php Pjax::end() ?>
-	
+
     <p>
 		<?= Html::button('Mostrar/Ocultar Detalle', ['class' => 'btn btn-primary', 'onclick' => '$("#orderDetail").toggle()']) ?>
         <?= Html::a('Editar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -138,6 +138,7 @@ OrderAsset::register($this);
 		GridView::widget([
 			'columns' => [
 				'number',
+				'comment:ntext',
 				[
 					'class' => 'yii\grid\ActionColumn',
 					'template' => '{delete}',
@@ -165,7 +166,7 @@ OrderAsset::register($this);
 
 		<?php Pjax::begin(['id' => 'pendingGridview']) ?>
 		<h3>Pedidos del mismo Cliente</h3>
-		
+
 		<?=
 		GridView::widget([
 			'columns' => [
@@ -186,9 +187,9 @@ OrderAsset::register($this);
 			]),
 		]);
 		?>
-		
+
 		<h3>Reclamos del mismo Cliente</h3>
-		
+
 		<?=
 		GridView::widget([
 			'columns' => [
@@ -249,17 +250,17 @@ OrderAsset::register($this);
 		?>
 		<?php Pjax::end() ?>
 	</div>
-	
+
 	<h3>Productos</h3>
-	
+
 	<p>
 		<?= Html::button('Agregar Producto', ['id' => 'addEntryButton', 'class' => 'btn btn-success', 'url' => "$addEntryUrl"]) ?>
 	</p>
-	
+
 	<?php Pjax::begin(['id' => 'productsGridview']); ?>
 	<?=
 	GridView::widget([
-		'summary' => 'Productos: <b>{totalCount}</b>. Piezas: <b>' . $model->totalQuantity . '</b>. Subtotal: <b>' . Yii::$app->formatter->asCurrency($model->subtotal) . 
+		'summary' => 'Productos: <b>{totalCount}</b>. Piezas: <b>' . $model->totalQuantity . '</b>. Subtotal: <b>' . Yii::$app->formatter->asCurrency($model->subtotal) .
 		'</b>. Total: <b>' . Yii::$app->formatter->asCurrency($model->total) . '</b>',
 		'rowOptions' => function ($model, $index, $widget, $grid) {
 			return $model->ignore_stock ? ['style'=>"font-weight: bold;"] : [];
@@ -306,5 +307,5 @@ OrderAsset::register($this);
 	]);
 	?>
 	<?php Pjax::end(); ?>
-	
+
 </div>

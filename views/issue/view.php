@@ -29,7 +29,7 @@ Modal::begin([
 	],
 ]);
 
-Modal::end(); 
+Modal::end();
 
 Modal::begin([
 	'id' => 'addComment',
@@ -53,7 +53,7 @@ IssueAsset::register($this);
 <div class="issue-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
-	
+
 	<?php Pjax::begin(['id' => 'issueErrors']) ?>
 	<?php if ($model->issueType->required_issue_product && empty($model->issueProducts)): ?>
 		<div class="error-summary">
@@ -110,13 +110,13 @@ IssueAsset::register($this);
             'contact',
         ],
     ]) ?>
-	
+
 	<div id="customerDetail" style="display: none">
-		
+
 		<h3>Detalle del Cliente</h3>
-		
+
 		<?= $this->render('/customer/_detail', ['model' => $model->customer]) ?>
-		
+
 	</div>
 
 	<h3>Facturas</h3>
@@ -128,6 +128,7 @@ IssueAsset::register($this);
 	GridView::widget([
 		'columns' => [
 			'number',
+			'comment:ntext',
 			[
 				'class' => 'yii\grid\ActionColumn',
 				'template' => '{delete}',
@@ -152,7 +153,7 @@ IssueAsset::register($this);
 	]);
 	?>
 	<?php Pjax::end() ?>
-	
+
 	<h3>Seguimiento de Estados</h3>
 
 	<?php Pjax::begin(['id' => 'issueStatusGridview']) ?>
@@ -180,13 +181,13 @@ IssueAsset::register($this);
 	]);
 	?>
 	<?php Pjax::end() ?>
-	
+
 	<h3>Productos</h3>
-	
+
 	<p>
 		<?= Html::button('Agregar Producto', ['id' => 'addEntryButton', 'class' => 'btn btn-success', 'url' => "$addEntryUrl"]) ?>
 	</p>
-	
+
 	<?php Pjax::begin(['id' => 'productsGridview']); ?>
 	<?=
 	GridView::widget([
@@ -227,13 +228,13 @@ IssueAsset::register($this);
 	]);
 	?>
 	<?php Pjax::end(); ?>
-	
+
 	<h3>Comentarios</h3>
-	
+
 	<p>
 		<?= Html::button('Agregar Comentario', ['id' => 'addCommentButton', 'class' => 'btn btn-success']) ?>
 	</p>
-	
+
 	<?php Pjax::begin(['id' => 'commentsGridview']); ?>
 	<?=
 	GridView::widget([

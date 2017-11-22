@@ -11,6 +11,7 @@ use Yii;
  * @property integer $id
  * @property integer $issue_id
  * @property string $number
+ * @property string $comment
  *
  * @property Issue $issue
  */
@@ -35,6 +36,7 @@ class IssueInvoice extends \yii\db\ActiveRecord
 			[['number'], 'unique'],
 			[['number'], InvoiceValidator::className()],
 			[['issue_id'], 'exist', 'skipOnError' => true, 'targetClass' => Issue::className(), 'targetAttribute' => ['issue_id' => 'id']],
+			[['comment'], 'string'],
 		];
 	}
 
@@ -47,6 +49,7 @@ class IssueInvoice extends \yii\db\ActiveRecord
 			'id' => 'ID',
 			'issue_id' => 'ID Reclamo',
 			'number' => 'Número de Factura',
+			'comment' => 'Comentario',
 		];
 	}
 

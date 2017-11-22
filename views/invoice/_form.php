@@ -19,8 +19,10 @@ use yii\widgets\ActiveForm;
 			],
 		],
 	]); ?>
-	
+
 	<?= $form->field($model, 'number') ?>
+
+  <?= $form->field($model, 'comment')->textArea() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Añadir' : 'Guardar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
