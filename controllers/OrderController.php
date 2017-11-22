@@ -389,7 +389,7 @@ class OrderController extends Controller
 	public function actionList($q = '') {
 		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 		$ordersArray = Order::find()->andWhere([
-			'or', 
+			'or',
 			[Order::tableName() . '.id' => $q],
 			[Customer::tableName() . '.gecom_id' => $q],
 			['like', Customer::tableName() . '.name', $q],
