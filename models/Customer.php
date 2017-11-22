@@ -63,7 +63,7 @@ class Customer extends \yii\db\ActiveRecord
 			[['gecom_id', 'email'], 'unique'],
 			[['email'], 'email'],
 			[['name', 'tax_situation', 'tax_situation_category', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'doc_number'], 'string', 'max' => 255],
-			[['gecom_id', 'name'], 'required'],
+			[['name'], 'required'],
 			[['zone_id'], 'exist', 'targetClass' => Zone::className(), 'targetAttribute' => 'id'],
 		];
 	}
