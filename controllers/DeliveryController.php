@@ -87,7 +87,7 @@ class DeliveryController extends Controller
 			],
 		];
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -154,7 +154,7 @@ class DeliveryController extends Controller
 		echo $out;
 		return;
 	}
-	
+
 	/**
 	 * This action is ment to handle the request from the delivery transport editable
 	 * @param integer $id
@@ -191,7 +191,9 @@ class DeliveryController extends Controller
 		$model->scenario = Delivery::SCENARIO_EDIT_TRACKING_NUMBER;
 		$out = Json::encode(['output' => '', 'message' => '']);
 		if ($model->load(Yii::$app->request->post())) {
-			$model->save();
+			if ($model->save()) {
+				$model->sendEmail();
+			}
 			$out = Json::encode(['output' => '', 'message' => $model->getErrors('tracking_number')]);
 		}
 		// return ajax json encoded response and exit
@@ -324,7 +326,7 @@ class DeliveryController extends Controller
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
 		}
-	}	
+	}
 
 	/**
 	 * Finds the DeliveryOrder model.

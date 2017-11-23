@@ -39,7 +39,7 @@ class Order extends \yii\db\ActiveRecord
 
 	/**
 	 * The last order status saved
-	 * @var integer 
+	 * @var integer
 	 */
 	public $status;
 

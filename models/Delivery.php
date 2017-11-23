@@ -34,7 +34,7 @@ class Delivery extends \yii\db\ActiveRecord
 	const SCENARIO_EDIT_STATUS = 'edit_status';
 	const SCENARIO_EDIT_TRANSPORT = 'edit_transport';
 	const SCENARIO_EDIT_TRACKING_NUMBER = 'edit_tracking_number';
-	
+
 	/**
 	 * The last order status saved
 	 * @var integer
@@ -48,9 +48,9 @@ class Delivery extends \yii\db\ActiveRecord
 	{
 		return 'delivery';
 	}
-	
-	/** 
-	* @inheritdoc 
+
+	/**
+	* @inheritdoc
 	*/
 	public function behaviors() {
 		return [
@@ -63,7 +63,7 @@ class Delivery extends \yii\db\ActiveRecord
 			],
 		];
 	}
-	
+
 	/**
 	* @inheritdoc
 	*/
@@ -84,7 +84,7 @@ class Delivery extends \yii\db\ActiveRecord
 			return false;
 		}
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -107,7 +107,7 @@ class Delivery extends \yii\db\ActiveRecord
 		}
 		parent::afterSave($insert, $changedAttributes);
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -174,7 +174,7 @@ class Delivery extends \yii\db\ActiveRecord
 	public function getTransport() {
 		return $this->hasOne(Transport::className(), ['id' => 'transport_id']);
 	}
-	
+
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
@@ -291,6 +291,21 @@ class Delivery extends \yii\db\ActiveRecord
 			if ($issue->invoiceNumbers) $invoiceNumbersArray[] = $issue->invoiceNumbers;
 		}
 		return implode(', ', $invoiceNumbersArray);
+	}
 
+	/**
+	* This method sends an email for each order that belongs to this delivery.
+	* The email must be sent when the tracking number of this delivery is entered.
+	*/
+	public function sendEmail() {
+		foreach ($this->orders as $order) {
+			if ($order->customer->email) {
+				Yii::$app->mailer->compose('order/delivery-sent', ['model' => $order, 'delivery' => $this])
+				->setFrom($order->user->email)
+				->setTo($order->customer->email)
+				->setSubject('Información de envio')
+				->send();
+			}
+		}
 	}
 }
