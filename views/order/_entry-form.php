@@ -22,7 +22,7 @@ use app\models\Product;
 			],
 		],
 	]); ?>
-	
+
 	<?=
 	$form->field($model, 'product_id')->label('Producto')->widget(Select2::classname(), [
 		'initValueText' => $model->product_id ? $model->product->gecom_desc . ' (' . $model->product->stock . ')' : null,
@@ -38,7 +38,7 @@ use app\models\Product;
 
 	<?= $form->field($model, 'quantity') ?>
 
-	<?= $form->field($model, 'ignore_stock')->checkbox() ?>
+	<?= $form->field($model, 'ignore_stock')->checkbox(['label' => 'Dejo de valija']) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Añadir' : 'Guardar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -41,7 +41,7 @@ foreach ($orderProducts as $k => $orderProduct) {
 					<?php foreach ($row as $column => $orderProduct): ?>
 						<td class="tr14 td11"><p class="p0"><?= $orderProduct->quantity ?></p></td>
 						<td class="tr14 td27"><p class="p0"><?= $orderProduct->product->gecom_desc ?></p></td>
-						<td class="tr14 td13"><p class="p0"><?= $orderProduct->ignore_stock ? 'Stock ignorado' : '' ?></p></td>
+						<td class="tr14 td13"><p class="p0"><?= $orderProduct->ignore_stock ? 'Dejó de valija' : '' ?></p></td>
 						<td class="tr14 td25"><p class="p0"><?= Yii::$app->formatter->asCurrency($orderProduct->price) ?></p></td>
 						<td class="tr14 td13"><p class="p0"><?= Yii::$app->formatter->asCurrency($orderProduct->subtotal) ?></p></td>
 						<?php if ($column == 0): ?>
