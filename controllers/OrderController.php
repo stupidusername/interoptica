@@ -78,7 +78,7 @@ class OrderController extends Controller
 						'roles' => ['admin', 'management'],
 					],
 					[
-						'actions' => ['index', 'view', 'create', 'export-txt', 'export-pdf', 'list'],
+						'actions' => ['index', 'view', 'create', 'export-txt', 'export-pdf', 'list', 'send-email'],
 						'roles' => ['@'],
 					],
 				],
@@ -281,39 +281,27 @@ class OrderController extends Controller
 	 * @return mixed
 	 */
 	public function actionExportPdf($id) {
-		$model = Order::find()->andWhere(['id' => $id])->with([
-			'enteredOrderStatus',
-			'user',
-			'customer',
-			'customer.zone',
-			'orderProducts.order',
-			'orderProducts.product',
-		])->one();
-		$header = $this->renderPartial('pdf-header', ['model' => $model]);
-		$content = $this->renderPartial('pdf', ['model' => $model]);
+		return Order::getPdf($id, Pdf::DEST_DOWNLOAD);
+	}
 
-		// setup kartik\mpdf\Pdf component
-		$pdf = new Pdf([
-			'filename' => $model->id . '.pdf',
-			'mode' => Pdf::MODE_UTF8,
-			'format' => Pdf::FORMAT_A4,
-			'orientation' => Pdf::ORIENT_LANDSCAPE,
-			'marginTop' => 0,
-			'destination' => Pdf::DEST_DOWNLOAD,
-			'content' => $content,
-			'cssFile' => '@webroot/css/pdf.css',
-			'options' => [
-				'setAutoTopMargin' => 'pad',
-				'setAutoBottomMargin' => 'pad',
-			],
-			'methods' => [
-				'SetHTMLHeader' => $header,
-			],
-			'marginFooter' => 0,
-		]);
+	/**
+	 * Sends the order pdf to the customer email.
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionSendEmail($id) {
+		$pdfContent = Order::getPdf($id, Pdf::DEST_STRING);
 
-		// return the pdf output as per the destination setting
-		return $pdf->render();
+		$order = $this->findModel($id);
+
+		$success = Yii::$app->mailer->compose('order/confirmed')
+			->setFrom($order->user->email)
+			->setTo($order->customer->email)
+			->setSubject('Nota de pedido')
+			->attachContent($pdfContent, ['fileName' => $order->id . '.pdf', 'contentType' => 'application/pdf'])
+			->send();
+
+			return $this->render('mail-sent', ['model' => $order, 'success' => $success]);
 	}
 
 	public function actionStatistics() {

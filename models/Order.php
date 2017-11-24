@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\helpers\MBStringHelper;
+use kartik\mpdf\Pdf;
 use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 use yii\helpers\ArrayHelper;
@@ -341,5 +342,47 @@ class Order extends \yii\db\ActiveRecord
 		if ($this->status > OrderStatus::STATUS_BILLING && !$this->getOrderInvoices()->count()) {
 			$this->addError($attribute, 'No se encuentran facturas registradas a este pedido.');
 		}
+	}
+
+	/**
+	* Renders the PDF of an order.
+	* @param integer $id id of the order
+	* @param string $destination one of the destinations declared on Pdf class
+	* @return mixed
+	*/
+	public static function getPdf($id, $destination) {
+		$model = Order::find()->andWhere(['id' => $id])->with([
+			'enteredOrderStatus',
+			'user',
+			'customer',
+			'customer.zone',
+			'orderProducts.order',
+			'orderProducts.product',
+		])->one();
+		$header = Yii::$app->controller->renderPartial('pdf-header', ['model' => $model]);
+		$content = Yii::$app->controller->renderPartial('pdf', ['model' => $model]);
+
+		// setup kartik\mpdf\Pdf component
+		$pdf = new Pdf([
+			'filename' => $model->id . '.pdf',
+			'mode' => Pdf::MODE_UTF8,
+			'format' => Pdf::FORMAT_A4,
+			'orientation' => Pdf::ORIENT_LANDSCAPE,
+			'marginTop' => 0,
+			'destination' => $destination,
+			'content' => $content,
+			'cssFile' => '@webroot/css/pdf.css',
+			'options' => [
+				'setAutoTopMargin' => 'pad',
+				'setAutoBottomMargin' => 'pad',
+			],
+			'methods' => [
+				'SetHTMLHeader' => $header,
+			],
+			'marginFooter' => 0,
+		]);
+
+		// return the pdf output as per the destination setting
+		return $pdf->render();
 	}
 }
