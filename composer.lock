@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "aaf49254c1b424e4e31dff960fc20da1",
+    "content-hash": "e8b624765e877b7e2ad41b72c5277b74",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -371,70 +371,17 @@
             "time": "2017-07-16T21:13:23+00:00"
         },
         {
-            "name": "dektrium/yii2-rbac",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dektrium/yii2-rbac.git",
-                "reference": "da10323955b440b0a70b22f364e93025bde97307"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dektrium/yii2-rbac/zipball/da10323955b440b0a70b22f364e93025bde97307",
-                "reference": "da10323955b440b0a70b22f364e93025bde97307",
-                "shasum": ""
-            },
-            "require": {
-                "kartik-v/yii2-widget-select2": "^2.0",
-                "yiisoft/yii2": "^2.0.8"
-            },
-            "type": "yii2-extension",
-            "extra": {
-                "bootstrap": "dektrium\\rbac\\Bootstrap",
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "dektrium\\rbac\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Dmitry Erofeev",
-                    "email": "dmeroff@gmail.com",
-                    "homepage": "http://dmeroff.ru"
-                }
-            ],
-            "description": "RBAC management module for Yii2",
-            "keywords": [
-                "dektrium",
-                "rbac gui",
-                "rbac management",
-                "rbac module",
-                "yii rbac",
-                "yii2",
-                "yii2-rbac"
-            ],
-            "time": "2017-01-28 11:59:48"
-        },
-        {
             "name": "dektrium/yii2-user",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/dektrium/yii2-user.git",
-                "reference": "73e1c3b247b276b8b0071f4888cffabc15443d04"
+                "url": "https://github.com/stupidusername/yii2-user.git",
+                "reference": "a75a03ff6e5f07da5835d11f88c0ee21d114503e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dektrium/yii2-user/zipball/73e1c3b247b276b8b0071f4888cffabc15443d04",
-                "reference": "73e1c3b247b276b8b0071f4888cffabc15443d04",
+                "url": "https://api.github.com/repos/stupidusername/yii2-user/zipball/a75a03ff6e5f07da5835d11f88c0ee21d114503e",
+                "reference": "a75a03ff6e5f07da5835d11f88c0ee21d114503e",
                 "shasum": ""
             },
             "require": {
@@ -461,7 +408,6 @@
                     "dektrium\\user\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -474,12 +420,17 @@
             ],
             "description": "Flexible user registration and authentication module for Yii2",
             "keywords": [
-                "User management",
                 "dektrium",
+                "user management",
                 "yii2",
                 "yii2-user"
             ],
-            "time": "2017-05-10 19:06:29"
+            "support": {
+                "issues": "https://github.com/dektrium/yii2-user/issues?state=open",
+                "forum": "https://gitter.im/dektrium/yii2-user",
+                "source": "https://github.com/dektrium/yii2-user"
+            },
+            "time": "2017-11-30 11:48:48"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -4701,7 +4652,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "dektrium/yii2-user": 20,
-        "dektrium/yii2-rbac": 20,
         "ruskid/yii2-csv-importer": 20,
         "kartik-v/yii2-grid": 20,
         "kartik-v/yii2-export": 20,
