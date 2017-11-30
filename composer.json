@@ -33,6 +33,7 @@
 	    "yiisoft/yii2-bootstrap": "~2.0.0",
 	    "yiisoft/yii2-swiftmailer": "~2.0.0",
 	    "dektrium/yii2-user": "dev-master",
+      "dektrium/yii2-rbac": "dev-master",
 	    "ruskid/yii2-csv-importer": "dev-master",
 	    "yii2tech/ar-softdelete": "^1.0",
 	    "kartik-v/yii2-grid": "@dev",
