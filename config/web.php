@@ -43,6 +43,7 @@ $config = [
 		],
 		'assetManager' => [
 			'linkAssets' => true,
+			'appendTimestamp' => true,
 		],
 		'view' => [
 			'theme' => [
