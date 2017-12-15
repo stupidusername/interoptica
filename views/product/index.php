@@ -45,6 +45,17 @@ $this->params['breadcrumbs'][] = $this->title;
 				'formOptions' => ['action' => ['edit']],
 			],
 		],
+    [
+			'attribute' => 'running_low',
+			'value' => function($model) {
+				return $model->running_low ? 'Sí' : 'No';
+			},
+      'filter' => Html::activeDropDownList($searchModel, 'running_low', [0 => 'No', 1 => 'Sí'], ['class' => 'form-control', 'prompt' => 'Elegir estado']),
+		],
+    [
+			'attribute' => 'running_low_date',
+			'format' => 'date',
+		],
 		[
 			'attribute' => 'extra',
 			'value' => function($model) {

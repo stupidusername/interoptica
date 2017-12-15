@@ -36,6 +36,14 @@ $this->params['breadcrumbs'][] = $this->title;
 				'format' => 'currency',
 			],
             'stock',
+            [
+      		    'attribute' => 'running_low',
+      		    'value' => $model->running_low ? 'Sí' : 'No',
+      	    ],
+            [
+              'attribute' => 'running_low_date',
+              'format' => 'date',
+            ],
 	    [
 		    'attribute' => 'extra',
 		    'value' => $model->extra ? 'Sí' : 'No',

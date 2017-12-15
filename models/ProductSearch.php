@@ -18,7 +18,7 @@ class ProductSearch extends Product
     public function rules()
     {
         return [
-            [['id', 'variant_id', 'stock'], 'integer'],
+            [['id', 'variant_id', 'stock', 'running_low'], 'integer'],
             [['gecom_code', 'gecom_desc'], 'safe'],
             [['price'], 'number'],
         ];
@@ -65,6 +65,12 @@ class ProductSearch extends Product
             'price' => $this->price,
             'stock' => $this->stock,
         ]);
+
+        if ($this->running_low === '1') {
+          $query->andWhere(['running_low' => true]);
+        } elseif ($this->running_low === '0') {
+          $query->andWhere(['or', ['running_low' => false], ['running_low' => null]]);
+        }
 
         $query->andFilterWhere(['like', 'gecom_code', $this->gecom_code])
             ->andFilterWhere(['like', 'gecom_desc', $this->gecom_desc]);

@@ -15,6 +15,8 @@ use yii\helpers\ArrayHelper;
  * @property string $gecom_desc
  * @property string $price
  * @property integer $stock
+ * @property boolean $runnig_low
+ * @property string $running_low_date
  * @property boolean $extra
  * @property boolean $deleted
  *
@@ -25,6 +27,7 @@ use yii\helpers\ArrayHelper;
 class Product extends \yii\db\ActiveRecord
 {
 	const STOCK_MIN = 10;
+	const STOCK_ALERT = 15;
 
 	/**
 	 * @inheritdoc
@@ -81,8 +84,20 @@ class Product extends \yii\db\ActiveRecord
 			'gecom_desc' => 'Descripción Gecom',
 			'price' => 'Precio',
 			'stock' => 'Stock',
+			'running_low' => 'Agotándose',
+			'running_low_date' => 'Agotándose desde',
 			'extra' => 'Extra',
 		];
+	}
+
+	/**
+	* @inheritdoc
+	*/
+	public function afterSave($insert, $changedAttributes) {
+		if (!$insert && array_key_exists('stock', $changedAttributes)) {
+			$this->checkStock($changedAttributes['stock'], $this->stock);
+		}
+		parent::afterSave($insert, $changedAttributes);
 	}
 
 	/**
@@ -164,7 +179,27 @@ class Product extends \yii\db\ActiveRecord
 			$this->stock = 0;
 			$this->save(false);
 		}
+		$this->checkStock($this->stock, $this->stock + $quantity);
 		$this->updateCounters(['stock' => $quantity]);
+	}
+
+	/**
+	* Checks if the stock is running low and sets the proper alert
+	* @param $oldStock integer
+	* @param $stock integer
+	*/
+	public function checkStock($oldStock, $stock) {
+		$oldStock = $oldStock ?? 0;
+		$stock = $stock ?? 0;
+		if ($stock <= self::STOCK_ALERT && $oldStock > $stock) {
+			$this->running_low = true;
+			$this->running_low_date = gmdate('Y-m-d');
+			$this->save(false);
+		} elseif ($stock > self::STOCK_ALERT) {
+			$this->running_low = 0;
+			$this->running_low_date = null;
+			$this->save(false);
+		}
 	}
 }
 
