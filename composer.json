@@ -40,7 +40,6 @@
 	    "kartik-v/yii2-export": "dev-master",
 	    "kartik-v/yii2-money": "dev-master",
 	    "kartik-v/yii2-mpdf": "dev-master",
-	    "mpdf/mpdf": "v7.0.0-beta2",
 	    "kartik-v/yii2-widget-select2": "@dev",
 	    "kartik-v/yii2-editable": "*",
 	    "miloschuman/yii2-highcharts-widget": "dev-master",
