@@ -9,8 +9,8 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * This is the model class for table "brand".
  *
  * @property integer $id
- * @property string $gecom_code
  * @property string $name
+ * @property string $logo
  * @property boolean $deleted
  *
  * @property Model[] $models
@@ -24,25 +24,25 @@ class Brand extends \yii\db\ActiveRecord
     {
         return 'brand';
     }
-	
-	/** @inheritdoc */
-	public function behaviors() {
-		return [
-			'softDeleteBehavior' => [
-				'class' => SoftDeleteBehavior::className(),
-				'softDeleteAttributeValues' => [
-					'deleted' => true
-				],
-				'replaceRegularDelete' => true
-			],
-		];
-	}
-	
-	/** @inheritdoc */
-	public static function find()
-    {
-        return parent::find()->where(['or', ['deleted' => null], ['deleted' => 0]]);
-    }
+
+    /** @inheritdoc */
+  	public function behaviors() {
+  		return [
+  			'softDeleteBehavior' => [
+  				'class' => SoftDeleteBehavior::className(),
+  				'softDeleteAttributeValues' => [
+  					'deleted' => true
+  				],
+  				'replaceRegularDelete' => true
+  			],
+  		];
+  	}
+
+    /** @inheritdoc */
+  	public static function find()
+  	{
+  		return parent::find()->where(['or', [self::tableName() . '.deleted' => null], [self::tableName() . '.deleted' => 0]]);
+  	}
 
     /**
      * @inheritdoc
@@ -50,9 +50,7 @@ class Brand extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['gecom_code', 'name'], 'string', 'max' => 255],
-            [['gecom_code'], 'unique'],
-			[['name', 'gecom_code'], 'required'],
+            [['name', 'logo'], 'string', 'max' => 255],
         ];
     }
 
@@ -63,8 +61,8 @@ class Brand extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'gecom_code' => 'Código Gecom',
             'name' => 'Nombre',
+            'logo' => 'Logo',
         ];
     }
 
