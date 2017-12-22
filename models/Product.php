@@ -10,14 +10,14 @@ use yii\helpers\ArrayHelper;
  * This is the model class for table "product".
  *
  * @property integer $id
- * @property integer $variant_id
+ * @property integer $model_id
  * @property string $gecom_code
- * @property string $gecom_desc
  * @property string $price
  * @property integer $stock
  * @property boolean $runnig_low
  * @property string $running_low_date
- * @property boolean $extra
+ * @property string $create_date
+ * @property string $update_date
  * @property boolean $deleted
  *
  * @property OrderProduct[] $orderProducts
@@ -62,13 +62,12 @@ class Product extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['variant_id', 'stock'], 'integer'],
+			[['model_id', 'stock'], 'integer'],
 			[['price'], 'number'],
-			[['extra'], 'boolean'],
-			[['gecom_code', 'gecom_desc'], 'string', 'max' => 255],
-			[['gecom_code', 'gecom_desc'], 'unique'],
-			[['variant_id'], 'exist', 'skipOnError' => true, 'targetClass' => Variant::className(), 'targetAttribute' => ['variant_id' => 'id']],
-			[['gecom_code', 'gecom_desc', 'price'], 'required']
+			[['code'], 'string', 'max' => 255],
+			[['code'], 'unique'],
+			[['model_id'], 'exist', 'skipOnError' => true, 'targetClass' => Model::className(), 'targetAttribute' => ['model_id' => 'id']],
+			[['model_id', 'code', 'price'], 'required']
 		];
 	}
 
@@ -79,14 +78,14 @@ class Product extends \yii\db\ActiveRecord
 	{
 		return [
 			'id' => 'ID',
-			'variant_id' => 'ID Variante',
-			'gecom_code' => 'Código Gecom',
-			'gecom_desc' => 'Descripción Gecom',
+			'model_id' => 'ID Modelo',
+			'code' => 'Código',
 			'price' => 'Precio',
 			'stock' => 'Stock',
 			'running_low' => 'Agotándose',
 			'running_low_date' => 'Agotándose desde',
-			'extra' => 'Extra',
+			'create_date' => 'Fecha de alta',
+			'update_date' => 'Fecha de modificación',
 		];
 	}
 
@@ -122,14 +121,6 @@ class Product extends \yii\db\ActiveRecord
 	public function getIssueProducts()
 	{
 		return $this->hasMany(IssueProduct::className(), ['product_id' => 'id']);
-	}
-
-	/**
-	 * @return \yii\db\ActiveQuery
-	 */
-	public function getVariant()
-	{
-		return $this->hasOne(Variant::className(), ['id' => 'variant_id']);
 	}
 
 	/**
