@@ -51,6 +51,7 @@ class Brand extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'logo'], 'string', 'max' => 255],
+            [['name'], 'required'],
         ];
     }
 
