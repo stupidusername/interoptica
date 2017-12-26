@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\Url;
+use yii\web\UploadedFile;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -17,6 +19,19 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  */
 class Brand extends \yii\db\ActiveRecord
 {
+
+  const LOGO_FOLDER = '/images/brand/';
+
+  /**
+  * @var UploadedFile
+  */
+  public $logoUpload;
+
+  /**
+  * @var boolean
+  */
+  public $deleteLogo;
+
     /**
      * @inheritdoc
      */
@@ -45,13 +60,33 @@ class Brand extends \yii\db\ActiveRecord
   	}
 
     /**
+    * @inheritdoc
+    */
+    public function beforeSave($insert) {
+      if (!parent::beforeSave($insert)) {
+        return false;
+      }
+      $logoUpload = UploadedFile::getInstance($this, 'logoUpload');
+      if (!empty($logoUpload)) {
+        $filename = uniqid() . '.' . $logoUpload->extension;
+        $logoUpload->saveAs(Yii::getAlias('@webroot' . self::LOGO_FOLDER . $filename));
+        $this->logo = $filename;
+      } else if ($this->deleteLogo) {
+        $this->logo = null;
+      }
+      return true;
+    }
+
+    /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['name', 'logo'], 'string', 'max' => 255],
+            [['name'], 'string', 'max' => 255],
             [['name'], 'required'],
+            [['logoUpload'], 'image', 'extensions' => 'jpg, png', 'maxSize' => 1024 * 1024],
+            [['deleteLogo'], 'integer'],
         ];
     }
 
@@ -64,6 +99,7 @@ class Brand extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Nombre',
             'logo' => 'Logo',
+            'logoUpload' => 'Logo',
         ];
     }
 
@@ -73,5 +109,16 @@ class Brand extends \yii\db\ActiveRecord
     public function getModels()
     {
         return $this->hasMany(Model::className(), ['brand_id' => 'id']);
+    }
+
+    /**
+    * @return string|null
+    */
+    public function getLogoUrl() {
+      $url = null;
+      if ($this->logo) {
+        $url = Url::to(self::LOGO_FOLDER . $this->logo);
+      }
+      return $url;
     }
 }
