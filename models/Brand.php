@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\web\UploadedFile;
+use yii\helpers\ArrayHelper;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -120,4 +121,13 @@ class Brand extends \yii\db\ActiveRecord
       }
       return $url;
     }
+
+    /**
+  	 * Gets an id => name array.
+  	 * return string[]
+  	 */
+  	public static function getIdNameArray() {
+  		$brands = ArrayHelper::map(self::find()->select(['id', 'name'])->asArray()->all(), 'id', 'name');
+  		return $brands;
+  	}
 }

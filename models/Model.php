@@ -29,6 +29,15 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  */
 class Model extends \yii\db\ActiveRecord
 {
+    // Model types
+    const TYPE_SUN = 0;
+    const TYPE_RX = 1;
+    const TYPE_CASE_SUN = 2;
+    const TYPE_CASE_RX = 3;
+    const TYPE_DISPLAY_SUN = 4;
+    const TYPE_DISPLAY_RX = 5;
+    const TYPE_EXTRA = 6;
+
     /**
      * @inheritdoc
      */
@@ -43,9 +52,9 @@ class Model extends \yii\db\ActiveRecord
   			'softDeleteBehavior' => [
   				'class' => SoftDeleteBehavior::className(),
   				'softDeleteAttributeValues' => [
-  					'deleted' => true
+  					'deleted' => true,
   				],
-  				'replaceRegularDelete' => true
+  				'replaceRegularDelete' => true,
   			],
   		];
   	}
@@ -66,6 +75,9 @@ class Model extends \yii\db\ActiveRecord
             [['description'], 'string'],
             [['name'], 'string', 'max' => 255],
             [['brand_id'], 'exist', 'skipOnError' => true, 'targetClass' => Brand::className(), 'targetAttribute' => ['brand_id' => 'id']],
+            [['type', 'brand_id', 'name'], 'required'],
+            [['front_size', 'lens_width', 'bridge_size', 'temple_length', 'base', 'flex'], 'required', 'when' => function ($model) { return in_array($this->type, [self::TYPE_SUN, self::TYPE_RX]); }],
+            [['polarized', 'mirrored'], 'required', 'when' => function ($model) { return $this->type === self::TYPE_SUN; }],
         ];
     }
 
@@ -92,6 +104,21 @@ class Model extends \yii\db\ActiveRecord
     }
 
     /**
+    * @return string[]
+    */
+    public static function typeLabels() {
+      return [
+        static::TYPE_SUN => 'Sol',
+        static::TYPE_RX => 'Receta',
+        static::TYPE_CASE_SUN => 'Estuche Sol',
+        static::TYPE_CASE_RX => 'Estuche Receta',
+        static::TYPE_DISPLAY_SUN => 'Exhibidor Sol',
+        static::TYPE_DISPLAY_RX => 'Exhibidor Receta',
+        static::TYPE_EXTRA => 'Extra',
+      ];
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getBrand()
@@ -113,5 +140,12 @@ class Model extends \yii\db\ActiveRecord
     public function getProducts()
     {
         return $this->hasMany(Product::className(), ['model_id' => 'id']);
+    }
+
+    /**
+    * @return string
+    */
+    public function getTypeLabel() {
+      return self::typeLabels()[$this->type];
     }
 }
