@@ -3,7 +3,6 @@
 namespace app\models;
 
 use Yii;
-use yii\helpers\Url;
 use yii\web\UploadedFile;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
@@ -117,7 +116,7 @@ class Brand extends \yii\db\ActiveRecord
     public function getLogoUrl() {
       $url = null;
       if ($this->logo) {
-        $url = Url::to(self::LOGO_FOLDER . $this->logo);
+        $url = Yii::$app->imageCache->thumbSrc(self::LOGO_FOLDER . $this->logo);
       }
       return $url;
     }

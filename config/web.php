@@ -40,6 +40,9 @@ $config = [
 		'urlManager' => [
 			'enablePrettyUrl' => true,
 			'showScriptName' => false,
+			'rules' => [
+				'image/thumb/<path:.*>' => 'image/thumb',
+			],
 		],
 		'assetManager' => [
 			'linkAssets' => true,
@@ -59,6 +62,14 @@ $config = [
 				NumberFormatter::MIN_FRACTION_DIGITS => 2,
 				NumberFormatter::MAX_FRACTION_DIGITS => 2,
 			],
+		],
+		'imageCache' => [
+			'class' => 'iutbay\yii2imagecache\ImageCache',
+			'sourcePath' => '@webroot/images',
+			'sourceUrl' => '@web/images',
+			'thumbsPath' => '@webroot/images/thumb',
+			'thumbsUrl' => '@web/image/thumb',
+			'resizeMode' => 'inset',
 		],
 	],
 	'modules' => [
