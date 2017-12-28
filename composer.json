@@ -46,7 +46,8 @@
 	    "yiisoft/yii2-jui": "~2.0.0",
       "2amigos/yii2-taggable-behavior": "~1.0",
       "kartik-v/yii2-widget-fileinput": "@dev",
-      "iutbay/yii2-imagecache" : "*"
+      "iutbay/yii2-imagecache" : "*",
+      "2amigos/yii2-selectize-widget": "~1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

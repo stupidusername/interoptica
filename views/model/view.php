@@ -40,6 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'name',
             'description:ntext',
+            'materials',
             'front_size',
             'lens_width',
             'bridge_size',

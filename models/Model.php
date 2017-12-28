@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use dosamigos\taggable\Taggable;
 use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
@@ -56,6 +57,11 @@ class Model extends \yii\db\ActiveRecord
   				],
   				'replaceRegularDelete' => true,
   			],
+        'taggable' => [
+          'class' => Taggable::className(),
+          'attribute' => 'materials',
+          'relation' => 'materials',
+        ],
   		];
   	}
 
@@ -78,6 +84,7 @@ class Model extends \yii\db\ActiveRecord
             [['type', 'brand_id', 'name'], 'required'],
             [['front_size', 'lens_width', 'bridge_size', 'temple_length', 'base', 'flex'], 'required', 'when' => function ($model) { return in_array($this->type, [self::TYPE_SUN, self::TYPE_RX]); }],
             [['polarized', 'mirrored'], 'required', 'when' => function ($model) { return $this->type === self::TYPE_SUN; }],
+            [['materials'], 'safe'],
         ];
     }
 
@@ -92,6 +99,7 @@ class Model extends \yii\db\ActiveRecord
             'brand_id' => 'ID Marca',
             'name' => 'Nombre',
             'description' => 'Descripción',
+            'materials' => 'Materiales',
             'front_size' => 'Frente',
             'lens_width' => 'Calibre',
             'bridge_size' => 'Puente',
@@ -129,9 +137,9 @@ class Model extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getModelMaterials()
+    public function getMaterials()
     {
-        return $this->hasMany(ModelMaterial::className(), ['model_id' => 'id']);
+        return $this->hasMany(Material::className(), ['id' => 'material_id'])->viaTable('model_material', ['model_id' => 'id']);
     }
 
     /**
