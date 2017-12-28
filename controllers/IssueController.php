@@ -95,9 +95,17 @@ class IssueController extends Controller
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
 
+		// data provider used for export
+		$exportDataProvider = $dataProvider;
+		if (Yii::$app->request->isPost) {
+			$exportDataProvider = $searchModel->search(Yii::$app->request->queryParams);
+			$exportDataProvider->pagination->pageSize = 0;
+		}
+
 		return $this->render('index', [
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
+			'exportDataProvider' => $exportDataProvider,
 		]);
 	}
 
@@ -274,7 +282,7 @@ class IssueController extends Controller
 		Yii::$app->response->format = Response::FORMAT_JSON;
 		return ['success' => true];
 	}
-	
+
 	/**
 	 * Adds an invoice  to an existing Issue.
 	 * @param integer $issueId
@@ -394,7 +402,7 @@ class IssueController extends Controller
 	public function actionList($q = '') {
 		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 		$issuesArray = Issue::find()->andWhere([
-			'or', 
+			'or',
 			[Issue::tableName() . '.id' => $q],
 			[Customer::tableName() . '.gecom_id' => $q],
 			['like', Customer::tableName() . '.name', $q],
