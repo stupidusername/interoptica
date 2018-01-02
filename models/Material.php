@@ -31,6 +31,7 @@ class Material extends \yii\db\ActiveRecord
         return [
             [['frequency'], 'integer'],
             [['name'], 'string', 'max' => 255],
+            [['name'], 'required']
         ];
     }
 

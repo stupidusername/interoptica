@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Material;
 use app\models\Model;
 use app\models\ModelSearch;
 use dektrium\user\filters\AccessRule;
@@ -36,7 +37,7 @@ class ModelController extends Controller
       				],
       				'rules' => [
       					[
-      						'actions' => ['index', 'view'],
+      						'actions' => ['index', 'view', 'list-materials'],
       						'allow' => true,
       						'roles' => ['@'],
       					],
@@ -127,6 +128,20 @@ class ModelController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+    * Returns a JSON object coitaing materials.
+    * @param mixed $query
+    * @return mixed JSON response.
+    */
+    public function actionListMaterials($query) {
+      Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+  		$materialsArray = Material::find()->andWhere($query)->asArray()->all();
+  		$results = array_map(function ($materialArray) {
+  			return ['name' => $materialArray['name']];
+  		}, $materialsArray);
+  		return $results;
     }
 
     /**

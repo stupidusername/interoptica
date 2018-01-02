@@ -2,6 +2,7 @@
 
 use app\models\Brand;
 use app\models\Model;
+use dosamigos\selectize\SelectizeTextInput;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -21,6 +22,18 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
+
+    <?= $form->field($model, 'materialNames')->widget(SelectizeTextInput::className(), [
+      'loadUrl' => ['list-materials'],
+      'options' => ['class' => 'form-control'],
+      'clientOptions' => [
+          'plugins' => ['remove_button'],
+          'valueField' => 'name',
+          'labelField' => 'name',
+          'searchField' => ['name'],
+          'create' => true,
+      ],
+    ])->hint('Use comas para separar los materiales') ?>
 
     <?= $form->field($model, 'front_size')->textInput() ?>
 
