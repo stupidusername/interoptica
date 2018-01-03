@@ -1,6 +1,5 @@
 <?php
 
-use app\models\ProductsImportForm;
 use kartik\export\ExportMenu;
 use kartik\grid\EditableColumn;
 use kartik\grid\GridView;

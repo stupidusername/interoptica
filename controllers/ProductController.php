@@ -5,7 +5,6 @@ namespace app\controllers;
 use app\models\Color;
 use app\models\Product;
 use app\models\ProductSearch;
-use app\models\ProductsImportForm;
 use kartik\grid\EditableColumnAction;
 use dektrium\user\filters\AccessRule;
 use Yii;
@@ -148,24 +147,6 @@ class ProductController extends Controller
 		$this->findModel($id)->delete();
 
 		return $this->redirect(['index']);
-	}
-
-	/**
-	 * Renders import products page.
-	 * @return mixed
-	 */
-	public function actionImport($scenario) {
-		$model = new ProductsImportForm(['scenario' => $scenario]);
-
-		if (Yii::$app->request->isPost) {
-			$model->file = UploadedFile::getInstance($model, 'file');
-			if ($model->import()) {
-				// file is uploaded successfully
-				return $this->redirect(['index']);
-			}
-		}
-
-		return $this->render('import', ['model' => $model]);
 	}
 
 	/**
