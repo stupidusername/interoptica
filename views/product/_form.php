@@ -1,6 +1,9 @@
 <?php
 
+use dosamigos\selectize\SelectizeTextInput;
+use kartik\select2\Select2;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use kartik\money\MaskMoney;
 
@@ -13,15 +16,48 @@ use kartik\money\MaskMoney;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'gecom_code')->textInput(['maxlength' => true]) ?>
+    <?=
+  	$form->field($model, 'model_id')->label('Modelo')->widget(Select2::classname(), [
+  		'initValueText' => $model->model_id ? $model->model->name : null,
+  		'options' => ['placeholder' => 'Elegir modelo'],
+  		'pluginOptions' => [
+  			'minimumInputLength' => 3,
+  			'ajax' => [
+  				'url' => Url::to('/model/list'),
+  			],
+  		],
+  	])
+  	?>
 
-    <?= $form->field($model, 'gecom_desc')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'colorNames')->widget(SelectizeTextInput::className(), [
+      'loadUrl' => ['list-colors'],
+      'options' => ['class' => 'form-control'],
+      'clientOptions' => [
+          'plugins' => ['remove_button'],
+          'valueField' => 'name',
+          'labelField' => 'name',
+          'searchField' => ['name'],
+          'create' => true,
+      ],
+    ])->hint('Use comas para separar los colores') ?>
+
+    <?= $form->field($model, 'lensColorNames')->widget(SelectizeTextInput::className(), [
+      'loadUrl' => ['list-colors'],
+      'options' => ['class' => 'form-control'],
+      'clientOptions' => [
+          'plugins' => ['remove_button'],
+          'valueField' => 'name',
+          'labelField' => 'name',
+          'searchField' => ['name'],
+          'create' => true,
+      ],
+    ])->hint('Use comas para separar los colores') ?>
 
     <?= $form->field($model, 'price')->widget(MaskMoney::classname()) ?>
 
     <?= $form->field($model, 'stock')->textInput() ?>
- 
-    <?= $form->field($model, 'extra')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

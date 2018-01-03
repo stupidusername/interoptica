@@ -5,20 +5,20 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "material".
+ * This is the model class for table "color".
  *
  * @property int $id
  * @property int $frequency
  * @property string $name
  */
-class Material extends \yii\db\ActiveRecord
+class Color extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'material';
+        return 'color';
     }
 
     /**

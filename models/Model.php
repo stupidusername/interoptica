@@ -57,7 +57,7 @@ class Model extends \yii\db\ActiveRecord
   				],
   				'replaceRegularDelete' => true,
   			],
-        'taggable' => [
+        'materials' => [
           'class' => Taggable::className(),
           'attribute' => 'materialNames',
           'relation' => 'materials',

@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use dosamigos\taggable\Taggable;
 use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 use yii\helpers\ArrayHelper;
@@ -11,10 +12,10 @@ use yii\helpers\ArrayHelper;
  *
  * @property integer $id
  * @property integer $model_id
- * @property string $gecom_code
+ * @property string $code
  * @property string $price
  * @property integer $stock
- * @property boolean $runnig_low
+ * @property boolean $running_low
  * @property string $running_low_date
  * @property string $create_date
  * @property string $update_date
@@ -47,6 +48,16 @@ class Product extends \yii\db\ActiveRecord
 				],
 				'replaceRegularDelete' => true
 			],
+			'colors' => [
+				'class' => Taggable::className(),
+				'attribute' => 'colorNames',
+				'relation' => 'colors',
+			],
+			'lensColors' => [
+				'class' => Taggable::className(),
+				'attribute' => 'lensColorNames',
+				'relation' => 'lensColors',
+			],
 		];
 	}
 
@@ -67,7 +78,8 @@ class Product extends \yii\db\ActiveRecord
 			[['code'], 'string', 'max' => 255],
 			[['code'], 'unique'],
 			[['model_id'], 'exist', 'skipOnError' => true, 'targetClass' => Model::className(), 'targetAttribute' => ['model_id' => 'id']],
-			[['model_id', 'code', 'price'], 'required']
+			[['model_id', 'code', 'price'], 'required'],
+			[['colorNames', 'lensColorNames'], 'safe'],
 		];
 	}
 
@@ -80,6 +92,10 @@ class Product extends \yii\db\ActiveRecord
 			'id' => 'ID',
 			'model_id' => 'ID Modelo',
 			'code' => 'Código',
+			'colors' => 'Colores',
+			'colorNames' => 'Colores',
+			'lensColors' => 'Colores lente',
+			'lensColorNames' => 'Colores lente',
 			'price' => 'Precio',
 			'stock' => 'Stock',
 			'running_low' => 'Agotándose',
@@ -92,11 +108,42 @@ class Product extends \yii\db\ActiveRecord
 	/**
 	* @inheritdoc
 	*/
+	public function beforeSave($insert) {
+		if (!parent::beforeSave($insert)) {
+			return false;
+		}
+		if ($insert) {
+			$this->create_date = gmdate('Y-m-d');
+		} else {
+			// Changing the stock should not affect update_date
+			$attrs = $this->attributes;
+			unset($attrs['stock'], $attrs['running_low'], $attrs['running_low_date']);
+			foreach (array_keys($attrs) as $attrName) {
+				if ($this->isAttributeChanged($attrName, false)) {
+					$this->update_date = gmdate('Y-m-d');
+					break;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	* @inheritdoc
+	*/
 	public function afterSave($insert, $changedAttributes) {
 		if (!$insert && array_key_exists('stock', $changedAttributes)) {
 			$this->checkStock($changedAttributes['stock'], $this->stock);
 		}
 		parent::afterSave($insert, $changedAttributes);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getModel()
+	{
+			return $this->hasOne(Model::className(), ['id' => 'model_id']);
 	}
 
 	/**
@@ -124,6 +171,22 @@ class Product extends \yii\db\ActiveRecord
 	}
 
 	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getColors()
+	{
+			return $this->hasMany(Color::className(), ['id' => 'color_id'])->viaTable('product_color', ['product_id' => 'id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getLensColors()
+	{
+			return $this->hasMany(Color::className(), ['id' => 'color_id'])->viaTable('product_lens_color', ['product_id' => 'id']);
+	}
+
+	/**
 	 * Gets an id => name array.
 	 * @param OrderProduct $orderProduct if set, the quantity of $orderProduct
 	 * will be added to its product stock.
@@ -135,9 +198,9 @@ class Product extends \yii\db\ActiveRecord
 			if ($orderProduct && !$orderProduct->isNewRecord && $orderProduct->product_id == $array['id']) {
 				$stock += $orderProduct->quantity;
 			}
-			return $array['gecom_desc'] . ' (' . $stock . ')';
+			return $array['code'] . ' (' . $stock . ')';
 		};
-		$activeQuery = self::find()->inStock()->select(['id', 'gecom_desc', 'stock']);
+		$activeQuery = self::find()->inStock()->select(['id', 'code', 'stock']);
 		if ($orderProduct && !$orderProduct->isNewRecord) {
 			$activeQuery->orWhere(['id' => $orderProduct->product_id]);
 		}
@@ -147,13 +210,13 @@ class Product extends \yii\db\ActiveRecord
 
 	/**
 	 * Gets products ordered by fail rate
-	 * @param integere $limit
+	 * @param integer $limit
 	 * @return mixed
 	 */
 	public static function getProductsOrderedByFailRate($limit = null) {
 		$products = self::find()->select([
 			self::tableName() . '.id',
-			'gecom_desc',
+			'code',
 			'fails' => IssueProduct::find()->select('sum(quantity)')->where('product_id = ' . Product::tableName() . '.id'),
 			'orders' => OrderProduct::find()->select('sum(quantity)')->where('product_id = ' . Product::tableName() . '.id'),
 		])->orderBy(['(fails / orders)' => SORT_DESC])->limit($limit)->asArray()->all();

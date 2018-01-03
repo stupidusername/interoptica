@@ -27,8 +27,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
 	<?php
 	$columns = [
-		'gecom_code',
-		'gecom_desc',
+    [
+      'attribute' => 'model.name',
+      'label' => 'Modelo',
+    ],
+		'code',
 		[
 			'class' => EditableColumn::className(),
 			'attribute' => 'price',
@@ -55,12 +58,6 @@ $this->params['breadcrumbs'][] = $this->title;
     [
 			'attribute' => 'running_low_date',
 			'format' => 'date',
-		],
-		[
-			'attribute' => 'extra',
-			'value' => function($model) {
-				return $model->extra ? 'Sí' : 'No';
-			},
 		],
 	];
 	?>

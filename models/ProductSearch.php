@@ -18,8 +18,8 @@ class ProductSearch extends Product
     public function rules()
     {
         return [
-            [['id', 'variant_id', 'stock', 'running_low'], 'integer'],
-            [['gecom_code', 'gecom_desc'], 'safe'],
+            [['id', 'running_low'], 'integer'],
+            [['code'], 'safe'],
             [['price'], 'number'],
         ];
     }
@@ -42,7 +42,7 @@ class ProductSearch extends Product
      */
     public function search($params)
     {
-        $query = Product::find();
+        $query = Product::find()->with(['model']);
 
         // add conditions that should always apply here
 
@@ -61,9 +61,7 @@ class ProductSearch extends Product
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'variant_id' => $this->variant_id,
             'price' => $this->price,
-            'stock' => $this->stock,
         ]);
 
         if ($this->running_low === '1') {
@@ -72,8 +70,7 @@ class ProductSearch extends Product
           $query->andWhere(['or', ['running_low' => false], ['running_low' => null]]);
         }
 
-        $query->andFilterWhere(['like', 'gecom_code', $this->gecom_code])
-            ->andFilterWhere(['like', 'gecom_desc', $this->gecom_desc]);
+        $query->andFilterWhere(['like', 'code', $this->code]);
 
         return $dataProvider;
     }

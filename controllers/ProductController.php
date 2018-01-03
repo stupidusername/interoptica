@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Color;
 use app\models\Product;
 use app\models\ProductSearch;
 use app\models\ProductsImportForm;
@@ -39,7 +40,7 @@ class ProductController extends Controller
 				],
 				'rules' => [
 					[
-						'actions' => ['index', 'view', 'list'],
+						'actions' => ['index', 'view', 'list', 'list-colors'],
 						'allow' => true,
 						'roles' => ['@'],
 					],
@@ -180,6 +181,20 @@ class ProductController extends Controller
 		}, $productsArray);
 		$out = ['results' => $results];
 		return $out;
+	}
+
+	/**
+	* Returns a JSON object coitaing colors.
+	* @param mixed $query
+	* @return mixed JSON response.
+	*/
+	public function actionListColors($query) {
+		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		$colorsArray = Color::find()->andWhere($query)->asArray()->all();
+		$results = array_map(function ($colorArray) {
+			return ['name' => $colorArray['name']];
+		}, $colorsArray);
+		return $results;
 	}
 
 	/**

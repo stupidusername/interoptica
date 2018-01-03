@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Product */
 
-$this->title = $model->gecom_desc;
+$this->title = $model->code;
 $this->params['breadcrumbs'][] = ['label' => 'Productos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -25,30 +25,39 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'gecom_code',
-            'gecom_desc',
-            [
-				'attribute' => 'price',
-				'format' => 'currency',
-			],
-            'stock',
-            [
-      		    'attribute' => 'running_low',
-      		    'value' => $model->running_low ? 'Sí' : 'No',
-      	    ],
-            [
-              'attribute' => 'running_low_date',
-              'format' => 'date',
-            ],
-	    [
-		    'attribute' => 'extra',
-		    'value' => $model->extra ? 'Sí' : 'No',
-	    ],
-        ],
-    ]) ?>
+  <?= DetailView::widget([
+    'model' => $model,
+    'attributes' => [
+      'id',
+      [
+        'attribute' => 'model.name',
+        'label' => 'Modelo',
+      ],
+      'code',
+      [
+        'attribute' => 'price',
+        'format' => 'currency',
+      ],
+      'colorNames',
+      'lensColorNames',
+      'stock',
+      [
+        'attribute' => 'running_low',
+        'value' => $model->running_low ? 'Sí' : 'No',
+      ],
+      [
+        'attribute' => 'running_low_date',
+        'format' => 'date',
+      ],
+      [
+        'attribute' => 'create_date',
+        'format' => 'date',
+      ],
+      [
+        'attribute' => 'update_date',
+        'format' => 'date',
+      ],
+    ],
+  ]) ?>
 
 </div>

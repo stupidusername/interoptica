@@ -37,7 +37,7 @@ class ModelController extends Controller
       				],
       				'rules' => [
       					[
-      						'actions' => ['index', 'view', 'list-materials'],
+      						'actions' => ['index', 'view', 'list', 'list-materials'],
       						'allow' => true,
       						'roles' => ['@'],
       					],
@@ -129,6 +129,21 @@ class ModelController extends Controller
 
         return $this->redirect(['index']);
     }
+
+    /**
+  	 * Builds a response for Select2 product widgets
+  	 * @param string $q
+  	 * @return JSON
+  	 */
+  	public function actionList($q = '') {
+  		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+  		$modelsArray = Model::find()->andWhere(['like', 'name', $q])->asArray()->all();
+  		$results = array_map(function ($modelArray) {
+  			return ['id' => $modelArray['id'], 'text' => $modelArray['name']];
+  		}, $modelsArray);
+  		$out = ['results' => $results];
+  		return $out;
+  	}
 
     /**
     * Returns a JSON object coitaing materials.
