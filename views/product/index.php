@@ -21,8 +21,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
 		<?= Html::a('Crear Producto', ['create'], ['class' => 'btn btn-success']) ?>
-		<?= Html::a('Importar Precios', ['import', 'scenario' => ProductsImportForm::SCENARIO_PRICE], ['class' => 'btn btn-primary']) ?>
-		<?= Html::a('Importar Stock', ['import', 'scenario' => ProductsImportForm::SCENARIO_STOCK], ['class' => 'btn btn-primary']) ?>
+		<?= Html::a('Administrar Marcas', ['brand/index'], ['class' => 'btn btn-primary']) ?>
+    <?= Html::a('Administrar Modelos', ['model/index'], ['class' => 'btn btn-primary']) ?>
+    <?= Html::a('Administrar Colecciones', ['collection/index'], ['class' => 'btn btn-primary']) ?>
     </p>
 
 	<?php
