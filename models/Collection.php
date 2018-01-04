@@ -50,6 +50,7 @@ class Collection extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'string', 'max' => 255],
+            [['name'], 'required'],
         ];
     }
 
