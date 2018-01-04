@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\IssueProduct */
 
-$this->title = 'Editar Producto: ' . $model->product->gecom_desc;
+$this->title = 'Editar Producto: ' . $model->product->code;
 ?>
 <div class="issue-product-update">
 

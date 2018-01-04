@@ -156,9 +156,9 @@ class ProductController extends Controller
 	 */
 	public function actionList($q = '') {
 		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-		$productsArray = Product::find()->andWhere(['or', ['like', 'gecom_code', $q], ['like', 'gecom_desc', $q]])->asArray()->all();
+		$productsArray = Product::find()->andWhere(['like', 'code', $q])->asArray()->all();
 		$results = array_map(function ($productArray) {
-			return ['id' => $productArray['id'], 'text' => $productArray['gecom_desc'] . ' (' . $productArray['stock']. ')'];
+			return ['id' => $productArray['id'], 'text' => $productArray['code'] . ' (' . $productArray['stock']. ')'];
 		}, $productsArray);
 		$out = ['results' => $results];
 		return $out;

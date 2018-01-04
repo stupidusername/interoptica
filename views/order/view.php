@@ -267,7 +267,7 @@ OrderAsset::register($this);
 			return $model->ignore_stock ? ['style'=>"font-weight: bold;"] : [];
 		},
 		'columns' => [
-			'product.gecom_desc',
+			'product.code',
 			[
 				'attribute' => 'price',
 				'format' => 'currency',

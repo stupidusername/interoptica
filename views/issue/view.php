@@ -192,7 +192,7 @@ IssueAsset::register($this);
 	<?=
 	GridView::widget([
 		'columns' => [
-			'product.gecom_desc',
+			'product.code',
 			'quantity',
 			[
 				'label' => 'Falla',

@@ -48,7 +48,7 @@ Highcharts::widget([
 		<div class="col-md-6">
 
 <?php
-$data = array_map(function ($elem) { return ['name' => $elem->product->gecom_desc, 'y' => (int) $elem->total_quantity]; }, $failsByProduct);
+$data = array_map(function ($elem) { return ['name' => $elem->product->code, 'y' => (int) $elem->total_quantity]; }, $failsByProduct);
 ?>
 
 <?=

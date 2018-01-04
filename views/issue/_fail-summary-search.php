@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
 
     <?=
 	$form->field($model, 'product_id')->label('Producto')->widget(Select2::classname(), [
-		'initValueText' => $model->product_id ? $model->product->gecom_desc . ' (' . $model->product->stock . ')' : null,
+		'initValueText' => $model->product_id ? $model->product->code . ' (' . $model->product->stock . ')' : null,
 		'options' => ['placeholder' => 'Elegir producto'],
 		'pluginOptions' => [
 			'allowClear' => true,
@@ -34,12 +34,12 @@ use yii\widgets\ActiveForm;
 	?>
 
     <?= $form->field($model, 'fail_id')->label('Falla')->dropDownList(Fail::getIdNameArray(), ['prompt' => 'Elegir falla']) ?>
-	
+
 	<?= $form->field($model, 'fromDate')->widget(DatePicker::classname(), [
 		'dateFormat' => 'yyyy-MM-dd',
 		'options' => ['class' => 'form-control'],
 	]) ?>
-	
+
 	<?= $form->field($model, 'toDate')->widget(DatePicker::classname(), [
 		'dateFormat' => 'yyyy-MM-dd',
 		'options' => ['class' => 'form-control'],

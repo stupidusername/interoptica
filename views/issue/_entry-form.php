@@ -23,10 +23,10 @@ use app\models\Product;
 			],
 		],
 	]); ?>
-	
+
 	<?=
 	$form->field($model, 'product_id')->label('Producto')->widget(Select2::classname(), [
-		'initValueText' => $model->product_id ? $model->product->gecom_desc . ' (' . $model->product->stock . ')' : null,
+		'initValueText' => $model->product_id ? $model->product->code . ' (' . $model->product->stock . ')' : null,
 		'options' => ['placeholder' => 'Elegir producto'],
 		'pluginOptions' => [
 			'minimumInputLength' => 3,
@@ -36,12 +36,12 @@ use app\models\Product;
 		],
 	])
 	?>
-	
+
 	<?= $form->field($model, 'fail_id')->dropDownList(Fail::getIdNameArray(), ['prompt' => 'Elegir falla']) ?>
 
 	<?= $form->field($model, 'quantity') ?>
-	
-	<?= $form->field($model, 'comment')->textarea() ?>	
+
+	<?= $form->field($model, 'comment')->textarea() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Añadir' : 'Guardar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

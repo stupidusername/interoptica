@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	$columns = [
 		[
 			'label' => 'Producto',
-			'value' => 'product.gecom_desc'
+			'value' => 'product.code'
 		],
 		[
 			'label' => 'Falla',
@@ -30,12 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
 		'total_quantity',
 	];
 	?>
-	
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => $columns,
     ]); ?>
-	
+
 	<?=
 	ExportMenu::widget([
 		'dataProvider' => $exportDataProvider,
