@@ -257,7 +257,7 @@ class Order extends \yii\db\ActiveRecord
 	public function getTotalQuantity() {
 		$quantity = 0;
 		foreach ($this->orderProducts as $orderProduct) {
-			if (!$orderProduct->product->extra) {
+			if ($orderProduct->product->model->type != Model::TYPE_EXTRA) {
 				$quantity += $orderProduct->quantity;
 			}
 		}
@@ -357,7 +357,7 @@ class Order extends \yii\db\ActiveRecord
 			'customer',
 			'customer.zone',
 			'orderProducts.order',
-			'orderProducts.product',
+			'orderProducts.product.model',
 		])->one();
 		$header = Yii::$app->controller->renderPartial('pdf-header', ['model' => $model]);
 		$content = Yii::$app->controller->renderPartial('pdf', ['model' => $model]);

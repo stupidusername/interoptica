@@ -30,7 +30,7 @@ Modal::begin([
 	],
 ]);
 
-Modal::end(); 
+Modal::end();
 
 DeliveryAsset::register($this);
 ?>
@@ -189,7 +189,7 @@ GridView::widget([
 		],
 	],
 	'dataProvider' => new ActiveDataProvider([
-		'query' => $model->getOrders()->with(['orderStatus', 'customer', 'orderInvoices', 'orderProducts.product'])->orderBy(['id' => SORT_DESC]),
+		'query' => $model->getOrders()->with(['orderStatus', 'customer', 'orderInvoices', 'orderProducts.product.model'])->orderBy(['id' => SORT_DESC]),
 		'pagination' => false,
 		'sort' => false,
 	]),

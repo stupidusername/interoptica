@@ -4,7 +4,6 @@ namespace app\models;
 
 use app\helpers\DateHelper;
 use Yii;
-use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
 class OrderSummary extends Order {
@@ -63,7 +62,7 @@ class OrderSummary extends Order {
 			[['period'], 'integer'],
 		];
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -92,7 +91,7 @@ class OrderSummary extends Order {
 	 */
 	public function scenarios() {
 		// bypass scenarios() implementation in the parent class
-		return Model::scenarios();
+		return yii\base\Model::scenarios();
 	}
 
 	/**
@@ -113,7 +112,7 @@ class OrderSummary extends Order {
 			self::PERIOD_YEAR => 'SUBDATE(DATE(order_status.create_datetime), DAYOFYEAR(order_status.create_datetime) - 1)',
 		];
 		$query = self::find()->select(['order.user_id', 'totalQuantity' => 'SUM(order_product.quantity)', 'period' => $sqlPeriodFunctions[$this->period]])
-			->andWhere(['order.user_id' => $userIds])->andWhere(['or', ['extra' => null], ['extra' => 0]])->with(['orderStatus'])->groupBy(['order.user_id', 'period'])
+			->andWhere(['order.user_id' => $userIds])->andWhere(['!=', 'type', Model::TYPE_EXTRA])->with(['orderStatus'])->groupBy(['order.user_id', 'period'])
 			->indexBy(function ($row) { return $row['user_id'] . '-' . $row['period']; });
 
 		// add conditions that should always apply here
@@ -160,7 +159,7 @@ class OrderSummary extends Order {
 					$query->andWhere(['<', 'create_datetime', $this->queryToDate]);
 				}
 			},
-			'orderProducts.product']);
+			'orderProducts.product.model']);
 
 		return $dataProvider;
 	}
