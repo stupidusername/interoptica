@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Color;
 use app\models\Product;
+use app\models\ProductForm;
 use app\models\ProductSearch;
 use kartik\grid\EditableColumnAction;
 use dektrium\user\filters\AccessRule;
@@ -106,7 +107,7 @@ class ProductController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model = new Product();
+		$model = new ProductForm();
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->id]);
@@ -125,7 +126,10 @@ class ProductController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model = $this->findModel($id);
+		$model = ProductForm::findOne($id);
+		if ($model === null) {
+			throw new NotFoundHttpException('The requested page does not exist.');
+		}
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->id]);

@@ -24,6 +24,7 @@ use yii\helpers\ArrayHelper;
  * @property OrderProduct[] $orderProducts
  * @property Order[] $orders
  * @property Variant $variant
+ * @property ProductImage[] $productImages
  */
 class Product extends \yii\db\ActiveRecord
 {
@@ -184,6 +185,14 @@ class Product extends \yii\db\ActiveRecord
 	public function getLensColors()
 	{
 			return $this->hasMany(Color::className(), ['id' => 'color_id'])->viaTable('product_lens_color', ['product_id' => 'id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getProductImages()
+	{
+		return $this->hasMany(ProductImage::className(), ['product_id' => 'id'])->orderBy(['rank' => SORT_ASC]);
 	}
 
 	/**
