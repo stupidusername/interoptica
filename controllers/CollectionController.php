@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Collection;
 use app\models\CollectionProduct;
+use app\models\ProductSearch;
 use dektrium\user\filters\AccessRule;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -133,6 +134,7 @@ class CollectionController extends Controller
     /**
   	 * Adds a product to an existing Collection.
   	 * @param integer $collectionId
+     * @return mixed
   	 */
   	public function actionAddEntry($collectionId) {
   		$collection = $this->findModel($collectionId);
@@ -148,6 +150,44 @@ class CollectionController extends Controller
   			]);
   		}
   	}
+
+    /**
+     * Renders a view that allows to edit the products of a collection
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionEditProducts($id)
+    {
+      $model = $this->findModel($id);
+
+      $searchModel = new ProductSearch();
+  		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+  		return $this->render('edit-products', [
+        'model' => $model,
+  			'searchModel' => $searchModel,
+  			'dataProvider' => $dataProvider,
+  		]);
+    }
+
+    /**
+     * Adds a product to an existing Collection.
+     * @param integer $collectionId
+     * @param integer $productId
+     */
+    public function actionCheckEntry($collectionId, $productId) {
+      Yii::$app->response->format = Response::FORMAT_JSON;
+      $model = new CollectionProduct();
+      $model->collection_id = $collectionId;
+      $model->product_id = $productId;
+      if ($model->save()) {
+        $response = ['success' => true];
+      } else {
+        $response = ['success' => false];
+      }
+      return $response;
+    }
 
     /**
   	 * Deletes an existing CollectionProduct model.

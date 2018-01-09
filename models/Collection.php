@@ -72,4 +72,12 @@ class Collection extends \yii\db\ActiveRecord
     {
         return $this->hasMany(CollectionProduct::className(), ['collection_id' => 'id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProducts()
+    {
+        return $this->hasMany(Product::className(), ['id' => 'product_id'])->viaTable('collection_product', ['collection_id' => 'id']);
+    }
 }

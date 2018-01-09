@@ -57,6 +57,7 @@ Modal::end();
 
   	<p>
   		<?= Html::button('Agregar Producto', ['id' => 'addEntryButton', 'class' => 'btn btn-success', 'url' => "$addEntryUrl"]) ?>
+			<?= Html::a('Editar Productos', ['edit-products', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
   	</p>
 
     <?php Pjax::begin(['id' => 'productsGridview']); ?>
