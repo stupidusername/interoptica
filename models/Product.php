@@ -6,6 +6,7 @@ use dosamigos\taggable\Taggable;
 use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 use yii\helpers\ArrayHelper;
+use zxbodya\yii2\galleryManager\GalleryBehavior;
 
 /**
  * This is the model class for table "product".
@@ -24,7 +25,6 @@ use yii\helpers\ArrayHelper;
  * @property OrderProduct[] $orderProducts
  * @property Order[] $orders
  * @property Variant $variant
- * @property ProductImage[] $productImages
  */
 class Product extends \yii\db\ActiveRecord
 {
@@ -58,6 +58,14 @@ class Product extends \yii\db\ActiveRecord
 				'class' => Taggable::className(),
 				'attribute' => 'lensColorNames',
 				'relation' => 'lensColors',
+			],
+			'galleryBehavior' => [
+				'class' => GalleryBehavior::className(),
+				'tableName' => 'product_image',
+				'type' => 'product',
+				'extension' => 'jpg',
+				'directory' => Yii::getAlias('@webroot') . '/images/product',
+				'url' => Yii::getAlias('@web') . '/images/product',
 			],
 		];
 	}
@@ -185,14 +193,6 @@ class Product extends \yii\db\ActiveRecord
 	public function getLensColors()
 	{
 			return $this->hasMany(Color::className(), ['id' => 'color_id'])->viaTable('product_lens_color', ['product_id' => 'id']);
-	}
-
-	/**
-	 * @return \yii\db\ActiveQuery
-	 */
-	public function getProductImages()
-	{
-		return $this->hasMany(ProductImage::className(), ['product_id' => 'id'])->orderBy(['rank' => SORT_ASC]);
 	}
 
 	/**

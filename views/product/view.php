@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use zxbodya\yii2\galleryManager\GalleryManager;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Product */
@@ -59,5 +60,13 @@ $this->params['breadcrumbs'][] = $this->title;
       ],
     ],
   ]) ?>
+
+  <h3>Imágenes</h3>
+
+  <?= GalleryManager::widget([
+    'model' => $model,
+    'behaviorName' => 'galleryBehavior',
+    'apiRoute' => 'gallery',
+  ]); ?>
 
 </div>

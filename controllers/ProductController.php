@@ -14,6 +14,7 @@ use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
+use zxbodya\yii2\galleryManager\GalleryManagerAction;
 
 /**
  * ProductController implements the CRUD actions for Product model.
@@ -60,6 +61,13 @@ class ProductController extends Controller
 			'edit' => [
 				'class' => EditableColumnAction::className(),
 				'modelClass' => Product::className(),
+			],
+			'gallery' => [
+				'class' => GalleryManagerAction::className(),
+				// mappings between type names and model classes (should be the same as in behaviour)
+				'types' => [
+					'product' => Product::className(),
+				],
 			],
 		]);
 	}
