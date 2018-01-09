@@ -16,7 +16,7 @@ use Yii;
  */
 class ProductImage extends \yii\db\ActiveRecord
 {
-  const LOGO_FOLDER = '/images/brand/';
+  const LOGO_FOLDER = '/images/product/';
 
   /**
    * @inheritdoc
@@ -37,8 +37,8 @@ class ProductImage extends \yii\db\ActiveRecord
   /**
   * @return string
   */
-  public function getLogoUrl() {
-      $url = Yii::$app->imageCache->thumbSrc(self::LOGO_FOLDER . $this->filename);
+  public function getUrl() {
+    $url = Yii::$app->imageCache->thumbSrc(self::LOGO_FOLDER . $this->filename);
     return $url;
   }
 }
