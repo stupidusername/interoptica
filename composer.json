@@ -21,10 +21,6 @@
 		{
             "type": "vcs",
             "url": "https://github.com/stupidusername/yii2-money"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/stupidusername/yii2-user"
         }
     ],
     "require": {
@@ -47,7 +43,8 @@
       "2amigos/yii2-taggable-behavior": "~1.0",
       "kartik-v/yii2-widget-fileinput": "@dev",
       "iutbay/yii2-imagecache" : "*",
-      "2amigos/yii2-selectize-widget": "~1.0"
+      "2amigos/yii2-selectize-widget": "~1.0",
+      "zxbodya/yii2-gallery-manager": "*@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
