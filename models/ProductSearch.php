@@ -42,7 +42,7 @@ class ProductSearch extends Product
      */
     public function search($params)
     {
-        $query = Product::find()->with(['model']);
+        $query = Product::find()->with(['model.brand']);
 
         // add conditions that should always apply here
 

@@ -28,6 +28,10 @@ $this->params['breadcrumbs'][] = $this->title;
 	<?php
 	$columns = [
     [
+      'attribute' => 'model.brand.name',
+      'label' => 'Marca',
+    ],
+    [
       'attribute' => 'model.name',
       'label' => 'Modelo',
     ],
