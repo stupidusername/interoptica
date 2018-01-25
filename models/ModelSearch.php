@@ -40,7 +40,7 @@ class ModelSearch extends Model
      */
     public function search($params)
     {
-        $query = Model::find();
+        $query = Model::find()->active();
 
         // add conditions that should always apply here
 

@@ -55,7 +55,7 @@ class BrandController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Brand::find(),
+            'query' => Brand::find()->active(),
         ]);
 
         return $this->render('index', [

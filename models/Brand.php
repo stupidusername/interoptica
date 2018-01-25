@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\DeletedQuery;
 use Yii;
 use yii\web\UploadedFile;
 use yii\helpers\ArrayHelper;
@@ -53,11 +54,12 @@ class Brand extends \yii\db\ActiveRecord
   		];
   	}
 
-    /** @inheritdoc */
-  	public static function find()
-  	{
-  		return parent::find()->where(['or', [self::tableName() . '.deleted' => null], [self::tableName() . '.deleted' => 0]]);
-  	}
+    /**
+    * @inheritdoc
+    */
+    public static function find() {
+      return new DeletedQuery(get_called_class());
+    }
 
     /**
     * @inheritdoc
@@ -127,7 +129,7 @@ class Brand extends \yii\db\ActiveRecord
   	 * return string[]
   	 */
   	public static function getIdNameArray() {
-  		$brands = ArrayHelper::map(self::find()->select(['id', 'name'])->asArray()->all(), 'id', 'name');
+  		$brands = ArrayHelper::map(self::find()->select(['id', 'name'])->active()->asArray()->all(), 'id', 'name');
   		return $brands;
   	}
 }

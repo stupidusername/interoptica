@@ -137,7 +137,7 @@ class ModelController extends Controller
   	 */
   	public function actionList($q = '') {
   		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-  		$modelsArray = Model::find()->andWhere(['like', 'name', $q])->asArray()->all();
+  		$modelsArray = Model::find()->active()->andWhere(['like', 'name', $q])->asArray()->all();
   		$results = array_map(function ($modelArray) {
   			return ['id' => $modelArray['id'], 'text' => $modelArray['name']];
   		}, $modelsArray);
