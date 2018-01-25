@@ -63,7 +63,7 @@ class Product extends \yii\db\ActiveRecord
 				'class' => GalleryBehavior::className(),
 				'tableName' => 'product_image',
 				'type' => 'product',
-				'extension' => 'jpg',
+				'extension' => 'png',
 				'directory' => Yii::getAlias('@webroot') . '/images/product',
 				'url' => Yii::getAlias('@web') . '/images/product',
 			],
