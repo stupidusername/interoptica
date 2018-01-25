@@ -1,10 +1,11 @@
 <?php
 
-use yii\helpers\Html;
-use yii\grid\GridView;
-use kartik\select2\Select2;
-use yii\helpers\Url;
 use app\models\OrderStatus;
+use kartik\export\ExportMenu;
+use kartik\select2\Select2;
+use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\OrderSearch */
@@ -23,16 +24,10 @@ $this->params['breadcrumbs'][] = $this->title;
 		<?= Html::a('Administrar Transportes', ['transport/index'], ['class' => 'btn btn-primary']) ?>
 		<?= Html::a('Estadísticas', ['statistics'], ['class' => 'btn btn-primary']) ?>
     </p>
-	
-	<?=
-	GridView::widget([
-		'dataProvider' => $dataProvider,
-		'filterModel' => $searchModel,
-		'rowOptions' => function ($model, $index, $widget, $grid) {
-			return $model->status == OrderStatus::STATUS_ENTERED ? ['style'=>"font-weight: bold;"] : [];
-		},
-		'columns' => [
-			[
+
+    <?php
+  	$columns = [
+      [
 				'attribute' => 'id',
 				'value' => function ($model, $key, $index, $column) {
 					return Html::a($model->id, ['view', 'id' => $model->id]);
@@ -101,8 +96,31 @@ $this->params['breadcrumbs'][] = $this->title;
 				},
 				'format' => 'currency',
 			],
-			['class' => 'yii\grid\ActionColumn'],
-		],
+    ];
+    ?>
+
+	<?=
+	GridView::widget([
+		'dataProvider' => $dataProvider,
+		'filterModel' => $searchModel,
+		'rowOptions' => function ($model, $index, $widget, $grid) {
+			return $model->status == OrderStatus::STATUS_ENTERED ? ['style'=>"font-weight: bold;"] : [];
+		},
+		'columns' => array_merge($columns, [['class' => 'yii\grid\ActionColumn']]),
+	]);
+	?>
+
+  <?php
+  $columns[0]['value'] = null;
+  ?>
+
+  <?=
+	ExportMenu::widget([
+		'dataProvider' => $exportDataProvider,
+		'target' => ExportMenu::TARGET_SELF,
+		'showConfirmAlert' => false,
+		'filename' => 'pedidos',
+		'columns' => $columns,
 	]);
 	?>
 </div>

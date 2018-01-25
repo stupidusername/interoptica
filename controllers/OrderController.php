@@ -100,9 +100,17 @@ class OrderController extends Controller
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		$dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
 
+		// data provider used for export
+		$exportDataProvider = $dataProvider;
+		if (Yii::$app->request->isPost) {
+			$exportDataProvider = $searchModel->search(Yii::$app->request->queryParams);
+			$exportDataProvider->pagination->pageSize = 0;
+		}
+
 		return $this->render('index', [
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
+			'exportDataProvider' => $exportDataProvider,
 		]);
 	}
 
