@@ -33,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             [
               'attribute' => 'logoUrl',
+              'label' => 'Logo',
               'format' => 'image',
             ],
         ],
