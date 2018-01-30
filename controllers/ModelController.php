@@ -152,7 +152,7 @@ class ModelController extends Controller
     */
     public function actionListMaterials($query) {
       Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-  		$materialsArray = Material::find()->andWhere($query)->asArray()->all();
+  		$materialsArray = Material::find()->andWhere(['name' => $query])->asArray()->all();
   		$results = array_map(function ($materialArray) {
   			return ['name' => $materialArray['name']];
   		}, $materialsArray);

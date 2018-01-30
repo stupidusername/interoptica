@@ -179,7 +179,7 @@ class ProductController extends Controller
 	*/
 	public function actionListColors($query) {
 		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-		$colorsArray = Color::find()->andWhere($query)->asArray()->all();
+		$colorsArray = Color::find()->andWhere(['name' => $query])->asArray()->all();
 		$results = array_map(function ($colorArray) {
 			return ['name' => $colorArray['name']];
 		}, $colorsArray);
