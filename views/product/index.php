@@ -68,9 +68,30 @@ $this->params['breadcrumbs'][] = $this->title;
 
 	<?=
 	GridView::widget([
+    'pjax' => true,
+    'pjaxSettings' => [
+      'options' => [
+        'id' => 'productsGridview'
+      ]
+    ],
 		'dataProvider' => $dataProvider,
 		'filterModel' => $searchModel,
-		'columns' => array_merge($columns, [['class' => 'yii\grid\ActionColumn']]),
+		'columns' => array_merge(
+      $columns,
+      [
+        [
+          'class' => 'yii\grid\ActionColumn',
+          'buttons' => [
+            'delete' => function ($url) {
+              return Html::a('<span class="glyphicon glyphicon-trash"></span>', '#', [
+                'title' => Yii::t('yii', 'Delete'),
+                'aria-label' => Yii::t('yii', 'Delete'),
+                'onclick' => "if (confirm('¿Está seguro de eliminar este elemento?')) { $.ajax('$url', { type: 'POST' }).done(function(data) { $.pjax.reload({container: '#productsGridview'}); }); } return false;"
+              ]);
+            },
+          ],
+        ],
+      ]),
 	]);
 	?>
 

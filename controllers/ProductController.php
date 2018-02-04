@@ -83,7 +83,7 @@ class ProductController extends Controller
 
 		// data provider used for export
 		$exportDataProvider = $dataProvider;
-		if (Yii::$app->request->isPost) {
+		if (Yii::$app->request->isPost && Yii::$app->request->getBodyParam('export_type')) {
 			$exportDataProvider = $searchModel->search(Yii::$app->request->queryParams);
 			$exportDataProvider->pagination->pageSize = 0;
 		}
@@ -154,7 +154,9 @@ class ProductController extends Controller
 	{
 		$this->findModel($id)->delete();
 
-		return $this->redirect(['index']);
+		if (!Yii::$app->request->isAjax) {
+      return $this->redirect(['index']);
+    }
 	}
 
 	/**
