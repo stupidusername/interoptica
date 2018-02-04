@@ -111,6 +111,7 @@ if (YII_ENV_DEV) {
 
 // Disable Excel 95 and PDF export
 \Yii::$container->set('kartik\export\ExportMenu', [
+	'batchSize' => 500,
 	'exportConfig' => [
 		'PDF' => false,
 		'Excel5' => false,
