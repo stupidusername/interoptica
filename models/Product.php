@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\DeletedQuery;
 use dosamigos\taggable\Taggable;
 use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
@@ -70,10 +71,11 @@ class Product extends \yii\db\ActiveRecord
 		];
 	}
 
-	/** @inheritdoc */
-	public static function find()
-	{
-		return parent::find()->where(['or', [self::tableName() . '.deleted' => null], [self::tableName() . '.deleted' => 0]]);
+	/**
+	* @inheritdoc
+	*/
+	public static function find() {
+		return new DeletedQuery(get_called_class());
 	}
 
 	/**
