@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\DeletedQuery;
 use dektrium\user\models\User as BaseUser;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 use yii\helpers\ArrayHelper;
@@ -25,11 +26,10 @@ class User extends BaseUser {
 	}
 
 	/**
-	 * @inheritdoc
-	 */
-	public static function find()
-	{
-		return parent::find()->where(['or', [self::tableName() . '.deleted' => null], [self::tableName() . '.deleted' => 0]]);
+	* @inheritdoc
+	*/
+	public static function find() {
+		return new DeletedQuery(get_called_class());
 	}
 
 	/** @inheritdoc */
@@ -58,7 +58,7 @@ class User extends BaseUser {
 		$attributeLabels['gecom_id'] = 'Gecom ID';
 		return $attributeLabels;
 	}
-	
+
 	/**
 	 * @return string
 	 */
