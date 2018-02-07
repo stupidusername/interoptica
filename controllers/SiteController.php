@@ -67,7 +67,7 @@ class SiteController extends Controller {
 	 */
 	public function actionUserList($q = '') {
 		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-		$usersArray = User::find()->andWhere(
+		$usersArray = User::find()->active()->andWhere(
 				['or', ['gecom_id' => $q], ['like', 'username', $q], ['like', 'email', $q], ['like', 'name', $q], ['like', 'public_email', $q]])
 				->joinWith(['profile'])->asArray()->all();
 		$results = array_map(function ($userArray) {

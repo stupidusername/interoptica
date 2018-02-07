@@ -52,7 +52,7 @@ class BillingSummary extends MonthlySummary {
 			[['fromDate', 'toDate'], 'string'],
 		];
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -101,7 +101,11 @@ class BillingSummary extends MonthlySummary {
 			return $dataProvider;
 		}
 
-		$query->innerJoinWith(['user']);
+		$query->innerJoinWith([
+			'user' => function($query) {
+				$query->active();
+			},
+		]);
 
 		return $dataProvider;
 	}

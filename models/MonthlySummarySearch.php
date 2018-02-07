@@ -84,6 +84,12 @@ class MonthlySummarySearch extends MonthlySummary
 
 		$query->orderBy(['begin_date' => SORT_DESC, 'user_id' => SORT_ASC]);
 
+		$query->innerJoinWith([
+			'user' => function($query) {
+				$query->active();
+			},
+		]);
+
 		return $dataProvider;
 	}
 }

@@ -71,7 +71,7 @@ class User extends BaseUser {
 	 * return string[]
 	 */
 	public static function getIdNameArray() {
-		$customers = ArrayHelper::map(self::find()->select(['id', 'username'])->asArray()->all(), 'id', 'username');
+		$customers = ArrayHelper::map(self::find()->active()->select(['id', 'username'])->asArray()->all(), 'id', 'username');
 		return $customers;
 	}
 }

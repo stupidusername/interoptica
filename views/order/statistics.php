@@ -40,7 +40,7 @@ while ($period < $orderModel->queryToDate) {
 	}
 }
 $userIds = Yii::$app->authManager->getUserIdsByRole('salesman');
-$users = User::find()->andWhere(['id' => $userIds])->indexBy('id')->all();
+$users = User::find()->active()->andWhere(['id' => $userIds])->all();
 if ($orderModel->period == OrderSummary::PERIOD_MONTH) {
 	$objectives = MonthlySummary::find()->select(['user_id', 'period' => 'SUBDATE(begin_date, DAYOFMONTH(begin_date) - 1)', 'objective'])
 		->andWhere(['>=', 'begin_date', $orderModel->queryFromDate])->andWhere(['<', 'begin_date', $orderModel->queryToDate])
@@ -48,8 +48,8 @@ if ($orderModel->period == OrderSummary::PERIOD_MONTH) {
 }
 $series = [];
 $totals = [];
-foreach ($userIds as $k => $id) {
-	$series[$k * 2] = ['type' => 'column', 'name' => $users[$id]->username, 'data' => [], 'key' => $id];
+foreach ($users as $k => $user) {
+	$series[$k * 2] = ['type' => 'column', 'name' => $user->username, 'data' => [], 'key' => $user->id];
 	if ($orderModel->period == OrderSummary::PERIOD_MONTH) {
 		$series[$k * 2 + 1] = ['type' => 'errorbar', 'name' => 'Objetivo', 'data' => []];
 	}
@@ -57,7 +57,7 @@ foreach ($userIds as $k => $id) {
 		if (!isset($totals[$period])) {
 			$totals[$period] = 0;
 		}
-		$idx = $id . '-' . $period;
+		$idx = $user->id . '-' . $period;
 		$quantity = isset($ordersBySalesman[$idx]) ? (int) $ordersBySalesman[$idx]->totalQuantity : 0;
 		$totals[$period] += $quantity;
 		$series[$k * 2]['data'][] = $quantity;
@@ -116,10 +116,10 @@ while ($period < $billingModel->queryToDate) {
 	$period = gmdate('Y-m-d', strtotime('+1 month ' . $period));
 }
 $series = [];
-foreach ($userIds as $k => $id) {
-	$series[$k] = ['name' => $users[$id]->username, 'data' => [], 'key' => $id];
+foreach ($users as $k => $user) {
+	$series[$k] = ['name' => $user->username, 'data' => [], 'key' => $user->id];
 	foreach ($periods as $period) {
-		$series[$k]['data'][] = isset($billingBySalesman[$id . '-' . $period]) ? (int) $billingBySalesman[$id . '-' . $period]->invoiced : 0;
+		$series[$k]['data'][] = isset($billingBySalesman[$user->id . '-' . $period]) ? (int) $billingBySalesman[$user->id . '-' . $period]->invoiced : 0;
 	}
 }
 ?>
