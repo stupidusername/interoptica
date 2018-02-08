@@ -83,6 +83,7 @@ $config = [
 			'adminPermission' => 'admin',
 			'modelMap' => [
 				'User' => 'app\models\User',
+				'UserSearch' => 'app\models\UserSearch',
 				'Profile' => 'app\models\Profile',
 			],
 		],
