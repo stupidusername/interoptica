@@ -1,5 +1,7 @@
 <?php
 
+use app\models\Brand;
+use app\models\Model;
 use kartik\export\ExportMenu;
 use kartik\grid\EditableColumn;
 use kartik\grid\GridView;
@@ -30,10 +32,17 @@ $this->params['breadcrumbs'][] = $this->title;
     [
       'attribute' => 'model.brand.name',
       'label' => 'Marca',
+      'filter' => Html::activeDropDownList($searchModel, 'brandId', Brand::getIdNameArray(), ['class' => 'form-control', 'prompt' => 'Elegir marca']),
+    ],
+    [
+      'label' => 'Tipo',
+      'attribute' => 'model.typeLabel',
+      'filter' => Html::activeDropDownList($searchModel, 'modelType', Model::typeLabels(), ['class' => 'form-control', 'prompt' => 'Elegir tipo']),
     ],
     [
       'attribute' => 'model.name',
       'label' => 'Modelo',
+      'filter' => Html::activeTextInput($searchModel, 'modelName', ['class' => 'form-control']),
     ],
 		'code',
 		[

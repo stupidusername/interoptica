@@ -13,13 +13,28 @@ use app\models\Product;
 class ProductSearch extends Product
 {
     /**
+    * @var integer
+    */
+    public $brandId;
+
+    /**
+    * @var integer
+    */
+    public $modelType;
+
+    /**
+    * @var string
+    */
+    public $modelName;
+
+    /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'running_low'], 'integer'],
-            [['code'], 'safe'],
+            [['id', 'running_low', 'brandId', 'modelType'], 'integer'],
+            [['modelName', 'code'], 'safe'],
             [['price'], 'number'],
         ];
     }
@@ -42,7 +57,7 @@ class ProductSearch extends Product
      */
     public function search($params)
     {
-        $query = Product::find()->active()->with(['model.brand']);
+        $query = Product::find()->active()->innerJoinWith(['model.brand']);
 
         // add conditions that should always apply here
 
@@ -62,6 +77,8 @@ class ProductSearch extends Product
         $query->andFilterWhere([
             'id' => $this->id,
             'price' => $this->price,
+            'model.type' => $this->modelType,
+            'brand.id' => $this->brandId,
         ]);
 
         if ($this->running_low === '1') {
@@ -71,6 +88,7 @@ class ProductSearch extends Product
         }
 
         $query->andFilterWhere(['like', 'code', $this->code]);
+        $query->andFilterWhere(['like', 'model.name', $this->modelName]);
 
         return $dataProvider;
     }
