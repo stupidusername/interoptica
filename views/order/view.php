@@ -166,10 +166,18 @@ OrderAsset::register($this);
 		<?php Pjax::end() ?>
 
 		<?php Pjax::begin(['id' => 'pendingGridview']) ?>
-		<h3>Pedidos del mismo Cliente</h3>
+		<h3>Pedidos del mismo Cliente (<?= count($clientPendingOrders) ?>)</h3>
+
+		<p>
+			<?= Html::button('Mostrar/Ocultar', ['class' => 'btn btn-primary', 'onclick' => '$("#pendingOrders").toggle()']) ?>
+		</p>
 
 		<?=
 		GridView::widget([
+			'options' => [
+				'id' => 'pendingOrders',
+				'style' => ['display' => 'none'],
+			],
 			'columns' => [
 				'id',
 				[
@@ -189,10 +197,18 @@ OrderAsset::register($this);
 		]);
 		?>
 
-		<h3>Reclamos del mismo Cliente</h3>
+		<h3>Reclamos del mismo Cliente (<?= count($clientPendingIssues) ?>)</h3>
+
+		<p>
+			<?= Html::button('Mostrar/Ocultar', ['class' => 'btn btn-primary', 'onclick' => '$("#pendingIssues").toggle()']) ?>
+		</p>
 
 		<?=
 		GridView::widget([
+			'options' => [
+				'id' => 'pendingIssues',
+				'style' => ['display' => 'none'],
+			],
 			'columns' => [
 				'id',
 				[
