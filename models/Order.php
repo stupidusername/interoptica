@@ -369,6 +369,7 @@ class Order extends \yii\db\ActiveRecord
 			'format' => Pdf::FORMAT_A4,
 			'orientation' => Pdf::ORIENT_LANDSCAPE,
 			'marginTop' => 0,
+			'marginFooter' => 0,
 			'destination' => $destination,
 			'content' => $content,
 			'cssFile' => '@webroot/css/pdf.css',
@@ -379,7 +380,6 @@ class Order extends \yii\db\ActiveRecord
 			'methods' => [
 				'SetHTMLHeader' => $header,
 			],
-			'marginFooter' => 0,
 		]);
 
 		// return the pdf output as per the destination setting

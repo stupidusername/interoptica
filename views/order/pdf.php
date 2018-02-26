@@ -2,7 +2,7 @@
 
 /* @var \app\models\Order $model */
 
-const ENTRIES_PER_PAGE = 17;
+const ENTRIES_PER_PAGE = 24;
 
 // Prepare OrderProduct entries for table distribution
 $table = [];
