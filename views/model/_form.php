@@ -17,6 +17,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'type')->dropDownList(Model::typeLabels(), ['prompt' => 'Elegir tipo']) ?>
 
+    <?= $form->field($model, 'origin')->dropDownList(Model::originLabels(), ['prompt' => 'Elegir origen']) ?>
+
     <?= $form->field($model, 'brand_id')->dropDownList(Brand::getIdNameArray(), ['prompt' => 'Elegir marca']) ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>

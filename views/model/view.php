@@ -31,8 +31,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             [
-              'label' => 'attribute',
+              'label' => 'Tipo',
               'value' => $model->typeLabel,
+            ],
+            [
+              'label' => 'Origen',
+              'value' => $model->originLabel,
             ],
             [
               'label' => 'Marca',

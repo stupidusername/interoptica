@@ -12,6 +12,7 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  *
  * @property integer $id
  * @property integer $type
+ * @property integer $origin
  * @property integer $brand_id
  * @property string $name
  * @property string $description
@@ -39,6 +40,10 @@ class Model extends \yii\db\ActiveRecord
     const TYPE_DISPLAY_SUN = 4;
     const TYPE_DISPLAY_RX = 5;
     const TYPE_EXTRA = 6;
+
+    // Origin
+    const ORIGIN_FACTORY = 0;
+    const ORIGIN_IMPORTED = 1;
 
     /**
      * @inheritdoc
@@ -79,11 +84,11 @@ class Model extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type', 'brand_id', 'front_size', 'lens_width', 'bridge_size', 'temple_length', 'base', 'flex', 'polarized', 'mirrored'], 'integer'],
+            [['type', 'origin', 'brand_id', 'front_size', 'lens_width', 'bridge_size', 'temple_length', 'base', 'flex', 'polarized', 'mirrored'], 'integer'],
             [['description'], 'string'],
             [['name'], 'string', 'max' => 255],
             [['brand_id'], 'exist', 'skipOnError' => true, 'targetClass' => Brand::className(), 'targetAttribute' => ['brand_id' => 'id']],
-            [['type', 'brand_id', 'name'], 'required'],
+            [['type', 'origin', 'brand_id', 'name'], 'required'],
             [['front_size', 'lens_width', 'bridge_size', 'temple_length', 'base', 'flex'], 'required', 'when' => function ($model) { return in_array($this->type, [self::TYPE_SUN, self::TYPE_RX]); }],
             [['polarized', 'mirrored'], 'required', 'when' => function ($model) { return $this->type === self::TYPE_SUN; }],
             [['materialNames'], 'safe'],
@@ -130,6 +135,16 @@ class Model extends \yii\db\ActiveRecord
     }
 
     /**
+    * @return string[]
+    */
+    public static function originLabels() {
+      return [
+        static::ORIGIN_FACTORY => 'Fábrica',
+        static::ORIGIN_IMPORTED => 'Importado',
+      ];
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getBrand()
@@ -158,5 +173,12 @@ class Model extends \yii\db\ActiveRecord
     */
     public function getTypeLabel() {
       return self::typeLabels()[$this->type];
+    }
+
+    /**
+    * @return string
+    */
+    public function getOriginLabel() {
+      return self::originLabels()[$this->origin];
     }
 }

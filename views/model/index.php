@@ -30,6 +30,10 @@ $this->params['breadcrumbs'][] = $this->title;
               'label' => 'Tipo',
             ],
             [
+              'attribute' => 'originLabel',
+              'label' => 'Origen',
+            ],
+            [
               'attribute' => 'brand.name',
               'label' => 'Marca'
             ],
