@@ -22,8 +22,6 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property integer $temple_length
  * @property integer $base
  * @property boolean $flex
- * @property boolean $polarized
- * @property boolean $mirrored
  * @property boolean $deleted
  *
  * @property Brand $brand
@@ -84,13 +82,12 @@ class Model extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type', 'origin', 'brand_id', 'front_size', 'lens_width', 'bridge_size', 'temple_length', 'base', 'flex', 'polarized', 'mirrored'], 'integer'],
+            [['type', 'origin', 'brand_id', 'front_size', 'lens_width', 'bridge_size', 'temple_length', 'base', 'flex'], 'integer'],
             [['description'], 'string'],
             [['name'], 'string', 'max' => 255],
             [['brand_id'], 'exist', 'skipOnError' => true, 'targetClass' => Brand::className(), 'targetAttribute' => ['brand_id' => 'id']],
             [['type', 'origin', 'brand_id', 'name'], 'required'],
             [['front_size', 'lens_width', 'bridge_size', 'temple_length', 'base', 'flex'], 'required', 'when' => function ($model) { return in_array($this->type, [self::TYPE_SUN, self::TYPE_RX]); }],
-            [['polarized', 'mirrored'], 'required', 'when' => function ($model) { return $this->type === self::TYPE_SUN; }],
             [['materialNames'], 'safe'],
         ];
     }
@@ -114,8 +111,6 @@ class Model extends \yii\db\ActiveRecord
             'temple_length' => 'Patilla',
             'base' => 'Base',
             'flex' => 'Flex',
-            'polarized' => 'Polarizado',
-            'mirrored' => 'Espejado',
         ];
     }
 

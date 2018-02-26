@@ -36,6 +36,14 @@ $this->params['breadcrumbs'][] = $this->title;
       ],
       'code',
       [
+        'attribute' => 'polarized',
+        'value' => $model->polarized ? 'Sí' : 'No',
+      ],
+      [
+        'attribute' => 'mirrored',
+        'value' => $model->mirrored ? 'Sí' : 'No',
+      ],
+      [
         'attribute' => 'price',
         'format' => 'currency',
       ],

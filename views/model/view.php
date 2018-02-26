@@ -54,14 +54,6 @@ $this->params['breadcrumbs'][] = $this->title;
               'attribute' => 'flex',
               'value' => $model->flex ? 'Sí' : 'No',
             ],
-            [
-              'attribute' => 'polarized',
-              'value' => $model->polarized ? 'Sí' : 'No',
-            ],
-            [
-              'attribute' => 'mirrored',
-              'value' => $model->mirrored ? 'Sí' : 'No',
-            ],
         ],
     ]) ?>
 

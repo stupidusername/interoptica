@@ -15,6 +15,8 @@ use zxbodya\yii2\galleryManager\GalleryBehavior;
  * @property integer $id
  * @property integer $model_id
  * @property string $code
+ * @property boolean $polarized
+ * @property boolean $mirrored
  * @property string $price
  * @property integer $stock
  * @property boolean $running_low
@@ -84,7 +86,7 @@ class Product extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['model_id', 'stock'], 'integer'],
+			[['model_id', 'polarized', 'mirrored', 'stock'], 'integer'],
 			[['price'], 'number'],
 			[['code'], 'string', 'max' => 255],
 			[['code'], 'unique'],
@@ -103,6 +105,8 @@ class Product extends \yii\db\ActiveRecord
 			'id' => 'ID',
 			'model_id' => 'ID Modelo',
 			'code' => 'Código',
+			'polarized' => 'Polarizado',
+			'mirrored' => 'Espejado',
 			'colors' => 'Colores',
 			'colorNames' => 'Colores',
 			'lensColors' => 'Colores lente',

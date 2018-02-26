@@ -49,10 +49,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'flex')->checkbox() ?>
 
-    <?= $form->field($model, 'polarized')->checkbox() ?>
-
-    <?= $form->field($model, 'mirrored')->checkbox() ?>
-
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Editar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

@@ -31,6 +31,10 @@ use kartik\money\MaskMoney;
 
     <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'polarized')->checkbox() ?>
+
+    <?= $form->field($model, 'mirrored')->checkbox() ?>
+
     <?= $form->field($model, 'colorNames')->widget(SelectizeTextInput::className(), [
       'loadUrl' => ['list-colors'],
       'options' => ['class' => 'form-control'],

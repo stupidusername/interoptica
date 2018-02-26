@@ -17,7 +17,7 @@ class ModelSearch extends Model
     public function rules()
     {
         return [
-            [['id', 'type', 'brand_id', 'front_size', 'lens_width', 'bridge_size', 'temple_length', 'base', 'flex', 'polarized', 'mirrored', 'deleted'], 'integer'],
+            [['id', 'type', 'brand_id', 'front_size', 'lens_width', 'bridge_size', 'temple_length', 'base', 'flex', 'deleted'], 'integer'],
             [['name', 'description'], 'safe'],
         ];
     }
@@ -67,8 +67,6 @@ class ModelSearch extends Model
             'temple_length' => $this->temple_length,
             'base' => $this->base,
             'flex' => $this->flex,
-            'polarized' => $this->polarized,
-            'mirrored' => $this->mirrored,
             'deleted' => $this->deleted,
         ]);
 
