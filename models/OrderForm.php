@@ -18,7 +18,6 @@ class OrderForm extends Order {
 		return array_merge(parent::rules(), [
 			[['customerEmail'], 'required'],
 			[['customerEmail'], 'email'],
-			[['customerEmail'], 'uniqueEmail'],
 		]);
 	}
 
@@ -50,18 +49,5 @@ class OrderForm extends Order {
 			};
 		}
 		parent::afterSave($insert, $changedAttributes);
-	}
-
-	/**
-	 * @param string $attribute the attribute currently being validated
-	 * @param mixed $params the value of the "params" given in the rule
-	 * @param \yii\validators\InlineValidator related InlineValidator instance.
-	 * This parameter is available since version 2.0.11.
-	 */
-	public function uniqueEmail($attribute, $params, $validator) {
-		$customer = Customer::find()->andWhere(['email' => $this[$attribute]])->one();
-		if ($customer && $customer->id != $this->customer_id) {
-			$this->addError($attribute, 'La dirección de email ya se encuentra registrada por otro cliente.');
-		}
 	}
 }
