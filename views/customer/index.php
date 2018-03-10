@@ -1,5 +1,6 @@
 <?php
 
+use kartik\export\ExportMenu;
 use yii\helpers\Html;
 use yii\grid\GridView;
 
@@ -20,20 +21,35 @@ $this->params['breadcrumbs'][] = $this->title;
 		<?= Html::a('Importar Clientes', ['import'], ['class' => 'btn btn-primary']) ?>
 		<?= Html::a('Administrar Zonas', ['/zone/index'], ['class' => 'btn btn-primary']) ?>
     </p>
+
+    <?php
+    $columns = [
+        [
+          'attribute' => 'id',
+          'contentOptions' => ['style'=>'width: 100px;'],
+        ],
+        'gecom_id',
+        'name',
+        'email',
+        'address',
+        'locality',
+    ];
+    ?>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'columns' => [
-            [
-				'attribute' => 'id',
-				'contentOptions' => ['style'=>'width: 100px;'],
-			],
-            'gecom_id',
-            'name',
-            'email',
-	    'address',
-	    'locality',
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
+
+        'columns' => array_merge($columns, [['class' => 'yii\grid\ActionColumn']]),
     ]); ?>
+
+    <?=
+  	ExportMenu::widget([
+  		'dataProvider' => $exportDataProvider,
+  		'target' => ExportMenu::TARGET_SELF,
+  		'showConfirmAlert' => false,
+  		'filename' => 'clientes',
+  		'columns' => $columns,
+  	]);
+  	?>
 </div>
