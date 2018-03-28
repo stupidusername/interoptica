@@ -46,7 +46,7 @@ class IssueSearch extends Issue
 	 */
 	public function search($params)
 	{
-		$query = Issue::find()->with(['user', 'customer', 'issueType', 'openIssueStatus', 'issueStatus']);
+		$query = Issue::find()->with(['user', 'customer', 'issueType', 'openIssueStatus', 'issueStatus', 'issueStatuses']);
 
 		// add conditions that should always apply here
 
@@ -73,6 +73,7 @@ class IssueSearch extends Issue
 			'deleted' => $this->deleted,
 		]);
 
+		$status = null;
 		if ($this->status != null) {
 			// STATUS_OPEN should match STATUS_OPEN_URGENT too
 			if ($this->status == IssueStatus::STATUS_OPEN) {
@@ -80,11 +81,14 @@ class IssueSearch extends Issue
 			} else {
 				$status = $this->status;
 			}
-			$query->innerJoinWith(['issueStatuses' => function ($query) use ($status) {
-				$subQuery = IssueStatus::getLastStatuses();
-				$query->andWhere([IssueStatus::tableName() . '.id' => $subQuery, 'status' => $status]);
-			}]);
 		}
+
+		if ($status) {
+			$subQuery = IssueStatus::getLastStatuses();
+			$subQuery2 = IssueStatus::find()->select('issue_id')->andWhere([IssueStatus::tableName() . '.id' => $subQuery, 'status' => $status]);
+			$query->andWhere(['id' => $subQuery2]);
+		}
+
 
 		$query->andFilterWhere(['like', 'contact', $this->contact]);
 

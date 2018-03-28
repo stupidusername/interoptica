@@ -86,7 +86,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'value' => 'issueStatus.statusLabel',
         'filter' => Html::activeDropDownList($searchModel, 'status', IssueStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
         'contentOptions' => function ($model, $key, $index, $column) {
-          return $model->status == IssueStatus::STATUS_OPEN_URGENT ? ['style' => 'color: red; font-weight: bold;'] : [];
+          if ($model->status < IssueStatus::STATUS_CLOSED && in_array(IssueStatus::STATUS_OPEN_URGENT, array_column($model->issueStatuses, 'status'))) {
+           return ['style' => 'color: red; font-weight: bold;'];
+         } else {
+           return [];
+         }
         },
       ],
       [
