@@ -96,6 +96,7 @@ $statusLabels = DeliveryStatus::statusLabels();
 			'class' => EditableColumn::className(),
 			'label' => 'Transporte',
 			'attribute' => 'transport_id',
+      'filter' => Html::activeDropDownList($searchModel, 'transport_id', $transports, ['class' => 'form-control', 'prompt' => 'Elegir transporte']),
 			'editableOptions' => function ($model) use ($transports) {
 				return [
 					'inputType' => Editable::INPUT_DROPDOWN_LIST,

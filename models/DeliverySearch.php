@@ -29,7 +29,7 @@ class DeliverySearch extends Delivery
 	{
 		return [
 			[['id', 'customerId', 'status', 'user_id'], 'integer'],
-			[['tracking_number', 'invoiceNumbers'], 'safe'],
+			[['tracking_number', 'invoiceNumbers', 'transport_id'], 'safe'],
 		];
 	}
 
@@ -84,6 +84,7 @@ class DeliverySearch extends Delivery
 		$query->andFilterWhere([
 			'delivery.id' => $this->id,
 			'delivery.user_id' => $this->user_id,
+			'delivery.transport_id' => $this->transport_id,
 		]);
 
 		$query->andFilterWhere(['like', 'tracking_number', $this->tracking_number]);
@@ -112,7 +113,7 @@ class DeliverySearch extends Delivery
 
 		return $dataProvider;
 	}
-	
+
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
