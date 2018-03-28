@@ -6,6 +6,7 @@ use kartik\editable\Editable;
 use kartik\grid\EditableColumn;
 use kartik\grid\GridView;
 use kartik\select2\Select2;
+use kartik\date\DatePicker;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -117,6 +118,15 @@ $statusLabels = DeliveryStatus::statusLabels();
 			],
 		],
 		[
+      'attribute' => 'fromDate',
+      'filterType' => GridView::FILTER_DATE,
+      'filterWidgetOptions' => [
+        'type' => DatePicker::TYPE_INPUT,
+        'pluginOptions' => [
+          'autoclose' => true,
+          'format' => 'yyyy-mm-dd',
+        ],
+      ],
 			'label' => 'Fecha de Ingreso',
 			'value' => 'enteredDeliveryStatus.create_datetime',
 			'format' => 'datetime'

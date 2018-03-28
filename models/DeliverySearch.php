@@ -23,13 +23,18 @@ class DeliverySearch extends Delivery
 	public $invoiceNumbers;
 
 	/**
+	 * @var string
+	 */
+	public $fromDate;
+
+	/**
 	 * @inheritdoc
 	 */
 	public function rules()
 	{
 		return [
 			[['id', 'customerId', 'status', 'user_id'], 'integer'],
-			[['tracking_number', 'invoiceNumbers', 'transport_id'], 'safe'],
+			[['tracking_number', 'invoiceNumbers', 'transport_id', 'fromDate'], 'safe'],
 		];
 	}
 
@@ -110,6 +115,15 @@ class DeliverySearch extends Delivery
 			]);
 			$query->andWhere(['or', ['delivery.id' => $query1], ['delivery.id' => $query2]]);
 		}
+
+		$query->joinWith([
+			'enteredDeliveryStatus' => function ($query) {
+				if ($this->fromDate) {
+					$query->andWhere(['>=', 'create_datetime', gmdate('Y-m-d', strtotime($this->fromDate))]);
+					$query->andWhere(['<', 'create_datetime', gmdate('Y-m-d', strtotime($this->fromDate . ' +1 day'))]);
+				}
+			},
+		]);
 
 		return $dataProvider;
 	}

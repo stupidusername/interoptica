@@ -44,7 +44,8 @@
       "kartik-v/yii2-widget-fileinput": "@dev",
       "iutbay/yii2-imagecache" : "*",
       "2amigos/yii2-selectize-widget": "~1.0",
-      "zxbodya/yii2-gallery-manager": "*@dev"
+      "zxbodya/yii2-gallery-manager": "*@dev",
+        "kartik-v/yii2-widget-datepicker": "@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
