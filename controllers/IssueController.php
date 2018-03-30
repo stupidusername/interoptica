@@ -73,7 +73,7 @@ class IssueController extends Controller
 						'roles' => ['admin', 'author', 'depot'],
 					],
 					[
-						'actions' => ['index', 'view', 'statistics', 'fail-summary', 'create', 'add-comment', 'get-envelope', 'list'],
+						'actions' => ['index', 'view', 'statistics', 'fail-summary', 'create', 'add-comment', 'update-comment', 'get-envelope', 'list'],
 						'roles' => ['@'],
 					],
 				],
@@ -335,6 +335,23 @@ class IssueController extends Controller
 	}
 
 	/**
+	 * Updates an existing IssueComment model.
+	 * @param integer $id
+	 */
+	public function actionUpdateComment($id) {
+		$model = $this->findIssueCommentModel($id);
+
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			Yii::$app->response->format = Response::FORMAT_JSON;
+			return ['success' => true];
+		} else {
+			return $this->renderAjax('update-comment', [
+				'model' => $model,
+			]);
+		}
+	}
+
+	/**
 	 * Gets the envelope for a given issue.
 	 * @param integer $id
 	 * @return mixed
@@ -388,6 +405,22 @@ class IssueController extends Controller
 	protected function findIssueProductModel($issueId, $productId)
 	{
 		if (($model = IssueProduct::findOne(['issue_id' => $issueId, 'product_id' => $productId])) !== null) {
+			return $model;
+		} else {
+			throw new NotFoundHttpException('The requested page does not exist.');
+		}
+	}
+
+	/**
+	 * Finds the IssueComment model based on its primary key value.
+	 * If the model is not found, a 404 HTTP exception will be thrown.
+	 * @param integer $id
+	 * @return IssueComment the loaded model
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	protected function findIssueCommentModel($id)
+	{
+		if (($model = IssueComment::findOne(['id' => $id])) !== null) {
 			return $model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');

@@ -20,6 +20,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Reclamos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 $addEntryUrl = Url::to(['add-entry', 'issueId' => $model->id]);
+$addCommentUrl = Url::to(['add-comment', 'issueId' => $model->id]);
 
 Modal::begin([
 	'id' => 'addEntry',
@@ -33,7 +34,7 @@ Modal::end();
 
 Modal::begin([
 	'id' => 'addComment',
-	'url' => Url::to(['add-comment', 'issueId' => $model->id]),
+	'url' => $addCommentUrl,
 	'options' => [
 		'tabindex' => false // important for Select2 to work properly
 	],
@@ -232,7 +233,7 @@ IssueAsset::register($this);
 	<h3>Comentarios</h3>
 
 	<p>
-		<?= Html::button('Agregar Comentario', ['id' => 'addCommentButton', 'class' => 'btn btn-success']) ?>
+		<?= Html::button('Agregar Comentario', ['id' => 'addCommentButton', 'class' => 'btn btn-success', 'url' => "$addCommentUrl"]) ?>
 	</p>
 
 	<?php Pjax::begin(['id' => 'commentsGridview']); ?>
@@ -247,10 +248,33 @@ IssueAsset::register($this);
 				'attribute' => 'create_datetime',
 				'format' => 'datetime'
 			],
+			[
+				'label' => 'Usario (Edit.)',
+				'value' => 'editUser.username',
+			],
+			[
+				'attribute' => 'edit_datetime',
+				'format' => 'datetime'
+			],
 			'comment:ntext',
+			[
+				'class' => 'yii\grid\ActionColumn',
+				'template' => '{update}',
+				'urlCreator' => function ($action, $model, $key, $index, $actionColumn) {
+					switch ($action) {
+						case 'update':
+							return Url::to(['update-comment', 'id' => $model->id]);
+					}
+				},
+				'buttons' => [
+					'update' => function ($url, $model, $key) {
+						return Html::a(Html::tag('span', '', ['class' => "glyphicon glyphicon-pencil"]), $url, ['class' => 'commentUpdate']);
+					},
+				],
+			],
 		],
 		'dataProvider' => new ActiveDataProvider([
-            'query' => $model->getIssueComments()->with(['user']),
+            'query' => $model->getIssueComments()->with(['user', 'editUser']),
 			'pagination' => false,
 			'sort' => false,
         ]),

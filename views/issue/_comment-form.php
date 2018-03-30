@@ -20,11 +20,11 @@ use app\models\Product;
 			],
 		],
 	]); ?>
-	
-	<?= $form->field($model, 'comment')->textarea() ?>	
+
+	<?= $form->field($model, 'comment')->textarea() ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Añadir', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Añadir' : 'Editar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
