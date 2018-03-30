@@ -13,6 +13,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $gecom_id
  * @property string $name
  * @property string $email
+ * @property string $discount_percentage
  * @property integer $zone_id
  * @property string $tax_situation
  * @property string $tax_situation_category
@@ -65,6 +66,7 @@ class Customer extends \yii\db\ActiveRecord
 			[['gecom_id'], 'integer'],
 			[['gecom_id'], 'unique'],
 			[['email'], 'email'],
+			[['discount_percentage'], 'number', 'min' => 0, 'max' => 100],
 			[['name', 'tax_situation', 'tax_situation_category', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'doc_number'], 'string', 'max' => 255],
 			[['name'], 'required'],
 			[['email', 'zone_id', 'tax_situation', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'doc_number'], 'required', 'on' => self::SCENARIO_CREATE],
@@ -82,6 +84,7 @@ class Customer extends \yii\db\ActiveRecord
 			'gecom_id' => 'Gecom ID',
 			'name' => 'Nombre',
 			'email' => 'Email',
+			'discount_percentage' => 'Descuento Asignado',
 			'zone_id' => 'ID Zona',
 			'tax_situation' => 'Situación Impositiva',
 			'tax_situation_category' => 'Categoría',

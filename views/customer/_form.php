@@ -1,9 +1,10 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 use app\models\Customer;
 use app\models\Zone;
+use kartik\money\MaskMoney;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Customer */
@@ -19,6 +20,8 @@ use app\models\Zone;
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'discount_percentage')->widget(MaskMoney::classname(), ['pluginOptions' => ['prefix' => '']]) ?>
 
 	<?= $form->field($model, 'zone_id')->label('Zona')->dropDownList(Zone::getIdNameArray(), ['prompt' => 'Elegir zona']) ?>
 

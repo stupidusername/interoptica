@@ -182,7 +182,7 @@ class CustomerController extends Controller
 		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 		$customersArray = Customer::find()->andWhere(['or', ['gecom_id' => $q], ['like', 'name', $q]])->asArray()->all();
 		$results = array_map(function ($customerArray) {
-					return ['id' => $customerArray['id'], 'text' => $customerArray['name'], 'email' => $customerArray['email']];
+					return ['id' => $customerArray['id'], 'text' => $customerArray['name'], 'email' => $customerArray['email'], 'discount_percentage' => $customerArray['discount_percentage']];
 				}, $customersArray);
 		$out = ['results' => $results];
 		return $out;

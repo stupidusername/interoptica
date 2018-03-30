@@ -30,7 +30,7 @@ use kartik\select2\Select2;
 			],
 		],
 		'pluginEvents' => [
-			'select2:select' => 'function(e) { $("#orderform-customeremail").val(e.params.data.email); }',
+			'select2:select' => 'function(e) { $("#orderform-customeremail").val(e.params.data.email); $("#orderform-discount_percentage").val(e.params.data.discount_percentage); $("#orderform-discount_percentage-disp").val(parseFloat(e.params.data.discount_percentage).toFixed(2)).trigger("mask.maskMoney"); }',
 		],
 	])
 	?>
@@ -42,7 +42,7 @@ use kartik\select2\Select2;
 	<?php endif; ?>
 
     <?= $form->field($model, 'discount_percentage')->widget(MaskMoney::classname(), ['pluginOptions' => ['prefix' => '']]) ?>
-	
+
 	<?php if (!$model->isNewRecord): ?>
 		<?= $form->field($model, 'status')->dropDownList(OrderStatus::statusLabels(), ['prompt' => 'Elegir estado']); ?>
 	<?php endif; ?>

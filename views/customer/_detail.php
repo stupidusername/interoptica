@@ -15,6 +15,13 @@ DetailView::widget([
 		'name',
 		'email',
 		[
+			'attribute' => 'discount_percentage',
+			'format' => 'percent',
+			'value' => function ($model) {
+				return $model->discount_percentage / 100;
+			},
+		],
+		[
 			'label' => 'Zona',
 			'value' => $model->zone ? $model->zone->name : '',
 		],
@@ -32,4 +39,3 @@ DetailView::widget([
 	],
 ])
 ?>
-

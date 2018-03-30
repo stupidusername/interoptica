@@ -38,16 +38,16 @@ CustomerViewAsset::register($this);
             ],
         ]) ?>
     </p>
-	
+
 
     <?= $this->render('_detail', ['model' => $model]) ?>
-	
+
 	<p>
 		<?= Html::a('Crear Envio', ['/delivery/create'], ['class' => 'btn btn-success', 'id' => 'createDelivery']) ?>
 	</p>
-	
+
 	<h2>Pedidos</h2>
-	
+
 	<?php Pjax::begin(['id' => 'orders-gridview', 'enablePushState' => false]); ?>
 	<?=
 	GridView::widget([
@@ -120,9 +120,9 @@ CustomerViewAsset::register($this);
 	]);
 	?>
 	<?php Pjax::end(); ?>
-	
+
 	<h2>Reclamos</h2>
-	
+
 	<?php Pjax::begin(['id' => 'issues-gridview', 'enablePushState' => false]); ?>
 	<?= GridView::widget([
         'dataProvider' => $issueDataProvider,
@@ -202,5 +202,5 @@ CustomerViewAsset::register($this);
         ],
     ]); ?>
 	<?php Pjax::end(); ?>
-	
+
 </div>
