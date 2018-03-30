@@ -28,7 +28,6 @@ foreach ($orderProducts as $k => $orderProduct) {
 				<td class="tr5 td11"><p class="p0">Cant.</p></td>
 				<td class="tr5 td30"><p class="p0">Marca</p></td>
 				<td class="tr5 td29"><p class="p0">Tipo</p></td>
-				<td class="tr5 td25"><p class="p0">Modelo</p></td>
 				<td class="tr5 td27"><p class="p0">Código</p></td>
 				<td class="tr5 td28"><p class="p0">Obser.</p></td>
 				<td class="tr5 td23"><p class="p0">Precio</p></td>
@@ -43,7 +42,6 @@ foreach ($orderProducts as $k => $orderProduct) {
 						<td class="tr14 td11"><p class="p0"><?= $orderProduct->quantity ?></p></td>
 						<td class="tr14 td30"><p class="p0"><?= $orderProduct->product->model->brand->name ?></p></td>
 						<td class="tr14 td29"><p class="p0"><?= $orderProduct->product->model->typeLabel ?></p></td>
-						<td class="tr14 td25"><p class="p0"><?= $orderProduct->product->model->name ?></p></td>
 						<td class="tr14 td27"><p class="p0"><?= $orderProduct->product->code ?></p></td>
 						<td class="tr14 td28"><p class="p0"><?= $orderProduct->ignore_stock ? 'Dejó de valija' : '' ?></p></td>
 						<td class="tr14 td23"><p class="p0"><?= Yii::$app->formatter->asCurrency($orderProduct->price) ?></p></td>

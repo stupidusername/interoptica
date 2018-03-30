@@ -8,16 +8,14 @@ td {padding: 0px; margin: 0px; vertical-align: bottom;}
 
 .td0 {width: 66px;}
 .td1 {width: 15px;}
-.td2 {width: 243px;}
-.td3 {width: 477px;}
-.td4 {width: 200px;}
+.td2 {width: 275px;}
+.td3 {width: 645px;}
 .td11 {width: 40px;}
 .td13 {width: 107px;}
 .td17 {width: 123px;}
 .td18 {width: 110px;}
 .td23 {width: 100px;}
-.td25 {width: 175px;}
-.td27 {width: 175px;}
+.td27 {width: 350px;}
 .td28 {width: 150px;}
 .td29 {width: 150px;}
 .td30 {width: 175px;}
@@ -25,7 +23,6 @@ td {padding: 0px; margin: 0px; vertical-align: bottom;}
 
 .tr0 {height: 15px;}
 .tr5 {height: 25px;}
-.tr6 {height: 27px;}
 .tr7 {height: 7px;}
 .tr12 {height: 30px;}
 .tr14 {height: 18px;}
