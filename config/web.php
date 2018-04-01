@@ -1,6 +1,7 @@
 <?php
 
 $params = require(__DIR__ . '/params.php');
+$params_local = require(__DIR__ . '/params_local.php');
 
 $config = [
 	'id' => 'basic',
@@ -70,6 +71,14 @@ $config = [
 			'thumbsPath' => '@webroot/images/thumb',
 			'thumbsUrl' => '@web/image/thumb',
 			'resizeMode' => 'inset',
+		],
+		'afip' => [
+			'class' => 'app\components\afip\Afip',
+			'options' => [
+				'CUIT' => $params_local['cuit'],
+				'cert' => '../../../../afip_cert/cert',
+				'key' => '../../../../afip_cert/key',
+			]
 		],
 	],
 	'modules' => [
