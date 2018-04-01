@@ -17,6 +17,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $zone_id
  * @property string $tax_situation
  * @property string $tax_situation_category
+ * @property string $iva
  * @property string $address
  * @property string $zip_code
  * @property string $province
@@ -24,6 +25,8 @@ use yii\helpers\ArrayHelper;
  * @property string $phone_number
  * @property string $doc_number
  * @property boolean $deleted
+ *
+ * @property double $ivaWithDefault
  */
 class Customer extends \yii\db\ActiveRecord
 {
@@ -88,6 +91,7 @@ class Customer extends \yii\db\ActiveRecord
 			'zone_id' => 'ID Zona',
 			'tax_situation' => 'Situación Impositiva',
 			'tax_situation_category' => 'Categoría',
+			'ivaWithDefault' => 'IVA',
 			'address' => 'Dirección',
 			'zip_code' => 'Código Postal',
 			'province' => 'Provincia',
@@ -139,5 +143,12 @@ class Customer extends \yii\db\ActiveRecord
 	public static function getIdNameArray() {
 		$customers = ArrayHelper::map(self::find()->select(['id', 'name'])->asArray()->all(), 'id', 'name');
 		return $customers;
+	}
+
+	/**
+	* @return double
+	*/
+	public function getIvaWithDefault() {
+		return (double) ($this->iva ? $this->iva : Yii::$app->params['iva']);
 	}
 }

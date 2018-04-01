@@ -30,6 +30,11 @@ DetailView::widget([
 			'value' => $model->taxSituationLabel,
 		],
 		'tax_situation_category',
+		[
+			'attribute' => 'ivaWithDefault',
+			'value' => $model->ivaWithDefault / 100,
+			'format' => 'percent',
+		],
 		'address',
 		'zip_code',
 		'province',
