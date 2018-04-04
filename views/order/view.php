@@ -14,6 +14,7 @@ use app\models\Order;
 use app\models\IssueStatus;
 use app\models\Issue;
 use kartik\editable\Editable;
+use kartik\export\ExportMenu;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Order */
@@ -323,6 +324,67 @@ OrderAsset::register($this);
         ]),
 	]);
 	?>
+
+	<?=
+	ExportMenu::widget([
+		'dataProvider' => new ActiveDataProvider([
+			'query' => $model->getOrderProducts()->joinWith(['product.model.brand'])->orderBy(['product.code' => SORT_ASC]),
+			'pagination' => false,
+			'sort' => false,
+		]),
+		'target' => ExportMenu::TARGET_SELF,
+		'showConfirmAlert' => false,
+		'filename' => 'productos-pedido-'. $model->id,
+		'columns' => [
+			'product.code',
+			[
+				'attribute' => 'product.model.brand.name',
+				'label' => 'Marca',
+			],
+			[
+				'attribute' => 'product.model.typeLabel',
+				'label' => 'Tipo',
+			],
+			[
+				'attribute' => 'product.model.name',
+				'label' => 'Modelo',
+			],
+			[
+				'attribute' => 'product.model.description',
+				'format' => 'ntext',
+			],
+			'product.model.front_size',
+			'product.model.lens_width',
+			'product.model.bridge_size',
+			'product.model.temple_length',
+			'product.model.base',
+			[
+				'attribute' => 'product.model.flex',
+				'value' => function($model) {
+					return $model->product->model->flex ? 'Sí' : 'No';
+				}
+			],
+			[
+				'attribute' => 'product.polarized',
+				'value' => function($model) {
+					return $model->product->polarized ? 'Sí' : 'No';
+				}
+			],
+			[
+				'attribute' => 'product.mirrored',
+				'value' => function($model) {
+					return $model->product->mirrored ? 'Sí' : 'No';
+				}
+			],
+			[
+				'attribute' => 'price',
+				'format' => 'currency',
+			],
+			'quantity',
+		],
+	]);
+	?>
+
 	<?php Pjax::end(); ?>
 
 </div>

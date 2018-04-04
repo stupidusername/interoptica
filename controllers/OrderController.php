@@ -122,7 +122,7 @@ class OrderController extends Controller
 	public function actionView($id)
 	{
 		$model = $this->findModel($id);
-		if (Yii::$app->request->isPost) {
+		if (Yii::$app->request->isPost && Yii::$app->request->getBodyParam('Order')) {
 			$model->scenario = Order::SCENARIO_VIEW;
 			$out = Json::encode(['output' => '', 'message' => '']);
 			if ($model->load(Yii::$app->request->post())) {
