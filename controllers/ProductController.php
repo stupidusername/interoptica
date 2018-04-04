@@ -5,12 +5,12 @@ namespace app\controllers;
 use app\models\Color;
 use app\models\Product;
 use app\models\ProductSearch;
-use kartik\grid\EditableColumnAction;
 use dektrium\user\filters\AccessRule;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
@@ -58,10 +58,6 @@ class ProductController extends Controller
 	 */
 	public function actions() {
 		return ArrayHelper::merge(parent::actions(), [
-			'edit' => [
-				'class' => EditableColumnAction::className(),
-				'modelClass' => Product::className(),
-			],
 			'gallery' => [
 				'class' => GalleryManagerAction::className(),
 				// mappings between type names and model classes (should be the same as in behaviour)
@@ -93,6 +89,47 @@ class ProductController extends Controller
 			'dataProvider' => $dataProvider,
 			'exportDataProvider' => $exportDataProvider,
 		]);
+	}
+
+	/**
+	* Edit product info from index.
+	* @return JSON
+	*/
+	public function actionEdit() {
+		$ids = Yii::$app->request->post('ids', []);
+		$id = Yii::$app->request->post('editableKey');
+		ArrayHelper::removeValue($ids, $id);
+		array_push($ids, $id);
+
+		$out = Json::encode(['output' => '', 'message' => '']);
+		foreach ($ids as $modelId) {
+			$model = Product::findOne($modelId);
+
+			$post = [];
+			$posted = current($_POST['Product']);
+			$post['Product'] = $posted;
+
+			if ($model->load($post)) {
+				$model->save();
+				if ($modelId == $id) {
+					$output = '';
+					if (count($model->getErrors())) {
+						$errors = '<div><ul>';
+						foreach ($model->getErrors() as $fieldErrors) {
+							foreach($fieldErrors as $error) {
+								$errors .= "<li>$error</li>";
+							}
+						}
+						$errors .= '</ul></div>';
+					} else {
+						$errors = '';
+					}
+					$out = Json::encode(['output' => $output, 'message' => $errors]);
+				}
+			}
+		}
+		// return ajax json encoded response and exit
+		return $out;
 	}
 
 	/**

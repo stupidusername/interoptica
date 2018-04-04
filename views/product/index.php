@@ -1,5 +1,6 @@
 <?php
 
+use app\assets\ProductIndexAsset;
 use app\models\Brand;
 use app\models\Model;
 use kartik\export\ExportMenu;
@@ -14,6 +15,8 @@ use yii\helpers\Html;
 
 $this->title = 'Productos';
 $this->params['breadcrumbs'][] = $this->title;
+
+ProductIndexAsset::register($this);
 ?>
 <div class="product-index">
 
@@ -53,6 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'formOptions' => ['action' => ['edit']],
 				'inputType' => '\kartik\money\MaskMoney',
 			],
+      'refreshGrid' => true,
 		],
 		[
 			'class' => EditableColumn::className(),
@@ -60,6 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'editableOptions'=> [
 				'formOptions' => ['action' => ['edit']],
 			],
+      'refreshGrid' => true,
 		],
     [
 			'attribute' => 'running_low',
@@ -88,6 +93,15 @@ $this->params['breadcrumbs'][] = $this->title;
 		'columns' => array_merge(
       $columns,
       [
+        [
+    			'label' => 'Editar ' . Html::a('<span id="edit_clear" class="glyphicon glyphicon-remove"></span>'),
+    			'encodeLabel' => false,
+    			'format' => 'raw',
+    			'value' => function ($model, $key, $index, $column) {
+    				return Html::a('<span id="edit_uncheck_' . $model->id . '" style="display: none;" class="edit_uncheck glyphicon glyphicon-check"></span>') .
+    						Html::a('<span id="edit_check_' . $model->id . '" style="display: block;" class="edit_check glyphicon glyphicon-unchecked"></span>');
+    			},
+    		],
         [
           'class' => 'yii\grid\ActionColumn',
           'buttons' => [
