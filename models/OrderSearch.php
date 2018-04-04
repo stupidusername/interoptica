@@ -18,13 +18,18 @@ class OrderSearch extends Order
 	public $status;
 
 	/**
+	 * @var string
+	 */
+	public $fromDate;
+
+	/**
 	 * @inheritdoc
 	 */
 	public function rules()
 	{
 		return [
 			[['id', 'user_id', 'customer_id', 'status'], 'integer'],
-			[['comment'], 'safe'],
+			[['comment', 'fromDate'], 'safe'],
 		];
 	}
 
@@ -46,7 +51,7 @@ class OrderSearch extends Order
 	 */
 	public function search($params)
 	{
-		$query = Order::find()->with(['user', 'customer', 'orderStatus', 'enteredOrderStatus', 'orderProducts.product.model']);
+		$query = Order::find()->with(['user', 'customer', 'orderStatus', 'orderProducts.product.model']);
 
 		// add conditions that should always apply here
 
@@ -68,6 +73,15 @@ class OrderSearch extends Order
 			// disambiguate if needed
 			$this->status != null ? 'order.user_id' : 'user_id' => $this->user_id,
 			'customer_id' => $this->customer_id,
+		]);
+
+		$query->joinWith([
+			'enteredOrderStatus' => function ($query) {
+				if ($this->fromDate) {
+					$query->andWhere(['>=', 'create_datetime', gmdate('Y-m-d', strtotime($this->fromDate))]);
+					$query->andWhere(['<', 'create_datetime', gmdate('Y-m-d', strtotime($this->fromDate . ' +1 day'))]);
+				}
+			},
 		]);
 
 		if ($this->status != null) {

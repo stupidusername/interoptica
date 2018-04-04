@@ -2,8 +2,9 @@
 
 use app\models\OrderStatus;
 use kartik\export\ExportMenu;
+use kartik\grid\GridView;
 use kartik\select2\Select2;
-use yii\grid\GridView;
+use kartik\date\DatePicker;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -74,11 +75,20 @@ $this->params['breadcrumbs'][] = $this->title;
 				'value' => 'orderStatus.statusLabel',
 				'filter' => Html::activeDropDownList($searchModel, 'status', OrderStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
 			],
-			[
-				'label' => 'Fecha de Ingreso',
-				'value' => 'enteredOrderStatus.create_datetime',
-				'format' => 'datetime'
-			],
+      [
+        'attribute' => 'fromDate',
+        'filterType' => GridView::FILTER_DATE,
+        'filterWidgetOptions' => [
+          'type' => DatePicker::TYPE_INPUT,
+          'pluginOptions' => [
+            'autoclose' => true,
+            'format' => 'yyyy-mm-dd',
+          ],
+        ],
+  			'label' => 'Fecha de Ingreso',
+  			'value' => 'enteredOrderStatus.create_datetime',
+  			'format' => 'datetime'
+  		],
 			[
 				'attribute' => 'comment',
 				'contentOptions' => ['style' => 'width: 400px; max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'],
