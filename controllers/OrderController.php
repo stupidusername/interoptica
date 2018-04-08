@@ -9,6 +9,7 @@ use app\models\Order;
 use app\models\OrderForm;
 use app\models\OrderInvoice;
 use app\models\OrderProduct;
+use app\models\OrderProductsForm;
 use app\models\OrderStatus;
 use app\models\OrderSearch;
 use app\models\OrderSummary;
@@ -197,8 +198,8 @@ class OrderController extends Controller
 	 */
 	public function actionAddEntry($orderId) {
 		$order = $this->findModel($orderId);
-		$model = new OrderProduct();
-		$model->order_id = $order->id;
+		$model = new OrderProductsForm();
+		$model->orderId = $order->id;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			Yii::$app->response->format = Response::FORMAT_JSON;
