@@ -9,7 +9,7 @@ use app\models\Product;
 /* @var $this yii\web\View */
 /* @var $model app\models\OrderProductsForm */
 
-$this->title = 'Añadir Producto';
+$this->title = 'Agregar Productos';
 ?>
 <div class="order-product-create">
 
@@ -32,7 +32,7 @@ $this->title = 'Añadir Producto';
 
 			<?=
 			$form->field($model, 'productIds')->label('Productos')->widget(Select2::classname(), [
-				'initValueText' => array_map(function ($id) { return Product::findOne($id)->code; }, $model->productIds),
+				'initValueText' => array_map(function ($id) { return Product::findOne($id)->code; }, $model->productIds ? $model->productIds : []),
 				'showToggleAll' => false,
 				'options' => [
 		      'placeholder' => 'Elegir producto',
