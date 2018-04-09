@@ -40,7 +40,7 @@ DetailView::widget([
 		'province',
 		'locality',
 		'phone_number',
-		'doc_number',
+		'cuit',
 	],
 ])
 ?>

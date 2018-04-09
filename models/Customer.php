@@ -23,7 +23,7 @@ use yii\helpers\ArrayHelper;
  * @property string $province
  * @property string $locality
  * @property string $phone_number
- * @property string $doc_number
+ * @property string $cuit
  * @property boolean $deleted
  *
  * @property double $ivaWithDefault
@@ -70,9 +70,10 @@ class Customer extends \yii\db\ActiveRecord
 			[['gecom_id'], 'unique'],
 			[['email'], 'email'],
 			[['discount_percentage'], 'number', 'min' => 0, 'max' => 100],
-			[['name', 'tax_situation', 'tax_situation_category', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'doc_number'], 'string', 'max' => 255],
+			[['name', 'tax_situation', 'tax_situation_category', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'cuit'], 'string', 'max' => 255],
+			['cuit', 'match', 'pattern' => '/^\d{2}-\d{8}-\d$/', 'message' => 'El número de CUIT debe tener el formato: XX-XXXXXXXX-X'],
 			[['name'], 'required'],
-			[['email', 'zone_id', 'tax_situation', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'doc_number'], 'required', 'on' => self::SCENARIO_CREATE],
+			[['email', 'zone_id', 'tax_situation', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'cuit'], 'required', 'on' => self::SCENARIO_CREATE],
 			[['zone_id'], 'exist', 'targetClass' => Zone::className(), 'targetAttribute' => 'id'],
 		];
 	}
@@ -97,7 +98,7 @@ class Customer extends \yii\db\ActiveRecord
 			'province' => 'Provincia',
 			'locality' => 'Localidad',
 			'phone_number' => 'Teléfonos',
-			'doc_number' => 'Nro. de Documento',
+			'cuit' => 'CUIT',
 		];
 	}
 

@@ -25,14 +25,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'address') ?>
 
-    <?php // echo $form->field($model, 'zip_code') ?>
-
-    <?php // echo $form->field($model, 'locality') ?>
-
-    <?php // echo $form->field($model, 'phone_number') ?>
-
-    <?php // echo $form->field($model, 'doc_number') ?>
-
     <div class="form-group">
         <?= Html::submitButton('Buscar', ['class' => 'btn btn-primary']) ?>
         <?= Html::resetButton('Limpiar', ['class' => 'btn btn-default']) ?>

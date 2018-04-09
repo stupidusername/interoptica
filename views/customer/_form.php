@@ -39,7 +39,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'phone_number')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'doc_number')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'cuit')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

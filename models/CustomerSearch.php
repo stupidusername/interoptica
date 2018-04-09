@@ -19,7 +19,7 @@ class CustomerSearch extends Customer
     {
         return [
             [['id', 'gecom_id'], 'integer'],
-            [['name', 'email', 'tax_situation', 'tax_situation_category', 'address', 'zip_code', 'locality', 'phone_number', 'doc_number'], 'safe'],
+            [['name', 'email', 'tax_situation', 'tax_situation_category', 'address', 'zip_code', 'locality', 'phone_number', 'cuit'], 'safe'],
         ];
     }
 
@@ -71,7 +71,7 @@ class CustomerSearch extends Customer
             ->andFilterWhere(['like', 'zip_code', $this->zip_code])
             ->andFilterWhere(['like', 'locality', $this->locality])
             ->andFilterWhere(['like', 'phone_number', $this->phone_number])
-            ->andFilterWhere(['like', 'doc_number', $this->doc_number]);
+            ->andFilterWhere(['like', 'cuit', $this->cuit]);
 
         return $dataProvider;
     }
