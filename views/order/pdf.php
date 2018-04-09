@@ -62,15 +62,19 @@ foreach ($orderProducts as $k => $orderProduct) {
 <table cellpadding="0" cellspacing="0" class="t1" >
 	<tbody>
 		<tr>
-			<td class="tr5 td11"><p class="p0">&nbsp;</p></td>
-			<td class="tr5"><p class="p0">Cantidad de Piezas Vendidas:</p></td>
-			<td class="tr5 td23" style="text-align: right"><p class="p0"><?= $model->totalQuantity ?></p></td>
+			<td class="tr5"><p class="p0">Piezas Vendidas:</p></td>
+			<td class="tr5 td11" style="text-align: right"><p class="p0"><?= $model->totalQuantity ?></p></td>
 			<td class="tr5 td11"><p class="p0">&nbsp;</p></td>
 			<td class="tr5"><p class="p0">Subtotal:</p></td>
 			<td class="tr5 td23" style="text-align: right"><p class="p0"><?= Yii::$app->formatter->asCurrency($model->subtotal) ?></p></td>
 			<td class="tr5 td11"><p class="p0">&nbsp;</p></td>
 			<td class="tr5"><p class="p0">Descuento:</p></td>
 			<td class="tr5 td23" style="text-align: right"><p class="p0"><?= Yii::$app->formatter->asCurrency($model->discountedFromSubtotal) ?></p></td>
+			<td class="tr5 td11"><p class="p0">&nbsp;</p></td>
+			<td class="tr5"><p class="p0">IVA:</p></td>
+			<td class="tr5 td28" style="text-align: right"><p class="p0">
+				<?= Yii::$app->formatter->asCurrency($model->total - $model->discountedFromSubtotal) . ' (' . Yii::$app->formatter->asPercent($model->iva / 100) . ')' ?>
+			</p></td>
 			<td class="tr5 td11"><p class="p0">&nbsp;</p></td>
 			<td class="tr5"><p class="p0">Total:</p></td>
 			<td class="tr5 td23" style="text-align: right"><p class="p0"><?= Yii::$app->formatter->asCurrency($model->total) ?></p></td>
