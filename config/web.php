@@ -78,6 +78,7 @@ $config = [
 				'CUIT' => $params_local['cuit'],
 				'cert' => '../../../../afip_cert/cert',
 				'key' => '../../../../afip_cert/key',
+				'production' => YII_ENV == 'prod',
 			]
 		],
 	],
