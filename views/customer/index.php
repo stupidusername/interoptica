@@ -18,7 +18,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Crear Cliente', ['create'], ['class' => 'btn btn-success']) ?>
-		<?= Html::a('Importar Clientes', ['import'], ['class' => 'btn btn-primary']) ?>
 		<?= Html::a('Administrar Zonas', ['/zone/index'], ['class' => 'btn btn-primary']) ?>
     </p>
 

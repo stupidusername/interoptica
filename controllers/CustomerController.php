@@ -5,7 +5,6 @@ namespace app\controllers;
 use Yii;
 use app\models\Customer;
 use app\models\CustomerSearch;
-use app\models\CustomersImportForm;
 use app\models\IssueSearch;
 use app\models\OrderSearch;
 use yii\web\Controller;
@@ -154,24 +153,6 @@ class CustomerController extends Controller
 
         return $this->redirect(['index']);
     }
-
-	/**
-	 * Renders import customers page.
-	 * @return mixed
-	 */
-	public function actionImport() {
-		$model = new CustomersImportForm();
-
-		if (Yii::$app->request->isPost) {
-			$model->file = UploadedFile::getInstance($model, 'file');
-			if ($model->import()) {
-				// file is uploaded successfully
-				return $this->redirect(['index']);
-			}
-		}
-
-		return $this->render('import', ['model' => $model]);
-	}
 
 	/**
 	 * Builds a response for Select2 customer widgets
