@@ -15,6 +15,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $user_id
  * @property integer $customer_id
  * @property integer $transport_id
+ * @property string $iva
  * @property string $discount_percentage
  * @property string $comment
  * @property integer $deleted
@@ -82,6 +83,7 @@ class Order extends \yii\db\ActiveRecord
 		if (parent::beforeSave($insert)) {
 			if ($insert) {
 				$this->user_id = Yii::$app->user->id;
+				$this->iva = $this->customer->ivaWithDefault;
 			}
 			return true;
 		} else {
@@ -164,6 +166,7 @@ class Order extends \yii\db\ActiveRecord
 			'user_id' => 'ID Usuario',
 			'customer_id' => 'ID Cliente',
 			'transport_id' => 'ID Transporte',
+			'iva' => 'IVA',
 			'discount_percentage' => 'Porcentaje de Descuento',
 			'comment' => 'Comentario',
 			'status' => 'Estado',
@@ -291,7 +294,7 @@ class Order extends \yii\db\ActiveRecord
 	 * @return float
 	 */
 	public function getTotal() {
-		return ($this->subtotal - $this->discountedFromSubtotal) * (1 + (float) Yii::$app->params['iva'] / 100);
+		return ($this->subtotal - $this->discountedFromSubtotal) * (1 + (float) $this->iva / 100);
 	}
 
 	/**

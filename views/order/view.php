@@ -121,6 +121,13 @@ OrderAsset::register($this);
 					'value' => $model->transport ? $model->transport->name : '',
 				],
 				[
+					'attribute' => 'iva',
+					'format' => 'percent',
+					'value' => function ($model) {
+						return $model->iva / 100;
+					},
+				],
+				[
 					'attribute' => 'discount_percentage',
 					'format' => 'percent',
 					'value' => function ($model) {
