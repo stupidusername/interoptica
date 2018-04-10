@@ -170,8 +170,8 @@ class CustomerController extends Controller
 	}
 
   public function actionGetDetails($id) {
-    echo '<pre>';
-    print_r(Yii::$app->afip->RegisterScopeFour->GetTaxpayerDetails($id));
+    $model = Customer::findOne($id);
+    echo $model->getIvaFromAfipWS();
   }
 
 	/**

@@ -152,4 +152,26 @@ class Customer extends \yii\db\ActiveRecord
 	public function getIvaWithDefault() {
 		return (double) ($this->iva ? $this->iva : Yii::$app->params['iva']);
 	}
+
+	/**
+	* @return double
+	*/
+	public function getIvaFromAfipWS() {
+		$iva = Yii::$app->params['iva'];
+		if ($this->cuit) {
+			$cuit = (int) preg_replace('/[^0-9]/', '', $this->cuit);;
+			$details = Yii::$app->afip->RegisterScopeFour->GetTaxpayerDetails($cuit);
+			if ($details) {
+				if (property_exists($details, 'impuesto')) {
+					foreach ($details->impuesto as $tax) {
+						if ($tax->descripcionImpuesto == 'IVA' && $tax->estado != 'ACTIVO') {
+							$iva = 0;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return $iva;
+	}
 }
