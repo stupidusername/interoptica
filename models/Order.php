@@ -236,7 +236,7 @@ class Order extends \yii\db\ActiveRecord
 	public function getEnteredOrderStatus()
 	{
 		$subquery = OrderStatus::find()->select('MIN(id)')->groupBy('order_id');
-		return $this->hasOne(OrderStatus::className(), ['order_id' => 'id'])->andWhere(['status' => OrderStatus::STATUS_ENTERED, OrderStatus::tableName() . '.id' => $subquery]);
+		return $this->hasOne(OrderStatus::className(), ['order_id' => 'id'])->andWhere([OrderStatus::tableName() . '.status' => OrderStatus::STATUS_ENTERED, OrderStatus::tableName() . '.id' => $subquery]);
 	}
 
 	/**

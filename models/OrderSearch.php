@@ -78,16 +78,18 @@ class OrderSearch extends Order
 		$query->joinWith([
 			'enteredOrderStatus' => function ($query) {
 				if ($this->fromDate) {
-					$query->andWhere(['>=', 'create_datetime', gmdate('Y-m-d', strtotime($this->fromDate))]);
-					$query->andWhere(['<', 'create_datetime', gmdate('Y-m-d', strtotime($this->fromDate . ' +1 day'))]);
+					$query->andWhere(['>=', OrderStatus::tableName() . '.create_datetime', gmdate('Y-m-d', strtotime($this->fromDate))]);
+					$query->andWhere(['<', OrderStatus::tableName() . '.create_datetime', gmdate('Y-m-d', strtotime($this->fromDate . ' +1 day'))]);
 				}
 			},
 		]);
 
 		if ($this->status != null) {
 			$query->innerJoinWith(['orderStatuses' => function ($query) {
+				$alias = 'orderStatuses';
 				$subQuery = OrderStatus::getLastStatuses();
-				$query->andWhere([OrderStatus::tableName() . '.id' => $subQuery, 'status' => $this->status]);
+				$query->alias($alias);
+				$query->andWhere([$alias . '.id' => $subQuery, $alias . '.status' => $this->status]);
 			}]);
 		}
 
