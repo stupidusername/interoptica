@@ -69,7 +69,7 @@ class OrderSearch extends Order
 
 		// grid filtering conditions
 		$query->andFilterWhere([
-			'id' => $this->id,
+			'order.id' => $this->id,
 			// disambiguate if needed
 			$this->status != null ? 'order.user_id' : 'user_id' => $this->user_id,
 			'customer_id' => $this->customer_id,
