@@ -5,6 +5,6 @@ return [
   'as log' => \yii\queue\LogBehavior::class,
   'redis' => 'redis',
   'channel' => 'queue',
-  'ttr' => 1, // Max time for job execution
+  'ttr' => 60, // Max time for job execution
   'attempts' => 3, // Max number of attempts
 ];
