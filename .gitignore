@@ -28,3 +28,6 @@ phpunit.phar
 
 tests/_output/*
 tests/_support/_generated
+
+# console config
+console-local.php
