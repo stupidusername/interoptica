@@ -1,7 +1,6 @@
 <?php
 
 $params = require(__DIR__ . '/params.php');
-$params_local = require(__DIR__ . '/params_local.php');
 
 $config = [
 	'id' => 'basic',
@@ -38,6 +37,8 @@ $config = [
 			],
 		],
 		'db' => require(__DIR__ . '/db.php'),
+		'redis' => require(__DIR__ . '/redis.php'),
+		'queue' => require(__DIR__ . '/queue.php'),
 		'urlManager' => [
 			'enablePrettyUrl' => true,
 			'showScriptName' => false,
@@ -72,15 +73,7 @@ $config = [
 			'thumbsUrl' => '@web/image/thumb',
 			'resizeMode' => 'inset',
 		],
-		'afip' => [
-			'class' => 'app\components\afip\Afip',
-			'options' => [
-				'CUIT' => $params_local['cuit'],
-				'cert' => '../../../../afip_cert/cert',
-				'key' => '../../../../afip_cert/key',
-				'production' => YII_ENV == 'prod',
-			]
-		],
+		'afip' => require(__DIR__ . '/afip.php'),
 	],
 	'modules' => [
 		'user' => [

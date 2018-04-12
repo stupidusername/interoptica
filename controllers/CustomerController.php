@@ -169,11 +169,6 @@ class CustomerController extends Controller
 		return $out;
 	}
 
-  public function actionGetDetails($id) {
-    $model = Customer::findOne($id);
-    echo $model->getIvaFromAfipWS();
-  }
-
 	/**
      * Finds the Customer model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

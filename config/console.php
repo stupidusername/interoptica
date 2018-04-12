@@ -1,12 +1,14 @@
 <?php
 
 $params = require(__DIR__ . '/params.php');
-$db = require(__DIR__ . '/db.php');
 
 $config = [
 	'id' => 'basic-console',
 	'basePath' => dirname(__DIR__),
-	'bootstrap' => ['log'],
+	'bootstrap' => [
+		'log',
+		'queue',
+	],
 	'controllerNamespace' => 'app\commands',
 	'components' => [
 		'cache' => [
@@ -20,7 +22,10 @@ $config = [
 				],
 			],
 		],
-		'db' => $db,
+		'db' => require(__DIR__ . '/db.php'),
+		'redis' => require(__DIR__ . '/redis.php'),
+		'queue' => require(__DIR__ . '/queue.php'),
+		'afip' => require(__DIR__ . '/afip.php'),
 	],
 	'params' => $params,
 	'modules' => [

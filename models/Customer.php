@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\jobs\UpdateCustomerIVAJob;
 use Yii;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 use yii\helpers\ArrayHelper;
@@ -58,6 +59,16 @@ class Customer extends \yii\db\ActiveRecord
 	public static function find()
 	{
 		return parent::find()->where(['or', [self::tableName() . '.deleted' => null], [self::tableName() . '.deleted' => 0]]);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function afterSave($insert, $changedAttributes) {
+		if ($insert || (isset($changedAttributes['cuit']) && $this->cuit != $changedAttributes['cuit'])) {
+			Yii::$app->queue->push(new UpdateCustomerIVAJob(['customerId' => $this->id]));
+		}
+		parent::afterSave($insert, $changedAttributes);
 	}
 
 	/**
@@ -139,7 +150,7 @@ class Customer extends \yii\db\ActiveRecord
 
 	/**
 	 * Gets an id => name array.
-	 * return string[]
+	 * @return string[]
 	 */
 	public static function getIdNameArray() {
 		$customers = ArrayHelper::map(self::find()->select(['id', 'name'])->asArray()->all(), 'id', 'name');
@@ -154,14 +165,15 @@ class Customer extends \yii\db\ActiveRecord
 	}
 
 	/**
-	* @return double
+	* @return double|null
 	*/
 	public function getIvaFromAfipWS() {
-		$iva = Yii::$app->params['iva'];
+		$iva = null;
 		if ($this->cuit) {
 			$cuit = (int) preg_replace('/[^0-9]/', '', $this->cuit);;
 			$details = Yii::$app->afip->RegisterScopeFour->GetTaxpayerDetails($cuit);
 			if ($details) {
+				$iva = Yii::$app->params['iva'];
 				if (property_exists($details, 'impuesto')) {
 					foreach ($details->impuesto as $tax) {
 						if ($tax->descripcionImpuesto == 'IVA' && $tax->estado != 'ACTIVO') {
