@@ -84,7 +84,7 @@ class Customer extends \yii\db\ActiveRecord
 			[['name', 'tax_situation', 'tax_situation_category', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'cuit'], 'string', 'max' => 255],
 			['cuit', 'match', 'pattern' => '/^\d{2}-\d{8}-\d$/', 'message' => 'El número de CUIT debe tener el formato: XX-XXXXXXXX-X'],
 			[['name'], 'required'],
-			[['email', 'zone_id', 'tax_situation', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'cuit'], 'required', 'on' => self::SCENARIO_CREATE],
+			[['gecom_id', 'email', 'zone_id', 'tax_situation', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'cuit'], 'required', 'on' => self::SCENARIO_CREATE],
 			[['zone_id'], 'exist', 'targetClass' => Zone::className(), 'targetAttribute' => 'id'],
 		];
 	}
