@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "total-pages": 1
+  },
+  "data": [
+    {
+      "id": 1,
+      "status": "billing",
+      "status_update_datetime": "2018-03-25T12:00:00Z",
+      "discount_percentage": 12.5,
+      "subtotal": 1000,
+      "total": 875,
+      "include_iva": true,
+      "relationships": {
+        "customer": {
+          "id": 1,
+          "gecom_id": 1001,
+          "name": "Customer One",
+          "email": "customer@one.com",
+          "cuit": "00-00000000-0",
+          "phone_number": "111-1111"
+        },
+        "items": [
+          {
+            "id": 1,
+            "code": "1",
+            "title": "Product One",
+            "unit_price": 100,
+            "quantity": 10
+          }
+        ]
+      }
+    }
+  ]
+}

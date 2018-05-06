@@ -1,0 +1,118 @@
+{
+  "title": "Order set",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "type": "object",
+      "properties": {
+        "total-pages": {
+          "type": "number"
+        }
+      }
+    },
+    "data": {
+      "type": "array",
+      "items": {
+        "title": "Order",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "deleted",
+              "entered",
+              "collect",
+              "collect_revision",
+              "administration",
+              "pending_put_together",
+              "put_together",
+              "put_together_printed",
+              "billing",
+              "packaging",
+              "waiting_for_transport",
+              "sent",
+              "delivered"
+            ]
+          },
+          "status_update_datetime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "discount_percentage": {
+            "type": "number"
+          },
+          "subtotal": {
+            "description": "Discount not included (IVA not included)",
+            "type": "number"
+          },
+          "total": {
+            "description": "Discount included (IVA not included)",
+            "type": "number"
+          },
+          "include_iva": {
+            "description": "Indicates whether IVA should be charged",
+            "type": "boolean"
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "customer": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "gecom_id": {
+                    "type": "number"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "format": "email",
+                    "type": "string"
+                  },
+                  "cuit": {
+                    "type": "string"
+                  },
+                  "phone_number": {
+                    "type": "string"
+                  }
+                }
+              },
+              "items": {
+                "title": "Item",
+                "type": "array",
+                "items": {
+                  "title": "Item",
+                  "type": "object",
+                  "attrbitues": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "code": {
+                      "description": "SKU",
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "unite_price": {
+                      "type": "number"
+                    },
+                    "quantity": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
