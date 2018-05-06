@@ -7,6 +7,7 @@ class m170703_211453_create_roles extends Migration
 
 	# Added just for compat with standard migrations
 	public $db;
+	public $compact;
 
 	public function safeUp()
 	{
