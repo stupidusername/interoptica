@@ -1,5 +1,6 @@
 <?php
 
+$local = require(__DIR__ . '/local.php');
 $params = require(__DIR__ . '/params.php');
 
 $config = [
@@ -36,7 +37,7 @@ $config = [
 				],
 			],
 		],
-		'db' => require(__DIR__ . '/db.php'),
+		'db' => $local['db'],
 		'redis' => require(__DIR__ . '/redis.php'),
 		'queue' => require(__DIR__ . '/queue.php'),
 		'urlManager' => [

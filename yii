@@ -8,12 +8,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-if (file_exists(__DIR__ . '/console-local.php')) {
-	require(__DIR__ . '/console-local.php');
-}
-
-defined('YII_DEBUG') or define('YII_DEBUG', true);
-defined('YII_ENV') or define('YII_ENV', 'dev');
+require(__DIR__ . '/local.php');
 
 require(__DIR__ . '/vendor/autoload.php');
 require(__DIR__ . '/vendor/yiisoft/yii2/Yii.php');
