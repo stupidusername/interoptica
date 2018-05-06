@@ -97,6 +97,13 @@ $config = [
 		],
 	],
 	'params' => $params,
+	'aliases' => [
+		'@images' => '@app/web/images',
+		'@songs' => '@app/web/songs',
+		'@apks' => '@app/web/apks',
+		'@bower' => '@vendor/bower-asset',
+		'@npm'   => '@vendor/npm-asset',
+	],
 ];
 
 if (YII_ENV_DEV) {
