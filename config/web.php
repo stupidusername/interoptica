@@ -45,6 +45,7 @@ $config = [
 			'showScriptName' => false,
 			'rules' => [
 				'image/thumb/<path:.*>' => 'image/thumb',
+				'docs/<view>' => 'docs/view',
 			],
 		],
 		'assetManager' => [
