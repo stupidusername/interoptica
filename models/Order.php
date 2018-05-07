@@ -19,6 +19,7 @@ use yii\helpers\ArrayHelper;
  * @property string $discount_percentage
  * @property string $comment
  * @property integer $deleted
+ * @property string $delete_datetime
  *
  * @property Customer $customer
  * @property Transport $transport
@@ -61,7 +62,8 @@ class Order extends \yii\db\ActiveRecord
 			'softDeleteBehavior' => [
 				'class' => SoftDeleteBehavior::className(),
 				'softDeleteAttributeValues' => [
-					'deleted' => true
+					'deleted' => true,
+					'delete_datetime' => gmdate('Y-m-d H:i:s'),
 				],
 				'replaceRegularDelete' => true
 			],
