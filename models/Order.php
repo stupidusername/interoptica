@@ -85,7 +85,7 @@ class Order extends \yii\db\ActiveRecord
 		if (parent::beforeSave($insert)) {
 			if ($insert) {
 				$this->user_id = Yii::$app->user->id;
-				$this->iva = $this->customer->ivaWithDefault;
+				$this->iva = $this->customer->iva;
 			}
 			return true;
 		} else {

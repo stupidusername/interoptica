@@ -31,8 +31,8 @@ DetailView::widget([
 		],
 		'tax_situation_category',
 		[
-			'attribute' => 'ivaWithDefault',
-			'value' => $model->ivaWithDefault / 100,
+			'attribute' => 'iva',
+			'value' => $model->iva / 100,
 			'format' => 'percent',
 		],
 		'address',

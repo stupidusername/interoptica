@@ -26,8 +26,6 @@ use yii\helpers\ArrayHelper;
  * @property string $phone_number
  * @property string $cuit
  * @property boolean $deleted
- *
- * @property double $ivaWithDefault
  */
 class Customer extends \yii\db\ActiveRecord
 {
@@ -64,16 +62,6 @@ class Customer extends \yii\db\ActiveRecord
 	/**
 	 * @inheritdoc
 	 */
-	public function afterSave($insert, $changedAttributes) {
-		if ($insert || (isset($changedAttributes['cuit']) && $this->cuit != $changedAttributes['cuit'])) {
-			Yii::$app->queue->push(new UpdateCustomerIVAJob(['customerId' => $this->id]));
-		}
-		parent::afterSave($insert, $changedAttributes);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	public function rules()
 	{
 		return [
@@ -103,7 +91,7 @@ class Customer extends \yii\db\ActiveRecord
 			'zone_id' => 'ID Zona',
 			'tax_situation' => 'Situación Impositiva',
 			'tax_situation_category' => 'Categoría',
-			'ivaWithDefault' => 'IVA',
+			'iva' => 'IVA',
 			'address' => 'Dirección',
 			'zip_code' => 'Código Postal',
 			'province' => 'Provincia',
@@ -155,35 +143,5 @@ class Customer extends \yii\db\ActiveRecord
 	public static function getIdNameArray() {
 		$customers = ArrayHelper::map(self::find()->select(['id', 'name'])->asArray()->all(), 'id', 'name');
 		return $customers;
-	}
-
-	/**
-	* @return double
-	*/
-	public function getIvaWithDefault() {
-		return (double) ($this->iva ? $this->iva : Yii::$app->params['iva']);
-	}
-
-	/**
-	* @return double|null
-	*/
-	public function getIvaFromAfipWS() {
-		$iva = null;
-		if ($this->cuit) {
-			$cuit = (int) preg_replace('/[^0-9]/', '', $this->cuit);;
-			$details = Yii::$app->afip->RegisterScopeFour->GetTaxpayerDetails($cuit);
-			if ($details) {
-				$iva = Yii::$app->params['iva'];
-				if (property_exists($details, 'impuesto')) {
-					foreach ($details->impuesto as $tax) {
-						if ($tax->descripcionImpuesto == 'IVA' && $tax->estado != 'ACTIVO') {
-							$iva = 0;
-							break;
-						}
-					}
-				}
-			}
-		}
-		return $iva;
 	}
 }

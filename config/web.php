@@ -26,7 +26,7 @@ $config = [
 			// send all mails to a file by default. You have to set
 			// 'useFileTransport' to false and configure a transport
 			// for the mailer to send real emails.
-			'useFileTransport' => YII_ENV == 'dev',
+			'useFileTransport' => YII_ENV != 'prod',
 		],
 		'log' => [
 			'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -38,8 +38,6 @@ $config = [
 			],
 		],
 		'db' => $local['db'],
-		'redis' => require(__DIR__ . '/redis.php'),
-		'queue' => require(__DIR__ . '/queue.php'),
 		'urlManager' => [
 			'enablePrettyUrl' => true,
 			'showScriptName' => false,
@@ -75,7 +73,6 @@ $config = [
 			'thumbsUrl' => '@web/image/thumb',
 			'resizeMode' => 'inset',
 		],
-		'afip' => require(__DIR__ . '/afip.php'),
 	],
 	'modules' => [
 		'user' => [
