@@ -31,9 +31,8 @@ DetailView::widget([
 		],
 		'tax_situation_category',
 		[
-			'attribute' => 'iva',
-			'value' => $model->iva / 100,
-			'format' => 'percent',
+			'attribute' => 'exclude_iva',
+			'value' => $model->exclude_iva ? 'Sí' : 'No',
 		],
 		'address',
 		'zip_code',

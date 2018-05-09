@@ -29,6 +29,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'tax_situation_category')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'exclude_iva')->checkbox() ?>
+
     <?= $form->field($model, 'address')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'zip_code')->textInput(['maxlength' => true]) ?>

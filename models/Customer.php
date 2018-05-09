@@ -18,7 +18,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $zone_id
  * @property string $tax_situation
  * @property string $tax_situation_category
- * @property string $iva
+ * @property boolean $exclude_iva
  * @property string $address
  * @property string $zip_code
  * @property string $province
@@ -74,6 +74,7 @@ class Customer extends \yii\db\ActiveRecord
 			[['name'], 'required'],
 			[['gecom_id', 'email', 'zone_id', 'tax_situation', 'address', 'zip_code', 'province', 'locality', 'phone_number', 'cuit'], 'required', 'on' => self::SCENARIO_CREATE],
 			[['zone_id'], 'exist', 'targetClass' => Zone::className(), 'targetAttribute' => 'id'],
+			[['exclude_iva'], 'boolean'],
 		];
 	}
 
@@ -91,7 +92,7 @@ class Customer extends \yii\db\ActiveRecord
 			'zone_id' => 'ID Zona',
 			'tax_situation' => 'Situación Impositiva',
 			'tax_situation_category' => 'Categoría',
-			'iva' => 'IVA',
+			'exclude_iva' => 'Omitir IVA',
 			'address' => 'Dirección',
 			'zip_code' => 'Código Postal',
 			'province' => 'Provincia',
