@@ -38,9 +38,11 @@ class Batch extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['product_id', 'initial_stamp_numer', 'quantity', 'stock'], 'integer'],
+            [['product_id', 'initial_stamp_numer', 'stock'], 'integer'],
+            [['quantity'], 'integer', 'min' => 1],
             [['entered_date'], 'date', 'format' => 'Y-m-d'],
             [['dispatch_number'], 'string', 'max' => 255],
+            [['dispatch_number'], 'unique'],
             [['product_id', 'entered_date', 'quantity', 'stock'], 'required'],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
             [['stock'], 'compare', 'compareAttribute' => 'quantity', 'operator' => '<=', 'type' => 'number'],
@@ -85,13 +87,14 @@ class Batch extends \yii\db\ActiveRecord
     /**
     * @inheritdoc
     */
-    public function beforeSave($insert) {
-      if (!parent::beforeSave($insert)) {
+    public function beforeValidate() {
+      if (!parent::beforeValidate()) {
         return false;
       }
-      if ($insert) {
+      if ($this->isNewRecord) {
         $this->stock = $this->quantity;
       }
+      return true;
     }
 
     /**
