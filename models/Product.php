@@ -78,7 +78,10 @@ class Product extends \yii\db\ActiveRecord
 	* @inheritdoc
 	*/
 	public static function find() {
-		return new ProductQuery(get_called_class());
+		$subquery = Batch::find()->select('SUM(stock)')->andWhere('product_id='. self::tableName() . '.id')->groupBy('product_id');
+		$query = new DeletedQuery(get_called_class());
+		$query->addSelect([self::tableName() . '.*', 'stock' => $subquery]);
+		return $query;
 	}
 
 	/**
@@ -95,6 +98,15 @@ class Product extends \yii\db\ActiveRecord
 			[['model_id', 'code', 'price'], 'required'],
 			[['colorNames', 'lensColorNames'], 'safe'],
 		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributes() {
+		$attributes = parent::attributes();
+		$attributes[] = 'stock';
+		return $attributes;
 	}
 
 	/**
@@ -171,14 +183,6 @@ class Product extends \yii\db\ActiveRecord
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getStock()
-	{
-		return $this->getBatches()->select(['product_id', 'SUM(stock)'])->groupBy('product_id');
-	}
-
-	/**
-	 * @return \yii\db\ActiveQuery
-	 */
 	public function getOrderProducts()
 	{
 		return $this->hasMany(OrderProduct::className(), ['product_id' => 'id']);
@@ -243,12 +247,4 @@ class Product extends \yii\db\ActiveRecord
 			$this->save(false);
 		}
 	}
-}
-
-class ProductQuery extends DeletedQuery
-{
-	public function withStock()
-  {
-      return $this->joinWith('batches')->addSelect([Product::tableName() . '.*', 'SUM(stock) AS stock'])->groupBy('id');
-  }
 }

@@ -58,14 +58,7 @@ ProductIndexAsset::register($this);
 			],
       'refreshGrid' => true,
 		],
-		[
-			'class' => EditableColumn::className(),
-			'attribute' => 'stock',
-			'editableOptions'=> [
-				'formOptions' => ['action' => ['edit']],
-			],
-      'refreshGrid' => true,
-		],
+		'stock',
     [
 			'attribute' => 'running_low',
 			'value' => function($model) {
