@@ -98,10 +98,36 @@ class Batch extends \yii\db\ActiveRecord
     }
 
     /**
+  	* @inheritdoc
+  	*/
+  	public function afterSave($insert, $changedAttributes) {
+      // Update product stock alerts
+  		if (array_key_exists('stock', $changedAttributes)) {
+        $stock = $this->product->stock;
+        $oldStock = $stock - $this->stock + $changedAttributes['stock'];
+  			$this->checkStock($oldStock, $stock);
+  		}
+  		parent::afterSave($insert, $changedAttributes);
+  	}
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getProduct()
     {
         return $this->hasOne(Product::className(), ['id' => 'product_id']);
     }
+
+    /**
+  	 * Updates stock
+  	 */
+  	public function updateStock($quantity) {
+  		if (is_null($this->stock)) {
+  			$this->stock = 0;
+  			$this->save(false);
+  		}
+      $stock = $this->product->stock;
+  		$this->product->checkStock($stock, $stock + $quantity);
+  		$this->updateCounters(['stock' => $quantity]);
+  	}
 }

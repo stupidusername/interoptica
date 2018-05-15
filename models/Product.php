@@ -18,7 +18,6 @@ use zxbodya\yii2\galleryManager\GalleryBehavior;
  * @property boolean $polarized
  * @property boolean $mirrored
  * @property string $price
- * @property integer $stock
  * @property boolean $running_low
  * @property string $running_low_date
  * @property string $create_date
@@ -28,6 +27,8 @@ use zxbodya\yii2\galleryManager\GalleryBehavior;
  * @property OrderProduct[] $orderProducts
  * @property Order[] $orders
  * @property Variant $variant
+ * @property Batch[] $batches
+ * @property integer $stock
  */
 class Product extends \yii\db\ActiveRecord
 {
@@ -77,7 +78,7 @@ class Product extends \yii\db\ActiveRecord
 	* @inheritdoc
 	*/
 	public static function find() {
-		return new DeletedQuery(get_called_class());
+		return new ProductQuery(get_called_class());
 	}
 
 	/**
@@ -86,7 +87,7 @@ class Product extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['model_id', 'polarized', 'mirrored', 'stock'], 'integer'],
+			[['model_id', 'polarized', 'mirrored'], 'integer'],
 			[['price'], 'number'],
 			[['code'], 'string', 'max' => 255],
 			[['code'], 'unique'],
@@ -132,7 +133,7 @@ class Product extends \yii\db\ActiveRecord
 		} else {
 			// Changing the stock should not affect update_date
 			$attrs = $this->attributes;
-			unset($attrs['stock'], $attrs['running_low'], $attrs['running_low_date']);
+			unset($attrs['running_low'], $attrs['running_low_date']);
 			foreach (array_keys($attrs) as $attrName) {
 				if ($this->isAttributeChanged($attrName, false)) {
 					$this->update_date = gmdate('Y-m-d');
@@ -141,16 +142,6 @@ class Product extends \yii\db\ActiveRecord
 			}
 		}
 		return true;
-	}
-
-	/**
-	* @inheritdoc
-	*/
-	public function afterSave($insert, $changedAttributes) {
-		if (!$insert && array_key_exists('stock', $changedAttributes)) {
-			$this->checkStock($changedAttributes['stock'], $this->stock);
-		}
-		parent::afterSave($insert, $changedAttributes);
 	}
 
 	/**
@@ -167,6 +158,22 @@ class Product extends \yii\db\ActiveRecord
 	public function getOrders()
 	{
 		return $this->hasMany(Order::className(), ['id' => 'order_id'])->viaTable('order_product', ['product_id' => 'id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getBatches()
+	{
+		return $this->hasMany(Batch::className(), ['product_id' => 'id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getStock()
+	{
+		return $this->getBatches()->select(['product_id', 'SUM(stock)'])->groupBy('product_id');
 	}
 
 	/**
@@ -202,28 +209,6 @@ class Product extends \yii\db\ActiveRecord
 	}
 
 	/**
-	 * Gets an id => name array.
-	 * @param OrderProduct $orderProduct if set, the quantity of $orderProduct
-	 * will be added to its product stock.
-	 * return string[]
-	 */
-	public static function getIdNameArray($orderProduct = null) {
-		$getName = function ($array, $defaultValue) use ($orderProduct) {
-			$stock = $array['stock'];
-			if ($orderProduct && !$orderProduct->isNewRecord && $orderProduct->product_id == $array['id']) {
-				$stock += $orderProduct->quantity;
-			}
-			return $array['code'] . ' (' . $stock . ')';
-		};
-		$activeQuery = self::find()->inStock()->select(['id', 'code', 'stock']);
-		if ($orderProduct && !$orderProduct->isNewRecord) {
-			$activeQuery->orWhere(['id' => $orderProduct->product_id]);
-		}
-		$products = ArrayHelper::map($activeQuery->asArray()->all(), 'id', $getName);
-		return $products;
-	}
-
-	/**
 	 * Gets products ordered by fail rate
 	 * @param integer $limit
 	 * @return mixed
@@ -238,18 +223,6 @@ class Product extends \yii\db\ActiveRecord
 		return array_filter($products, function ($product) {
 			return $product['fails'] > 0 && $product['orders'] > 0;
 		});
-	}
-
-	/**
-	 * Updates product stock
-	 */
-	public function updateStock($quantity) {
-		if (is_null($this->stock)) {
-			$this->stock = 0;
-			$this->save(false);
-		}
-		$this->checkStock($this->stock, $this->stock + $quantity);
-		$this->updateCounters(['stock' => $quantity]);
 	}
 
 	/**
@@ -272,9 +245,10 @@ class Product extends \yii\db\ActiveRecord
 	}
 }
 
-class ProductQuery extends yii\db\ActiveQuery
+class ProductQuery extends DeletedQuery
 {
-	public function inStock() {
-		return $this->andWhere(['>', 'stock', 0]);
-	}
+	public function withStock()
+  {
+      return $this->joinWith('batches')->addSelect([Product::tableName() . '.*', 'SUM(stock) AS stock'])->groupBy('id');
+  }
 }
