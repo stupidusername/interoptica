@@ -46,6 +46,7 @@ class ApiController extends \yii\rest\Controller {
       },
       'orderProducts.product',
       'orderProducts.product.model',
+      'orderProducts.orderProductBatches.batch',
     ]);
     $pages = ceil($query->count() / $pageSize);
     $models = $query->asArray()->limit($pageSize)->offset($page * $pageSize)->all();
@@ -55,12 +56,24 @@ class ApiController extends \yii\rest\Controller {
       $items = [];
       foreach ($model['orderProducts'] as $orderProduct) {
         $subtotal += $orderProduct['quantity'] * $orderProduct['price'];
+        $batches = [];
+        foreach ($orderProduct['orderProductBatches'] as $orderProductBatch) {
+          $batches[] = [
+            'id' => (int) $orderProductBatch['id'],
+            'dispatch_number' => $orderProductBatch['batch']['dispatch_number'],
+            'quantity' => (int) $orderProductBatch['quantity'],
+          ];
+        }
         $items[] = [
           'id' => (int) $orderProduct['product']['id'],
           'code' => $orderProduct['product']['code'],
           'title' => $orderProduct['product']['model']['name'],
           'unit_price' => (float) $orderProduct['price'],
           'quantity' => (float) $orderProduct['quantity'],
+          'imported' => (boolean) $orderProduct['model']['imported'],
+          'relationships' => [
+            'batches' => $batches,
+          ],
         ];
       }
       $orders[] = [

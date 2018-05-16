@@ -67,7 +67,22 @@ HighlightAsset::register($this);
             "code": "1",
             "title": "Product One",
             "unit_price": 100,
-            "quantity": 10
+            "quantity": 10,
+            "imported": true,
+            "relationships": {
+              "batches": [
+                {
+                  "id": 1,
+                  "dispatch_number": "1",
+                  "quantity": 5
+                },
+                {
+                  "id": 2,
+                  "dispatch_number": null,
+                  "quantity": 5
+                },
+              ]
+            }
           }
         ]
       }
@@ -165,7 +180,6 @@ HighlightAsset::register($this);
                 }
               },
               "items": {
-                "title": "Item",
                 "type": "array",
                 "items": {
                   "title": "Item",
@@ -186,6 +200,32 @@ HighlightAsset::register($this);
                     },
                     "quantity": {
                       "type": "number"
+                    },
+                    "imported": {
+                      "type": "boolean",
+                    },
+                    "relationships": {
+                      "type": "object",
+                      "properties": {
+                        "batches": {
+                          "type": "array",
+                          "items": {
+                            "title": "Batch",
+                            "type": "object",
+                            "attributes": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "dispatch_number": {
+                                "type": ["null", "string"]
+                              },
+                              "quantity": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }
