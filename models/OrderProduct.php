@@ -33,7 +33,7 @@ class OrderProduct extends \yii\db\ActiveRecord
 	 */
 	public function attributes() {
 		$attributes = parent::attributes();
-		$attributes[] = 'stock';
+		$attributes[] = 'quantity';
 		return $attributes;
 	}
 
@@ -42,7 +42,7 @@ class OrderProduct extends \yii\db\ActiveRecord
 	*/
 	public static function find() {
 		$subquery = OrderProductBatch::find()->select('SUM(quantity)')->andWhere('order_product_id='. self::tableName() . '.id')->groupBy('order_product_id');
-		return self::find()->addSelect([self::tableName() . '.*', 'quantity' => $subquery]);
+		return parent::find()->addSelect([self::tableName() . '.*', 'quantity' => $subquery]);
 	}
 
 	/**
