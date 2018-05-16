@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\ApiKey;
+use app\models\Model;
 use app\models\Order;
 use app\models\OrderStatus;
 use Yii;
@@ -70,7 +71,7 @@ class ApiController extends \yii\rest\Controller {
           'title' => $orderProduct['product']['model']['name'],
           'unit_price' => (float) $orderProduct['price'],
           'quantity' => (float) $orderProduct['quantity'],
-          'imported' => (boolean) $orderProduct['model']['imported'],
+          'imported' => $orderProduct['product']['model']['origin'] == Model::ORIGIN_IMPORTED,
           'relationships' => [
             'batches' => $batches,
           ],

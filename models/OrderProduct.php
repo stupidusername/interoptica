@@ -58,7 +58,7 @@ class OrderProduct extends \yii\db\ActiveRecord
 		// Update product stock
 		if (!$insert) {
 			// Restore stock during update
-			$this->restoreStock();
+			$this->restoreStock(true);
 		}
 		$this->updateStock();
 		parent::afterSave($insert, $changedAttributes);
@@ -71,7 +71,7 @@ class OrderProduct extends \yii\db\ActiveRecord
 		if (!parent::beforeDelete()) {
 				return false;
 		}
-		$this->restoreStock();
+		$this->restoreStock(true);
 		return true;
 	}
 
@@ -144,9 +144,11 @@ class OrderProduct extends \yii\db\ActiveRecord
 	 * This parameter is available since version 2.0.11.
 	 */
 	public function inStock($attribute, $param, $validator) {
-		$oldQuantity = isset($this->oldAttributes['quantity']) ? $this->oldAttributes['quantity'] : 0;
 		$stock = $this->product->stock !== null ? $this->product->stock : 0;
-		$realStock = $oldQuantity + $stock;
+		$realStock = $stock;
+		if (isset($this->oldAttributes['product_id']) && $this->product_id == $this->oldAttributes['product_id']) {
+			$realStock += $this->getOrderProductBatches()->sum('quantity');
+		}
 		if ($this->$attribute > $realStock - Product::STOCK_MIN) {
 			$this->addError($attribute, "El stock de este producto es de $realStock y tienen que quedar " . Product::STOCK_MIN. ".");
 		}
@@ -174,10 +176,13 @@ class OrderProduct extends \yii\db\ActiveRecord
 	/**
 	 * Restores stock to products table in case of record deletion.
 	 */
-	public function restoreStock() {
+	public function restoreStock($delete = false) {
 		$orderProductBatches = $this->getOrderProductBatches()->with(['batch'])->all();
 		foreach ($orderProductBatches as $orderProductBatch) {
 			$orderProductBatch->batch->updatestock($orderProductBatch->quantity);
+			if ($delete) {
+				$orderProductBatch->delete();
+			}
 		}
 	}
 
