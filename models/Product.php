@@ -28,12 +28,13 @@ use zxbodya\yii2\galleryManager\GalleryBehavior;
  * @property Order[] $orders
  * @property Variant $variant
  * @property Batch[] $batches
- * @property integer $stock
  */
 class Product extends \yii\db\ActiveRecord
 {
 	const STOCK_MIN = 10;
 	const STOCK_ALERT = 15;
+
+	public $stock;
 
 	/**
 	 * @inheritdoc
@@ -98,15 +99,6 @@ class Product extends \yii\db\ActiveRecord
 			[['model_id', 'code', 'price'], 'required'],
 			[['colorNames', 'lensColorNames'], 'safe'],
 		];
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function attributes() {
-		$attributes = parent::attributes();
-		$attributes[] = 'stock';
-		return $attributes;
 	}
 
 	/**

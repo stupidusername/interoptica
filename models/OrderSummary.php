@@ -111,7 +111,7 @@ class OrderSummary extends Order {
 			self::PERIOD_MONTH => 'SUBDATE(DATE(order_status.create_datetime), DAYOFMONTH(order_status.create_datetime) - 1)',
 			self::PERIOD_YEAR => 'SUBDATE(DATE(order_status.create_datetime), DAYOFYEAR(order_status.create_datetime) - 1)',
 		];
-		$query = self::find()->select(['order.user_id', 'totalQuantity' => 'SUM(order_product.quantity)', 'period' => $sqlPeriodFunctions[$this->period]])
+		$query = self::find()->select(['order.user_id', 'totalQuantity' => 'SUM(order_product_batch.quantity)', 'period' => $sqlPeriodFunctions[$this->period]])
 			->andWhere(['order.user_id' => $userIds])->andWhere(['!=', 'type', Model::TYPE_EXTRA])->with(['orderStatus'])->groupBy(['order.user_id', 'period'])
 			->indexBy(function ($row) { return $row['user_id'] . '-' . $row['period']; });
 
@@ -159,7 +159,8 @@ class OrderSummary extends Order {
 					$query->andWhere(['<', 'create_datetime', $this->queryToDate]);
 				}
 			},
-			'orderProducts.product.model']);
+			'orderProducts.product.model',
+			'orderProducts.orderProductBatches']);
 
 		return $dataProvider;
 	}

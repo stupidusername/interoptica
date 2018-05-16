@@ -16,25 +16,17 @@ use yii\validators\UniqueValidator;
  *
  * @property Order $order
  * @property Product $product
- * @property integer $quantity
  */
 class OrderProduct extends \yii\db\ActiveRecord
 {
+	public $quantity;
+
 	/**
 	 * @inheritdoc
 	 */
 	public static function tableName()
 	{
 		return 'order_product';
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function attributes() {
-		$attributes = parent::attributes();
-		$attributes[] = 'quantity';
-		return $attributes;
 	}
 
 	/**
@@ -75,9 +67,12 @@ class OrderProduct extends \yii\db\ActiveRecord
 	/**
 	 * @inheritdoc
 	 */
-	public function afterDelete() {
+	public function beforeDelete() {
+		if (!parent::beforeDelete()) {
+				return false;
+		}
 		$this->restoreStock();
-		parent::afterDelete();
+		return true;
 	}
 
 	/**
@@ -131,7 +126,7 @@ class OrderProduct extends \yii\db\ActiveRecord
 	 */
 	public function getOrderProductBatches()
 	{
-		return $this->hasMany(OrderProductBatch::className(), ['order_prodcut_id' => 'id']);
+		return $this->hasMany(OrderProductBatch::className(), ['order_product_id' => 'id']);
 	}
 
 	/**
@@ -180,9 +175,9 @@ class OrderProduct extends \yii\db\ActiveRecord
 	 * Restores stock to products table in case of record deletion.
 	 */
 	public function restoreStock() {
-		$orderProductBathches = $this->getOrderProductBatches()->with(['batch'])->all();
+		$orderProductBatches = $this->getOrderProductBatches()->with(['batch'])->all();
 		foreach ($orderProductBatches as $orderProductBatch) {
-			$orderProductBatch->batch->updatestock($order->productBatch->quantity);
+			$orderProductBatch->batch->updatestock($orderProductBatch->quantity);
 			$orderProductBatch->delete();
 		}
 	}
@@ -205,6 +200,7 @@ class OrderProduct extends \yii\db\ActiveRecord
 			$orderProductBatch = new OrderProductBatch();
 			$orderProductBatch->order_product_id = $this->id;
 			$orderProductBatch->batch_id = $batch->id;
+			$orderProductBatch->quantity = $removedQuantity;
 			$orderProductBatch->save(false);
 			$quantity -= $removedQuantity;
 			if ($quantity <= 0) {
@@ -212,7 +208,7 @@ class OrderProduct extends \yii\db\ActiveRecord
 			}
 		}
 		if ($quantity) {
-			$batch = Batch::find()->andWhere(['product_id' => $this->product_id])->orderBy(['id' => SORT_DESC])->all();
+			$batch = Batch::find()->andWhere(['product_id' => $this->product_id])->orderBy(['id' => SORT_DESC])->one();
 			if ($batch) {
 				$batch->updateStock(-$quantity);
 			} else {
@@ -226,6 +222,7 @@ class OrderProduct extends \yii\db\ActiveRecord
 			$orderProductBatch = new OrderProductBatch();
 			$orderProductBatch->order_product_id = $this->id;
 			$orderProductBatch->batch_id = $batch->id;
+			$orderProductBatch->quantity = $quantity;
 			$orderProductBatch->save(false);
 		}
 	}
