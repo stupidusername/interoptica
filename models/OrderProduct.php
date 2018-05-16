@@ -12,11 +12,11 @@ use yii\validators\UniqueValidator;
  * @property integer $order_id
  * @property integer $product_id
  * @property string $price
- * @property integer $quantity
  * @property integer $ignore_stock
  *
  * @property Order $order
  * @property Product $product
+ * @property integer $quantity
  */
 class OrderProduct extends \yii\db\ActiveRecord
 {
@@ -26,6 +26,23 @@ class OrderProduct extends \yii\db\ActiveRecord
 	public static function tableName()
 	{
 		return 'order_product';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributes() {
+		$attributes = parent::attributes();
+		$attributes[] = 'stock';
+		return $attributes;
+	}
+
+	/**
+	* @inheritdoc
+	*/
+	public static function find() {
+		$subquery = OrderProductBatch::find()->select('SUM(quantity)')->andWhere('order_product_id='. self::tableName() . '.id')->groupBy('order_product_id');
+		return self::find()->addSelect([self::tableName() . '.*', 'quantity' => $subquery]);
 	}
 
 	/**
@@ -47,13 +64,11 @@ class OrderProduct extends \yii\db\ActiveRecord
 	 */
 	public function afterSave($insert, $changedAttributes) {
 		// Update product stock
-		$quantity = -$this->quantity;
 		if (!$insert) {
 			// Restore stock during update
-			$oldProduct = Product::findOne($changedAttributes['product_id']);
-			$quantity += $changedAttributes['quantity'];
+			$this->restoreStock();
 		}
-		$this->product->updateStock($quantity);
+		$this->updateStock();
 		parent::afterSave($insert, $changedAttributes);
 	}
 
@@ -112,6 +127,14 @@ class OrderProduct extends \yii\db\ActiveRecord
 	}
 
 	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getOrderProductBatches()
+	{
+		return $this->hasMany(OrderProductBatch::className(), ['order_prodcut_id' => 'id']);
+	}
+
+	/**
 	 * @return float
 	 */
 	public function getSubtotal() {
@@ -157,6 +180,40 @@ class OrderProduct extends \yii\db\ActiveRecord
 	 * Restores stock to products table in case of record deletion.
 	 */
 	public function restoreStock() {
-		$this->product->updateStock($this->quantity);
+		$orderProductBathches = $this->getOrderProductBatches()->with(['batch'])->all();
+		foreach ($orderProductBatches as $orderProductBatch) {
+			$orderProductBatch->batch->updatestock($order->productBatch->quantity);
+			$orderProductBatch->delete();
+		}
+	}
+
+	/**
+	* Update product stock
+	* @param integer $productId
+	* @param integer $quantity
+	*/
+	private function updateStock() {
+		$quantity = $this->quantity;
+		$batches = Batch::find()->andWhere(['product_id' => $this->product_id])->andWhere(['>', 'stock', 0])->orderBy(['id' => SORT_ASC])->all();
+		foreach ($batches as $batch) {
+			if ($quantity <= $batch->stock) {
+				$removedQuantity = $quantity;
+			} else {
+				$removedQuantity = $batch->stock;
+			}
+			$batch->updateStock(-$removedQuantity);
+			$orderProductBatch = new OrderProductBatch();
+			$orderProductBatch->order_product_id = $this->id;
+			$orderProductBatch->batch_id = $batch->id;
+			$orderProductBatch->save(false);
+			$quantity -= $removedQuantity;
+			if ($quantity <= 0) {
+				break;
+			}
+		}
+		if ($quantity) {
+			$batch = Batch::find()->andWhere(['product_id' => $this->product_id])->orderBy(['id' => SORT_DESC])->all();
+			$batch->updateStock(-$quantity);
+		}
 	}
 }
