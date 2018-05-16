@@ -105,7 +105,7 @@ class Batch extends \yii\db\ActiveRecord
   		if (array_key_exists('stock', $changedAttributes)) {
         $stock = $this->product->stock;
         $oldStock = $stock - $this->stock + $changedAttributes['stock'];
-  			$this->checkStock($oldStock, $stock);
+  			$this->product->checkStock($oldStock, $stock);
   		}
   		parent::afterSave($insert, $changedAttributes);
   	}
