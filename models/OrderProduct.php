@@ -213,7 +213,20 @@ class OrderProduct extends \yii\db\ActiveRecord
 		}
 		if ($quantity) {
 			$batch = Batch::find()->andWhere(['product_id' => $this->product_id])->orderBy(['id' => SORT_DESC])->all();
-			$batch->updateStock(-$quantity);
+			if ($batch) {
+				$batch->updateStock(-$quantity);
+			} else {
+				$batch = new Batch();
+				$batch->product_id = $this->product_id;
+				$batch->entered_date = gmdate('Y-m-d');
+				$batch->quantity = 0;
+				$batch->stock = -$quantity;
+				$batch->save(false);
+			}
+			$orderProductBatch = new OrderProductBatch();
+			$orderProductBatch->order_product_id = $this->id;
+			$orderProductBatch->batch_id = $batch->id;
+			$orderProductBatch->save(false);
 		}
 	}
 }
