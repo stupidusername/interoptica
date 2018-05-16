@@ -178,7 +178,6 @@ class OrderProduct extends \yii\db\ActiveRecord
 		$orderProductBatches = $this->getOrderProductBatches()->with(['batch'])->all();
 		foreach ($orderProductBatches as $orderProductBatch) {
 			$orderProductBatch->batch->updatestock($orderProductBatch->quantity);
-			$orderProductBatch->delete();
 		}
 	}
 
