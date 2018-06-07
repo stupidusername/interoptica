@@ -76,8 +76,10 @@ class OrderSearch extends Order
 		]);
 
 		$dates = explode(' - ', $this->dateRange);
-		$fromDate = $dates[0];
-		$toDate = $dates[1];
+		if (count($dates) == 2) {
+			$fromDate = $dates[0];
+			$toDate = $dates[1];
+		}
 
 		$query->joinWith([
 			'enteredOrderStatus' => function ($query) use ($fromDate, $toDate) {
