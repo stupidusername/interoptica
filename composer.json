@@ -47,7 +47,8 @@
       "zxbodya/yii2-gallery-manager": "*@dev",
         "kartik-v/yii2-widget-datepicker": "@dev",
         "yiisoft/yii2-redis": "^2.0",
-        "nezhelskoy/yii2-highlight": "*"
+        "nezhelskoy/yii2-highlight": "*",
+        "kartik-v/yii2-date-range": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

@@ -20,7 +20,7 @@ class OrderSearch extends Order
 	/**
 	 * @var string
 	 */
-	public $fromDate;
+	public $dateRange;
 
 	/**
 	 * @inheritdoc
@@ -29,7 +29,7 @@ class OrderSearch extends Order
 	{
 		return [
 			[['id', 'user_id', 'customer_id', 'status'], 'integer'],
-			[['comment', 'fromDate'], 'safe'],
+			[['comment', 'dateRange'], 'safe'],
 		];
 	}
 
@@ -75,11 +75,17 @@ class OrderSearch extends Order
 			'customer_id' => $this->customer_id,
 		]);
 
+		$dates = explode(' - ', $this->dateRange);
+		$fromDate = $dates[0];
+		$toDate = $dates[1];
+
 		$query->joinWith([
-			'enteredOrderStatus' => function ($query) {
-				if ($this->fromDate) {
-					$query->andWhere(['>=', OrderStatus::tableName() . '.create_datetime', gmdate('Y-m-d', strtotime($this->fromDate))]);
-					$query->andWhere(['<', OrderStatus::tableName() . '.create_datetime', gmdate('Y-m-d', strtotime($this->fromDate . ' +1 day'))]);
+			'enteredOrderStatus' => function ($query) use ($fromDate, $toDate) {
+				if ($fromDate) {
+					$query->andWhere(['>=', OrderStatus::tableName() . '.create_datetime', gmdate('Y-m-d', strtotime($fromDate))]);
+				}
+				if ($toDate) {
+					$query->andWhere(['<', OrderStatus::tableName() . '.create_datetime', gmdate('Y-m-d', strtotime($toDate . '+1 day'))]);
 				}
 			},
 		]);

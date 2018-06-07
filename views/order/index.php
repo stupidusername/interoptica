@@ -76,13 +76,15 @@ $this->params['breadcrumbs'][] = $this->title;
 				'filter' => Html::activeDropDownList($searchModel, 'status', OrderStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
 			],
       [
-        'attribute' => 'fromDate',
-        'filterType' => GridView::FILTER_DATE,
+        'attribute' => 'dateRange',
+        'filterType' => GridView::FILTER_DATE_RANGE,
         'filterWidgetOptions' => [
-          'type' => DatePicker::TYPE_INPUT,
+          'convertFormat' => true,
           'pluginOptions' => [
-            'autoclose' => true,
-            'format' => 'yyyy-mm-dd',
+            'autoApply' => true,
+            'locale' => [
+              'format' => 'Y-m-d',
+            ],
           ],
         ],
   			'label' => 'Fecha de Ingreso',
@@ -122,6 +124,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
   <?php
   $columns[0]['value'] = null;
+  $columns[7]['format'] = 'decimal';
   ?>
 
   <?=
