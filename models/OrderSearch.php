@@ -76,6 +76,8 @@ class OrderSearch extends Order
 		]);
 
 		$dates = explode(' - ', $this->dateRange);
+		$fromDate = null;
+		$toDate = null;
 		if (count($dates) == 2) {
 			$fromDate = $dates[0];
 			$toDate = $dates[1];
