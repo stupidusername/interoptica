@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Customer;
 use nezhelskoy\highlight\HighlightAsset;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -34,6 +35,14 @@ HighlightAsset::register($this);
 
 <p>Nota: Las fechas y horarios usados por esta API usan la zona horaria GMT.</p>
 
+<h3>Situación frente al IVA de los clientes</h3>
+
+<p>
+  Esta información es indicada por el campo "tax_situation" que puede tomar lo siguientes valores:
+  <?= Html::ul(array_map(function ($key, $val) { return "$key: $val"; }, array_keys(Customer::taxSituationLabels()), Customer::taxSituationLabels())) ?>
+  En caso de tomar el valor de "M", el campo "tax_situation_category" indica la categoría de monotributo.
+</p>
+
 <h3>Ejemplo</h3>
 
 <p>Request a <?= Url::to(['api/get-orders', 'key' => '123', 'updated_since' => '2018-01-01', 'page' => 0], true) ?></p>
@@ -59,6 +68,8 @@ HighlightAsset::register($this);
           "name": "Customer One",
           "email": "customer@one.com",
           "cuit": "00-00000000-0",
+          "tax_situation": "M",
+          "tax_situation_category": "A",
           "phone_number": "111-1111"
         },
         "items": [
@@ -173,6 +184,12 @@ HighlightAsset::register($this);
                   },
                   "cuit": {
                     "type": "string"
+                  },
+                  "tax_situation": {
+                    "type": "string"
+                  },
+                  "tax_situation_category": {
+                    "type": ["null", "string"]
                   },
                   "phone_number": {
                     "type": "string"

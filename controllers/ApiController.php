@@ -105,6 +105,8 @@ class ApiController extends \yii\rest\Controller {
             'name' => $model['customer']['name'],
             'email' => $model['customer']['email'],
             'cuit' => $model['customer']['cuit'],
+            'tax_situation' => $model['customer']['tax_situation'],
+            'tax_situation_category' => $model['customer']['tax_situation_category'],
             'phone_number' => $model['customer']['phone_number'],
           ],
           'items' => $items,

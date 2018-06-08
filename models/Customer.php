@@ -111,6 +111,8 @@ class Customer extends \yii\db\ActiveRecord
 			'I' => 'Inscripto',
 			'M' => 'Monotributo',
 			'E' => 'Exento',
+			'C' => 'Consumidor final',
+			'X' => 'Exterior',
 		];
 	}
 
