@@ -106,3 +106,21 @@ foreach ($commentLines as $k => $commentLine) {
 		</tr>
 	</tbody>
 </table>
+
+<table cellpadding="0" cellspacing="0" class="t1" style="margin-top: 0px;">
+	<tbody>
+		<tr>
+			<td class="tr5 td11"><p class="p0">Cant.</p></td>
+			<td class="tr5 td30"><p class="p0">Marca</p></td>
+			<td class="tr5 td29"><p class="p0">Tipo</p></td>
+			<td class="tr5 td32"><p class="p0">Código</p></td>
+			<td class="tr5 td28"><p class="p0">Lote</p></td>
+			<td class="tr5 td28"><p class="p0">Obser.</p></td>
+			<td class="tr5 td23"><p class="p0">Precio</p></td>
+			<td class="tr5 td31"><p class="p0">Subtotal</p></td>
+		</tr>
+		<tr>
+			<td class="tr7 td11"></td>
+		</tr>
+	</tbody>
+</table>
