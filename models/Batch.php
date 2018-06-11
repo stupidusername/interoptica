@@ -42,7 +42,6 @@ class Batch extends \yii\db\ActiveRecord
             [['quantity'], 'integer', 'min' => 1],
             [['entered_date'], 'date', 'format' => 'Y-m-d'],
             [['dispatch_number'], 'string', 'max' => 255],
-            [['dispatch_number'], 'unique'],
             [['product_id', 'entered_date', 'quantity', 'stock'], 'required'],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
             [['stock'], 'compare', 'compareAttribute' => 'quantity', 'operator' => '<=', 'type' => 'number'],

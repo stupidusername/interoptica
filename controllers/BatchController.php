@@ -77,15 +77,33 @@ class BatchController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Batch(['scenario' => Batch::SCENARIO_CREATE]);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $models = [new Batch(['scenario' => Batch::SCENARIO_CREATE])];
+        $request = Yii::$app->getRequest();
+        if ($request->isPost && $request->post('ajax') !== null) {
+            $data = Yii::$app->request->post('Batch', []);
+            foreach (array_keys($data) as $index) {
+                $models[$index] = new Batch(['scenario' => Batch::SCENARIO_CREATE]);
+            }
+            Batch::loadMultiple($models, Yii::$app->request->post());
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            $result = Batch::validateMultiple($models);
+            return $result;
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        if ($request->isPost) {
+          $data = Yii::$app->request->post('Batch', []);
+          foreach (array_keys($data) as $index) {
+              $models[$index] = new Batch(['scenario' => Batch::SCENARIO_CREATE]);
+          }
+          if (Batch::loadMultiple($models, Yii::$app->request->post()) && Batch::validateMultiple($models)) {
+              foreach ($models as $model) {
+                $model->save();
+              }
+              $this->redirect(['index']);
+          }
+        }
+
+        return $this->render('create', ['models' => $models]);
     }
 
     /**
