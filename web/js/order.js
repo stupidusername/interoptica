@@ -9,6 +9,13 @@ $(document).ready(function () {
 				});
 				clearInterval(timer);
 			}
+			if ($('#orderproductsform-productids').hasClass('select2-hidden-accessible')) {
+				$('.select2-selection').focus();
+				$('#orderproductsform-productids').on('select2:select', function () {
+					$('#orderproductsform-quantity').focus();
+				});
+				clearInterval(timer);
+			}
 		}, 25);
 	};
 
@@ -54,11 +61,6 @@ $(document).ready(function () {
 		});
 	}, 30000);
 
-	$('#addEntry').on('kbModalSubmitSuccess', function (event, xhr, settings) {
-		$.pjax.reload({container: '#productsGridview'});
-		showAddEntryModal();
-	});
-
 	$('#addInvoice').on('kbModalSubmitSuccess', function (event, xhr, settings) {
 		$.pjax.reload({container: '#invoicesGridview'});
 		$('#addInvoice').modal('hide');
@@ -72,9 +74,13 @@ $(document).ready(function () {
 		focusInvoice();
 	});
 
-	$('#addEntry').on('kbModalSubmit', function (event, xhr, settings) {
+	$('#addEntry').on('kbModalSubmit', function (event, data, status, xhr) {
+		if (data.success) {
+			$.pjax.reload({container: '#productsGridview'});
+			showAddEntryModal();
+			setUpUpdateButtons($('#addEntry'));
+		}
 		focus();
-		setUpUpdateButtons($('#addEntry'));
 	});
 
 	$(document).on('click', '.productDelete', function (event) {

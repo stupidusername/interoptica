@@ -37,7 +37,7 @@
         this.initalRequestUrl = options.url;
         jQuery(this.element).on('show.bs.modal', this.shown.bind(this));
     };
-	
+
 	ModalAjax.prototype.setOptions = function(options) {
         this.initalRequestUrl = options.url;
     };
@@ -133,7 +133,7 @@
 					newScripts.push(src);
 				}
 			});
-			
+
 			var loadNextScript = function() {
 				jQuery.getScript(newScripts[loadedScriptsCount] + (new Date().getTime()), function () {
 					loadedScriptsCount++;
@@ -154,7 +154,7 @@
 					window.eval(inlineInjections[i]);
 				}
 			};
-			
+
 			// Load scripts
 			if (newScripts.length) {
 				loadNextScript();
@@ -186,9 +186,6 @@
                     this.injectHtml(data);
                 }
 				jQuery(this.element).triggerHandler('kbModalSubmit', [data, status, xhr]);
-				if (data.success) {
-					jQuery(this.element).triggerHandler('kbModalSubmitSuccess', [data, status, xhr]);
-				}
             }
         });
 

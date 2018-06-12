@@ -1,5 +1,5 @@
 $(document).ready(function () {
-	
+
 	var addEntryUrl;
 
 	var focus = function () {
@@ -17,12 +17,12 @@ $(document).ready(function () {
 			}
 		}, 25);
 	};
-	
-	
+
+
 	var showAddEntryModal = function() {
 		$('#addEntry').kbModalAjax({url: addEntryUrl}); $('#addEntry').modal('show');
 	};
-	
+
 	var setUpButtons = function () {
 		$('.addEntryButton').on('click', function () {
 		addEntryUrl = $(this).attr('url');
@@ -33,7 +33,7 @@ $(document).ready(function () {
 	$('#deliveryDetail').on('pjax:complete', function() {
 		$.pjax.reload({container: '#entriesGridviews'});
 	});
-	
+
 	$('#entriesGridviews').on('pjax:complete', function() {
 		setUpButtons();
 	});
@@ -44,17 +44,16 @@ $(document).ready(function () {
 	setInterval(function () {
 		$.pjax.reload({container: '#deliveryDetail'});
 	}, 30000);
-	
-	$('#addEntry').on('kbModalSubmitSuccess', function (event, xhr, settings) {
-		$.pjax.reload({container: '#entriesGridviews'});
-		showAddEntryModal();
-	});
-	
+
 	$('#addEntry').on('kbModalShow', function (event, xhr, settings) {
 		focus();
 	});
-	
-	$('#addEntry').on('kbModalSubmit', function (event, xhr, settings) {
+
+	$('#addEntry').on('kbModalSubmit', function (event, data, status, xhr) {
+		if (data.success) {
+			$.pjax.reload({container: '#entriesGridviews'});
+			showAddEntryModal();
+		}
 		focus();
 	});
 

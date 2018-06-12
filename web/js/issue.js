@@ -71,19 +71,29 @@ $(document).ready(function () {
 		showAddInvoiceModal();
 	});
 
-	$('#addEntry').on('kbModalSubmitSuccess', function (event, xhr, settings) {
-		$.pjax.reload({container: '#productsGridview'});
-		showAddEntryModal();
+	$('#addEntry').on('kbModalSubmit', function (event, data, status, xhr) {
+		if (data.success) {
+			$.pjax.reload({container: '#productsGridview'});
+			showAddEntryModal();
+			setUpUpdateButtons($('#addEntry'));
+		}
+		focus();
 	});
 
-	$('#addComment').on('kbModalSubmitSuccess', function (event, xhr, settings) {
-		$('#addComment').modal('hide');
-		$.pjax.reload({container: '#commentsGridview'});
+	$('#addComment').on('kbModalSubmit', function (event, data, status, xhr) {
+		if (data.success) {
+			$('#addComment').modal('hide');
+			$.pjax.reload({container: '#commentsGridview'});
+			setUpUpdateButtons($('#addComment'));
+		}
+		focusComment();
 	});
 
-	$('#addInvoice').on('kbModalSubmitSuccess', function (event, xhr, settings) {
-		$.pjax.reload({container: '#invoicesGridview'});
-		$('#addInvoice').modal('hide');
+	$('#addInvoice').on('kbModalSubmit', function (event, data, status, xhr) {
+		if (data.success) {
+			$.pjax.reload({container: '#invoicesGridview'});
+			$('#addInvoice').modal('hide');
+		}
 	});
 
 	$('#addEntry').on('shown.bs.modal', function (event, xhr, settings) {
@@ -96,16 +106,6 @@ $(document).ready(function () {
 
 	$('#addInvoice').on('shown.bs.modal', function (event, xhr, settings) {
 		focusInvoice();
-	});
-
-	$('#addEntry').on('kbModalSubmit', function (event, xhr, settings) {
-		focus();
-		setUpUpdateButtons($('#addEntry'));
-	});
-
-	$('#addComment').on('kbModalSubmit', function (event, xhr, settings) {
-		focus();
-		setUpUpdateButtons($('#addEntry'));
 	});
 
 	$(document).on('click', '.productDelete', function (event) {

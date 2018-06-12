@@ -22,17 +22,17 @@ $(document).ready(function () {
 		showAddEntryModal();
 	});
 
-	$('#addEntry').on('kbModalSubmitSuccess', function (event, xhr, settings) {
-		$.pjax.reload({container: '#productsGridview'});
-		showAddEntryModal();
-	});
-
 	$('#addEntry').on('shown.bs.modal', function (event, xhr, settings) {
 		focus();
 	});
 
-	$('#addEntry').on('kbModalSubmit', function (event, xhr, settings) {
-		focus();
+	$('#addEntry').on('kbModalSubmit', function (event, data, status, xhr) {
+		if (data.success) {
+			$.pjax.reload({container: '#productsGridview'});
+			showAddEntryModal();
+		} else {
+			focus();
+		}
 	});
 
 	$(document).on('click', '.productDelete', function (event) {
