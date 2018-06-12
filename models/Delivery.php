@@ -198,7 +198,8 @@ class Delivery extends \yii\db\ActiveRecord
 	public function getEnteredDeliveryStatus()
 	{
 		$subquery = DeliveryStatus::find()->select('MIN(id)')->groupBy('delivery_id');
-		return $this->hasOne(DeliveryStatus::className(), ['delivery_id' => 'id'])->andWhere(['status' => DeliveryStatus::STATUS_WAITING_FOR_TRANSPORT, DeliveryStatus::tableName() . '.id' => $subquery]);
+		$alias = 'enteredDeliveryStatus';
+		return $this->hasOne(DeliveryStatus::className(), ['delivery_id' => 'id'])->alias($alias)->andWhere([$alias . '.status' => DeliveryStatus::STATUS_WAITING_FOR_TRANSPORT, $alias . '.id' => $subquery]);
 	}
 
 	/**

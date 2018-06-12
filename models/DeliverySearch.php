@@ -98,7 +98,7 @@ class DeliverySearch extends Delivery
 		if ($this->status != null) {
 			$query->innerJoinWith(['deliveryStatuses' => function ($query) {
 				$subQuery = DeliveryStatus::getLastStatuses();
-				$query->andWhere([DeliveryStatus::tableName() . '.id' => $subQuery, 'status' => $this->status]);
+				$query->andWhere([DeliveryStatus::tableName() . '.id' => $subQuery, DeliveryStatus::tableName() . '.status' => $this->status]);
 			}]);
 		}
 
@@ -119,8 +119,8 @@ class DeliverySearch extends Delivery
 		$query->joinWith([
 			'enteredDeliveryStatus' => function ($query) {
 				if ($this->fromDate) {
-					$query->andWhere(['>=', 'create_datetime', gmdate('Y-m-d', strtotime($this->fromDate))]);
-					$query->andWhere(['<', 'create_datetime', gmdate('Y-m-d', strtotime($this->fromDate . ' +1 day'))]);
+					$query->andWhere(['>=', 'enteredDeliveryStatus.create_datetime', gmdate('Y-m-d', strtotime($this->fromDate))]);
+					$query->andWhere(['<', 'enteredDeliveryStatus.create_datetime', gmdate('Y-m-d', strtotime($this->fromDate . ' +1 day'))]);
 				}
 			},
 		]);

@@ -80,7 +80,7 @@ $statusLabels = DeliveryStatus::statusLabels();
 			'class' => EditableColumn::className(),
 			'label' => 'Estado',
 			'attribute' => 'status',
-			'filter' => Html::activeDropDownList($searchModel, 'status', DeliveryStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
+			'filter' => Html::activeDropDownList($searchModel, 'status', $statusLabelsWithoutError, ['class' => 'form-control', 'prompt' => 'Elegir estado']),
 			'editableOptions' => function ($model) use ($statusLabelsWithoutError, $statusLabels) {
 				return [
 					'inputType' => Editable::INPUT_DROPDOWN_LIST,
