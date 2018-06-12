@@ -125,15 +125,15 @@ class OrderController extends Controller
 		$model = $this->findModel($id);
 		if (Yii::$app->request->isPost && Yii::$app->request->getBodyParam('Order')) {
 			$model->scenario = Order::SCENARIO_VIEW;
-			$out = Json::encode(['output' => '', 'message' => '']);
+			$out = ['output' => '', 'message' => ''];
 			if ($model->load(Yii::$app->request->post())) {
 				$model->save();
 				$output = OrderStatus::statusLabels()[$model->status];
-				$out = Json::encode(['output' => $output, 'message' => $model->getErrors('status')]);
+				$out = ['output' => $output, 'message' => $model->getErrors('status')];
 			}
 			// return ajax json encoded response and exit
-			echo $out;
-			return;
+			Yii::$app->response->format = Response::FORMAT_JSON;
+			return $out;
 		}
 
 		return $this->render('view', [

@@ -167,8 +167,7 @@ class IssueController extends Controller
 				$out = Json::encode(['output' => $output, 'message' => $model->getErrors()]);
 			}
 			// return ajax json encoded response and exit
-			echo $out;
-			return;
+			return $out;
 		}
 
 		return $this->render('view', [

@@ -152,8 +152,7 @@ class DeliveryController extends Controller
 			$out = Json::encode(['output' => $output, 'message' => $model->getErrors('status')]);
 		}
 		// return ajax json encoded response and exit
-		echo $out;
-		return;
+		return $out;
 	}
 
 	/**
@@ -178,8 +177,7 @@ class DeliveryController extends Controller
 			$out = Json::encode(['output' => $output, 'message' => $model->getErrors('transport')]);
 		}
 		// return ajax json encoded response and exit
-		echo $out;
-		return;
+		return $out;
 	}
 
 	/**
