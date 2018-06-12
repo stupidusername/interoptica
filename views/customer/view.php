@@ -107,8 +107,10 @@ CustomerViewAsset::register($this);
 				'encodeLabel' => false,
 				'format' => 'raw',
 				'value' => function ($model, $key, $index, $column) {
-					return Html::a('<span id="order_uncheck_' . $model->id . '" style="display: none;" class="order_uncheck glyphicon glyphicon-check"></span>') .
-							Html::a('<span id="order_check_' . $model->id . '" style="display: block;" class="order_check glyphicon glyphicon-unchecked"></span>');
+          if ($model->status < OrderStatus::STATUS_WAITING_FOR_TRANSPORT) {
+  					return Html::a('<span id="order_uncheck_' . $model->id . '" style="display: none;" class="order_uncheck glyphicon glyphicon-check"></span>') .
+  							Html::a('<span id="order_check_' . $model->id . '" style="display: block;" class="order_check glyphicon glyphicon-unchecked"></span>');
+          }
 				},
 			],
 			[
@@ -189,8 +191,10 @@ CustomerViewAsset::register($this);
 				'encodeLabel' => false,
 				'format' => 'raw',
 				'value' => function ($model, $key, $index, $column) {
-					return Html::a('<span id="issue_uncheck_' . $model->id . '" style="display: none;" class="issue_uncheck glyphicon glyphicon-check"></span>') .
-							Html::a('<span id="issue_check_' . $model->id . '" style="display: block;" class="issue_check glyphicon glyphicon-unchecked"></span>');
+          if ($model->status < IssueStatus::STATUS_WAITING_FOR_TRANSPORT) {
+  					return Html::a('<span id="issue_uncheck_' . $model->id . '" style="display: none;" class="issue_uncheck glyphicon glyphicon-check"></span>') .
+  							Html::a('<span id="issue_check_' . $model->id . '" style="display: block;" class="issue_check glyphicon glyphicon-unchecked"></span>');
+          }
 				},
 			],
 
