@@ -5,8 +5,10 @@ use app\models\IssueStatus;
 use app\models\IssueType;
 use app\models\Order;
 use app\models\OrderStatus;
-use kartik\select2\Select2;
+use kartik\editable\Editable;
+use kartik\grid\EditableColumn;
 use kartik\grid\GridView;
+use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
@@ -48,11 +50,15 @@ CustomerViewAsset::register($this);
 
 	<h2>Pedidos</h2>
 
-	<?php Pjax::begin(['id' => 'orders-gridview', 'enablePushState' => false]); ?>
 	<?=
 	GridView::widget([
 		'dataProvider' => $orderDataProvider,
 		'filterModel' => $orderSearchModel,
+    'pjax' => true,
+    'pjaxSettings' => [
+      'id' => 'orders-gridview',
+      'enablePushState' => false,
+    ],
 		'rowOptions' => function ($model, $index, $widget, $grid) {
 			return $model->status == OrderStatus::STATUS_ENTERED ? ['style'=>"font-weight: bold;"] : [];
 		},
@@ -68,30 +74,16 @@ CustomerViewAsset::register($this);
 			[
 				'label' => 'Usuario',
 				'value' => 'user.username',
-				'filter' => Select2::widget([
-					'initValueText' => $orderSearchModel->user_id ? $orderSearchModel->user->username : null,
-					'model' => $orderSearchModel,
-					'attribute' => 'user_id',
-					'options' => ['placeholder' => 'Elegir usuario'],
-					'pluginOptions' => [
-						'allowClear' => true,
-						'minimumInputLength' => 1,
-						'ajax' => [
-							'url' => Url::to('/site/user-list'),
-						],
-					],
-				]),
 			],
 			[
-				'class' => 'kartik\grid\EditableColumn',
+				'class' => EditableColumn::className(),
+        'attribute' => 'status',
 				'value' => 'orderStatus.statusLabel',
 				'filter' => Html::activeDropDownList($orderSearchModel, 'status', OrderStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
 				'editableOptions' => function ($model, $key, $index) {
 					return[
-						'inputType' => 'dropDownList',
+						'inputType' => Editable::INPUT_DROPDOWN_LIST,
 						'data' => OrderStatus::statusLabels(),
-						'model' => $model,
-						'attribute' => 'status',
 						'formOptions' => [
 							'action' => ['/order/view/', 'id' => $model->id],
 						],
@@ -121,7 +113,6 @@ CustomerViewAsset::register($this);
 		],
 	]);
 	?>
-	<?php Pjax::end(); ?>
 
 	<h2>Reclamos</h2>
 
@@ -142,19 +133,6 @@ CustomerViewAsset::register($this);
             [
 				'label' => 'Usuario',
 				'value' => 'user.username',
-				'filter' => Select2::widget([
-					'initValueText' => $issueSearchModel->user_id ? $issueSearchModel->user->username : null,
-					'model' => $issueSearchModel,
-					'attribute' => 'user_id',
-					'options' => ['placeholder' => 'Elegir usuario'],
-					'pluginOptions' => [
-						'allowClear' => true,
-						'minimumInputLength' => 1,
-						'ajax' => [
-							'url' => Url::to('/site/user-list'),
-						],
-					],
-				]),
 			],
             [
 				'attribute' => 'order_id',
@@ -166,15 +144,14 @@ CustomerViewAsset::register($this);
 				'filter' => Html::activeDropDownList($issueSearchModel, 'issue_type_id', IssueType::getIdNameArray(), ['class' => 'form-control', 'prompt' => 'Elegir asunto']),
 			],
 			[
-				'class' => 'kartik\grid\EditableColumn',
+				'class' => EditableColumn::className(),
+        'attribute' => 'status',
 				'value' => 'issueStatus.statusLabel',
 				'filter' => Html::activeDropDownList($issueSearchModel, 'status', IssueStatus::statusLabels(), ['class' => 'form-control', 'prompt' => 'Elegir estado']),
 				'editableOptions' => function ($model, $key, $index) {
 					return[
-						'inputType' => 'dropDownList',
+						'inputType' => Editable::INPUT_DROPDOWN_LIST,
 						'data' => IssueStatus::statusLabels(),
-						'model' => $model,
-						'attribute' => 'status',
 						'formOptions' => [
 							'action' => ['/issue/view/', 'id' => $model->id],
 						],

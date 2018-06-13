@@ -160,12 +160,16 @@ class IssueController extends Controller
 		$model = $this->findModel($id);
 		if (Yii::$app->request->isPost) {
 			$model->scenario = Issue::SCENARIO_VIEW;
-			$out = Json::encode(['output' => '', 'message' => '']);
-			if ($model->load(Yii::$app->request->post())) {
-				$model->save();
-				$output = IssueStatus::statusLabels()[$model->status];
-				$out = Json::encode(['output' => $output, 'message' => $model->getErrors()]);
+			$editableIndex = Yii::$app->request->post('editableIndex', null);
+			if ($editableIndex !== null) {
+				$postModel = Yii::$app->request->post('Issue')[$editableIndex];
+			} else {
+				$postModel = Yii::$app->request->post('Issue');
 			}
+			$model->setAttributes($postModel);
+			$model->save();
+			$output = IssueStatus::statusLabels()[$model->status];
+			$out = Json::encode(['output' => $output, 'message' => $model->getErrors()]);
 			// return ajax json encoded response and exit
 			return $out;
 		}

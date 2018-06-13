@@ -125,12 +125,16 @@ class OrderController extends Controller
 		$model = $this->findModel($id);
 		if (Yii::$app->request->isPost && Yii::$app->request->getBodyParam('Order')) {
 			$model->scenario = Order::SCENARIO_VIEW;
-			$out = ['output' => '', 'message' => ''];
-			if ($model->load(Yii::$app->request->post())) {
-				$model->save();
-				$output = OrderStatus::statusLabels()[$model->status];
-				$out = ['output' => $output, 'message' => $model->getErrors('status')];
+			$editableIndex = Yii::$app->request->post('editableIndex', null);
+			if ($editableIndex !== null) {
+				$postModel = Yii::$app->request->post('Order')[$editableIndex];
+			} else {
+				$postModel = Yii::$app->request->post('Order');
 			}
+			$model->setAttributes($postModel);
+			$model->save();
+			$output = OrderStatus::statusLabels()[$model->status];
+			$out = ['output' => $output, 'message' => $model->getErrors('status')];
 			// return ajax json encoded response and exit
 			Yii::$app->response->format = Response::FORMAT_JSON;
 			return $out;

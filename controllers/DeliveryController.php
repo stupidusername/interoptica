@@ -141,7 +141,7 @@ class DeliveryController extends Controller
 		$out = Json::encode(['output' => '', 'message' => '']);
 		$editableIndex = Yii::$app->request->post('editableIndex', null);
 		if ($editableIndex !== null) {
-			$postModel = Yii::$app->request->post("Delivery")[$editableIndex];
+			$postModel = Yii::$app->request->post('Delivery')[$editableIndex];
 		} else {
 			$postModel = Yii::$app->request->post('Delivery');
 		}
