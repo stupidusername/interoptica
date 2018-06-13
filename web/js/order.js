@@ -61,9 +61,11 @@ $(document).ready(function () {
 		});
 	}, 30000);
 
-	$('#addInvoice').on('kbModalSubmitSuccess', function (event, xhr, settings) {
-		$.pjax.reload({container: '#invoicesGridview'});
-		$('#addInvoice').modal('hide');
+	$('#addInvoice').on('kbModalSubmit', function (event, data, status, xhr) {
+		if (data.success) {
+			$.pjax.reload({container: '#invoicesGridview'});
+			$('#addInvoice').modal('hide');
+		}
 	});
 
 	$('#addEntry').on('shown.bs.modal', function (event, xhr, settings) {
