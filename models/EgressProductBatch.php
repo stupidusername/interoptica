@@ -26,31 +26,6 @@ class EgressProductBatch extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['id', 'egress_product_id', 'batch_id', 'quantity'], 'integer'],
-            [['batch_id'], 'exist', 'skipOnError' => true, 'targetClass' => Batch::className(), 'targetAttribute' => ['batch_id' => 'id']],
-            [['egress_product_id'], 'exist', 'skipOnError' => true, 'targetClass' => EgressProduct::className(), 'targetAttribute' => ['egress_product_id' => 'id']],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'egress_product_id' => 'Egress Product ID',
-            'batch_id' => 'Batch ID',
-            'quantity' => 'Quantity',
-        ];
-    }
-
-    /**
      * @return \yii\db\ActiveQuery
      */
     public function getBatch()
