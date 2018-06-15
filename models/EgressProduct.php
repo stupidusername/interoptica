@@ -85,7 +85,7 @@ class EgressProduct extends \yii\db\ActiveRecord
             'id' => 'ID',
             'egress_id' => 'ID Egreso',
             'product_id' => 'ID Producto',
-            'quantity' => 'cantidad',
+            'quantity' => 'Cantidad',
         ];
     }
 

@@ -154,7 +154,7 @@ class EgressController extends Controller
   	public function actionAddEntry($egressId) {
   		$egress = $this->findModel($egressId);
   		$model = new EgressProduct();
-  		$model->egressId = $egress->id;
+  		$model->egress_id = $egress->id;
 
   		if ($model->load(Yii::$app->request->post()) && $model->save()) {
   			Yii::$app->response->format = Response::FORMAT_JSON;

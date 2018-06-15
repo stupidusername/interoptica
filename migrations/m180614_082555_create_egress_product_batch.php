@@ -13,7 +13,7 @@ class m180614_082555_create_egress_product_batch extends Migration
     public function safeUp()
     {
       $this->createTable('{{%egress_product_batch}}', [
-        'id' => $this->integer(),
+        'id' => $this->primaryKey(),
         'egress_product_id' => $this->integer(),
         'batch_id' => $this->integer(),
         'quantity' => $this->integer(),
