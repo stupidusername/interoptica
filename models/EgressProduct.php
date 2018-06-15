@@ -33,7 +33,7 @@ class EgressProduct extends \yii\db\ActiveRecord
   	* @inheritdoc
   	*/
   	public static function find() {
-  		$subquery = EgressProductBatch::find()->select('SUM(quantity)')->andWhere('eggress_product_id='. self::tableName() . '.id')->groupBy('egress_product_id');
+  		$subquery = EgressProductBatch::find()->select('SUM(quantity)')->andWhere('egress_product_id='. self::tableName() . '.id')->groupBy('egress_product_id');
   		return parent::find()->addSelect([self::tableName() . '.*', 'quantity' => $subquery]);
   	}
 
@@ -127,7 +127,7 @@ class EgressProduct extends \yii\db\ActiveRecord
   			$realStock += $this->getEgressProductBatches()->sum('quantity');
   		}
   		if ($this->$attribute > $realStock) {
-  			$this->addError($attribute, "El stock de este producto es de $realStock y tienen que quedar " . Product::STOCK_MIN. ".");
+  			$this->addError($attribute, "El stock de este producto es de $realStock.");
   		}
   	}
 
@@ -156,7 +156,7 @@ class EgressProduct extends \yii\db\ActiveRecord
   	public function restoreStock($delete = false) {
   		$egressProductBatches = $this->getEgressProductBatches()->with(['batch'])->all();
   		foreach ($egressProductBatches as $egressProductBatch) {
-  			$eggressProductBatch->batch->updatestock($egressProductBatch->quantity);
+  			$egressProductBatch->batch->updatestock($egressProductBatch->quantity);
   			if ($delete) {
   				$egressProductBatch->delete();
   			}

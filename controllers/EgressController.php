@@ -7,6 +7,7 @@ use app\filters\AuthorRule;
 use app\models\Egress;
 use app\models\EgressProduct;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -43,7 +44,7 @@ class EgressController extends Controller
       					[
       						'actions' => ['update', 'delete'],
       						'model' => function() {
-      							return $this->findEgressFormModel(Yii::$app->request->getQueryParam('id'));
+      							return $this->findModel(Yii::$app->request->getQueryParam('id'));
       						},
       						'roles' => ['admin', 'author'],
       					],
@@ -70,7 +71,7 @@ class EgressController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Egress::find(),
+            'query' => Egress::find()->with(['user']),
             'sort' => [
               'defaultOrder' => ['id' => SORT_DESC],
             ],

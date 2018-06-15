@@ -71,7 +71,7 @@ class Egress extends \yii\db\ActiveRecord
   		if (parent::beforeSave($insert)) {
   			if ($insert) {
   				$this->user_id = Yii::$app->user->id;
-  				$this->create_date_time = gmdate('Y-m-d H:i:s');
+  				$this->create_datetime = gmdate('Y-m-d H:i:s');
   			}
   			return true;
   		} else {
@@ -114,17 +114,17 @@ class Egress extends \yii\db\ActiveRecord
     */
     public static function reasonLabels() {
       return [
-        REASON_STOCK_ADJUST => 'Ajuste stock',
-        REASON_OUT_FACTORY => 'Salida fábrica',
-        REASON_MARKETING => 'Marketing',
-        REASON_GIFT => 'Regalos ópticas',
-        REASON_PERSONAL => 'Personal',
-        REASON_OUT_DIRECTORS => 'Salida directores',
-        REASON_CHANGE_ENVELOPE => 'Sobres de cambio',
-        REASON_CHANGE_SALESMAN => 'Piezas por cambio - Vendedor',
-        REASON_CONSIGNMENT => 'Consignación',
-        REASON_IN_CASE => 'Ingreso valija',
-        REASON_OUT_CASE => 'Egreso valija',
+        self::REASON_STOCK_ADJUST => 'Ajuste stock',
+        self::REASON_OUT_FACTORY => 'Salida fábrica',
+        self::REASON_MARKETING => 'Marketing',
+        self::REASON_GIFT => 'Regalos ópticas',
+        self::REASON_PERSONAL => 'Personal',
+        self::REASON_OUT_DIRECTORS => 'Salida directores',
+        self::REASON_CHANGE_ENVELOPE => 'Sobres de cambio',
+        self::REASON_CHANGE_SALESMAN => 'Piezas por cambio - Vendedor',
+        self::REASON_CONSIGNMENT => 'Consignación',
+        self::REASON_IN_CASE => 'Ingreso valija',
+        self::REASON_OUT_CASE => 'Egreso valija',
       ];
     }
 
@@ -155,7 +155,7 @@ class Egress extends \yii\db\ActiveRecord
   	 * Restores the stock in case of record deletion.
   	 */
   	private function restoreStock() {
-  		foreach ($this->egressProducts as $eggressProduct) {
+  		foreach ($this->egressProducts as $egressProduct) {
   			$egressProduct->restoreStock();
   		}
   	}
