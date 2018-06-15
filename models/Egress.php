@@ -129,6 +129,13 @@ class Egress extends \yii\db\ActiveRecord
     }
 
     /**
+    * @return string
+    */
+    public function getReasonLabel() {
+      return self::reasonLabels()[$this->reason];
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getUser()
