@@ -222,7 +222,7 @@ IssueAsset::register($this);
 			],
 		],
 		'dataProvider' => new ActiveDataProvider([
-            'query' => $model->getIssueProducts()->with(['product', 'fail'])->orderBy(['id' => SORT_DESC]),
+            'query' => $model->getIssueProducts()->with(['fail'])->innerJoinWith(['product'])->orderBy(['product.code' => SORT_ASC]),
 			'pagination' => false,
 			'sort' => false,
         ]),

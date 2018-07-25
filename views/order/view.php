@@ -325,7 +325,7 @@ OrderAsset::register($this);
 			],
 		],
 		'dataProvider' => new ActiveDataProvider([
-            'query' => $model->getOrderProducts()->with(['product'])->orderBy(['id' => SORT_DESC]),
+            'query' => $model->getOrderProducts()->innerJoinWith(['product'])->orderBy(['product.code' => SORT_ASC]),
 			'pagination' => false,
 			'sort' => false,
         ]),

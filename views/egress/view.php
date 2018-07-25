@@ -98,7 +98,7 @@ EgressAsset::register($this);
   			],
   		],
   		'dataProvider' => new ActiveDataProvider([
-        'query' => $model->getEgressProducts()->with(['product'])->orderBy(['id' => SORT_DESC]),
+        'query' => $model->getEgressProducts()->innerJoinWith(['product'])->orderBy(['product.code' => SORT_ASC]),
   			'pagination' => false,
   			'sort' => false,
       ]),
