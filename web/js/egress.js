@@ -36,7 +36,7 @@ $(document).ready(function () {
 
 	$('#addEntry').on('kbModalSubmit', function (event, data, status, xhr) {
 		if (data.success) {
-			$.pjax.reload({container: '#productsGridview'});
+			$.pjax.reload({container: '#productsGridview', timeout: 30000});
 			showAddEntryModal();
 			setUpUpdateButtons($('#addEntry'));
 		}
@@ -50,7 +50,7 @@ $(document).ready(function () {
 			type: 'POST',
 			url: url,
 			success: function (data, status, xhr) {
-				$.pjax.reload({container: '#productsGridview'});
+				$.pjax.reload({container: '#productsGridview', timeout: 30000});
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				alert(jqXHR.responseText);

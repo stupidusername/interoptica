@@ -112,7 +112,7 @@ OrderAsset::register($this);
 						'data' => OrderStatus::statusLabels(),
 						'displayValue' => $model->orderStatus->statusLabel,
 						'pluginEvents' => [
-							'editableSuccess' => 'function () { $.pjax.reload({container: "#orderStatusGridview"}); }',
+							'editableSuccess' => 'function () { $.pjax.reload({container: "#orderStatusGridview", timeout: 30000}); }',
 						],
 					]),
 				],

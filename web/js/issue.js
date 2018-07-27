@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
 	$('#productsGridview').on('pjax:success', function() {
-			$.pjax.reload({container: '#issueErrors'});
+			$.pjax.reload({container: '#issueErrors', timeout: 30000});
 	});;
 
 	var focus = function () {
@@ -73,7 +73,7 @@ $(document).ready(function () {
 
 	$('#addEntry').on('kbModalSubmit', function (event, data, status, xhr) {
 		if (data.success) {
-			$.pjax.reload({container: '#productsGridview'});
+			$.pjax.reload({container: '#productsGridview', timeout: 30000});
 			showAddEntryModal();
 			setUpUpdateButtons($('#addEntry'));
 		}
@@ -83,7 +83,7 @@ $(document).ready(function () {
 	$('#addComment').on('kbModalSubmit', function (event, data, status, xhr) {
 		if (data.success) {
 			$('#addComment').modal('hide');
-			$.pjax.reload({container: '#commentsGridview'});
+			$.pjax.reload({container: '#commentsGridview', timeout: 30000});
 			setUpUpdateButtons($('#addComment'));
 		}
 		focusComment();
@@ -91,7 +91,7 @@ $(document).ready(function () {
 
 	$('#addInvoice').on('kbModalSubmit', function (event, data, status, xhr) {
 		if (data.success) {
-			$.pjax.reload({container: '#invoicesGridview'});
+			$.pjax.reload({container: '#invoicesGridview', timeout: 30000});
 			$('#addInvoice').modal('hide');
 		}
 	});
@@ -115,7 +115,7 @@ $(document).ready(function () {
 			type: 'POST',
 			url: url,
 			success: function (data, status, xhr) {
-				$.pjax.reload({container: '#productsGridview'});
+				$.pjax.reload({container: '#productsGridview', timeout: 30000});
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				alert(jqXHR.responseText);
@@ -130,7 +130,7 @@ $(document).ready(function () {
 			type: 'POST',
 			url: url,
 			success: function (data, status, xhr) {
-				$.pjax.reload({container: '#invoicesGridview'});
+				$.pjax.reload({container: '#invoicesGridview', timeout: 30000});
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				alert(jqXHR.responseText);

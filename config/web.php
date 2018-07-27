@@ -126,4 +126,9 @@ if (YII_ENV_DEV) {
 	],
 ]);
 
+// Change Pjax timeout
+\Yii::$container->set('yii\widgets\Pjax', [
+	'timeout' => 30000,
+]);
+
 return $config;

@@ -31,7 +31,7 @@ $(document).ready(function () {
 	};
 
 	$('#deliveryDetail').on('pjax:complete', function() {
-		$.pjax.reload({container: '#entriesGridviews'});
+		$.pjax.reload({container: '#entriesGridviews', timeout: 30000});
 	});
 
 	$('#entriesGridviews').on('pjax:complete', function() {
@@ -42,7 +42,7 @@ $(document).ready(function () {
 
 	// refresh order details periodically
 	setInterval(function () {
-		$.pjax.reload({container: '#deliveryDetail'});
+		$.pjax.reload({container: '#deliveryDetail', timeout: 30000});
 	}, 30000);
 
 	$('#addEntry').on('kbModalShow', function (event, xhr, settings) {
@@ -51,7 +51,7 @@ $(document).ready(function () {
 
 	$('#addEntry').on('kbModalSubmit', function (event, data, status, xhr) {
 		if (data.success) {
-			$.pjax.reload({container: '#entriesGridviews'});
+			$.pjax.reload({container: '#entriesGridviews', timeout: 30000});
 			showAddEntryModal();
 		}
 		focus();
@@ -64,7 +64,7 @@ $(document).ready(function () {
 			type: 'POST',
 			url: url,
 			success: function (data, status, xhr) {
-				$.pjax.reload({container: '#entriesGridviews'});
+				$.pjax.reload({container: '#entriesGridviews', timeout: 30000});
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				alert(jqXHR.responseText);

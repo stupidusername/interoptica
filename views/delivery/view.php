@@ -69,7 +69,7 @@ DeliveryAsset::register($this);
 				'data' => DeliveryStatus::statusLabelsWithoutError(),
 				'displayValue' => DeliveryStatus::statusLabels()[$model->status],
 				'pluginEvents' => [
-					'editableSuccess' => 'function () { $.pjax.reload({container: "#deliveryDetail"}); }',
+					'editableSuccess' => 'function () { $.pjax.reload({container: "#deliveryDetail", timeout: 30000}); }',
 				],
 				'pjaxContainerId' => 'deliveryDetail',
 			]),
@@ -89,7 +89,7 @@ DeliveryAsset::register($this);
 				'data' => Transport::getIdNameArray(),
 				'displayValue' => $model->transport_id ? Transport::getIdNameArray()[$model->transport_id] : '',
 				'pluginEvents' => [
-					'editableSuccess' => 'function () { $.pjax.reload({container: "#deliveryDetail"}); }',
+					'editableSuccess' => 'function () { $.pjax.reload({container: "#deliveryDetail", timeout: 30000}); }',
 				],
 				'pjaxContainerId' => 'deliveryDetail',
 			]),

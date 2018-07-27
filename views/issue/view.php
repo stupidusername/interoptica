@@ -104,7 +104,7 @@ IssueAsset::register($this);
 					'data' => IssueStatus::statusLabels(),
 					'displayValue' => $model->issueStatus->statusLabel,
 					'pluginEvents' => [
-						'editableSuccess' => 'function () { $.pjax.reload({container: "#issueStatusGridview"}); }',
+						'editableSuccess' => 'function () { $.pjax.reload({container: "#issueStatusGridview", timeout: 30000}); }',
 					],
 				]),
 			],

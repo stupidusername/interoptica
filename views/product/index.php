@@ -102,7 +102,7 @@ ProductIndexAsset::register($this);
               return Html::a('<span class="glyphicon glyphicon-trash"></span>', '#', [
                 'title' => Yii::t('yii', 'Delete'),
                 'aria-label' => Yii::t('yii', 'Delete'),
-                'onclick' => "if (confirm('¿Está seguro de eliminar este elemento?')) { $.ajax('$url', { type: 'POST' }).done(function(data) { $.pjax.reload({container: '#productsGridview'}); }); } return false;"
+                'onclick' => "if (confirm('¿Está seguro de eliminar este elemento?')) { $.ajax('$url', { type: 'POST' }).done(function(data) { $.pjax.reload({container: '#productsGridview'}); , timeout: 30000}); } return false;"
               ]);
             },
           ],

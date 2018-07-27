@@ -43,7 +43,7 @@ $productIds = ArrayHelper::getColumn($products, 'id');
           				$options = array_merge([
           					'title' => 'Chequear',
           					'aria-label' => 'Chequear',
-                    'onclick' => 'event.preventDefault(); var url = $(this).attr("href"); jQuery.post(url, function() { $.pjax.reload({container: "#products-gridview"}); });'
+                    'onclick' => 'event.preventDefault(); var url = $(this).attr("href"); jQuery.post(url, function() { $.pjax.reload({container: "#products-gridview"}); , timeout: 30000});'
           				]);
           				$icon = in_array($product->id, $productIds) ? 'glyphicon-check' : 'glyphicon-unchecked';
           				return Html::a('<span class="glyphicon ' . $icon . '"></span>', $url, $options);

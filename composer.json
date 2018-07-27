@@ -25,7 +25,7 @@
     ],
     "require": {
 	    "php": ">=5.4.0",
-	    "yiisoft/yii2": "~2.0.5",
+	    "yiisoft/yii2": "~2.0.14",
 	    "yiisoft/yii2-bootstrap": "~2.0.0",
 	    "yiisoft/yii2-swiftmailer": "~2.0.0",
 	    "dektrium/yii2-user": "dev-master",
@@ -45,11 +45,11 @@
       "iutbay/yii2-imagecache" : "*",
       "2amigos/yii2-selectize-widget": "~1.0",
       "zxbodya/yii2-gallery-manager": "*@dev",
-        "kartik-v/yii2-widget-datepicker": "@dev",
-        "yiisoft/yii2-redis": "^2.0",
-        "nezhelskoy/yii2-highlight": "*",
-        "kartik-v/yii2-date-range": "*",
-        "unclead/yii2-multiple-input": "~2"
+      "kartik-v/yii2-widget-datepicker": "@dev",
+      "yiisoft/yii2-redis": "^2.0",
+      "nezhelskoy/yii2-highlight": "*",
+      "kartik-v/yii2-date-range": "*",
+      "unclead/yii2-multiple-input": "~2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
