@@ -59,7 +59,7 @@ $(document).ready(function () {
 				$('#pendingIssues').css('display', displayIssues);
 			});
 		});
-	}, 3000);
+	}, 30000);
 
 	$('#addInvoice').on('kbModalSubmit', function (event, data, status, xhr) {
 		if (data.success) {
