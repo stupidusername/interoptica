@@ -38,7 +38,7 @@ class User extends BaseUser {
 		// add field to scenarios
 		$scenarios['create'][] = 'gecom_id';
 		$scenarios['update'][] = 'gecom_id';
-		$scenarios['register'][] = 'gecom_ud';
+		$scenarios['register'][] = 'gecom_id';
 		return $scenarios;
 	}
 
