@@ -203,7 +203,12 @@ class ProductController extends Controller
 	 */
 	public function actionList($q = '') {
 		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-		$productsArray = Product::find()->active()->andWhere(['like', 'code', $q])->asArray()->all();
+		$productsArray = Product::find()
+			->active()
+			->andWhere(['like', 'code', $q])
+			->orderBy(['code' => SORT_ASC])
+			->asArray()
+			->all();
 		$results = array_map(function ($productArray) {
 			return ['id' => $productArray['id'], 'text' => $productArray['code'] . ' (' . $productArray['stock']. ')'];
 		}, $productsArray);
@@ -218,7 +223,11 @@ class ProductController extends Controller
 	*/
 	public function actionListColors($query) {
 		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-		$colorsArray = Color::find()->andWhere(['name' => $query])->asArray()->all();
+		$colorsArray = Color::find()
+			->andWhere(['like', 'name', $query])
+			->orderBy(['name' => SORT_ASC])
+			->asArray()
+			->all();
 		$results = array_map(function ($colorArray) {
 			return ['name' => $colorArray['name']];
 		}, $colorsArray);

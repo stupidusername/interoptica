@@ -137,7 +137,12 @@ class ModelController extends Controller
   	 */
   	public function actionList($q = '') {
   		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-  		$modelsArray = Model::find()->active()->andWhere(['like', 'name', $q])->asArray()->all();
+  		$modelsArray = Model::find()
+        ->active()
+        ->andWhere(['like', 'name', $q])
+        ->orderBy(['name' => SORT_ASC])
+        ->asArray()
+        ->all();
   		$results = array_map(function ($modelArray) {
   			return ['id' => $modelArray['id'], 'text' => $modelArray['name']];
   		}, $modelsArray);
@@ -152,7 +157,11 @@ class ModelController extends Controller
     */
     public function actionListMaterials($query) {
       Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-  		$materialsArray = Material::find()->andWhere(['name' => $query])->asArray()->all();
+  		$materialsArray = Material::find()
+        ->andWhere(['like', 'name', $query])
+        ->orderBy(['name' => SORT_ASC])
+        ->asArray()
+        ->all();
   		$results = array_map(function ($materialArray) {
   			return ['name' => $materialArray['name']];
   		}, $materialsArray);
