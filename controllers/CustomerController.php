@@ -22,34 +22,34 @@ class CustomerController extends Controller
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
+      public function behaviors()
+      {
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
+          'verbs' => [
+            'class' => VerbFilter::className(),
+            'actions' => [
+              'delete' => ['POST'],
             ],
-			'access' => [
-                'class' => AccessControl::className(),
-                'ruleConfig' => [
-                    'class' => AccessRule::className(),
-                ],
-                'rules' => [
-					[
-						'actions' => ['index', 'create', 'view', 'list'],
-						'roles' => ['@'],
-						'allow' => true,
-					],
-                    [
-                        'allow' => true,
-                        'roles' => ['admin'],
-                    ],
-                ],
+          ],
+          'access' => [
+            'class' => AccessControl::className(),
+            'ruleConfig' => [
+              'class' => AccessRule::className(),
             ],
+            'rules' => [
+              [
+                'actions' => ['index', 'create', 'view', 'list'],
+                'roles' => ['@'],
+                'allow' => true,
+              ],
+              [
+                'allow' => true,
+                'roles' => ['admin', 'editor'],
+              ],
+            ],
+          ],
         ];
-    }
+      }
 
     /**
      * Lists all Customer models.

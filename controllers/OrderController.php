@@ -58,10 +58,10 @@ class OrderController extends Controller
 						'model' => function() {
 							return $this->findOrderFormModel(Yii::$app->request->getQueryParam('id'));
 						},
-						'roles' => ['admin', 'author'],
+						'roles' => ['admin', 'author', 'editor'],
 					],
 					[
-						'actions' => ['add-entry', 'update-entry', 'delete-entry'],
+						'actions' => ['add-entry', 'update-entry', 'delete-entry', 'editor'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('orderId'));
 						},
@@ -72,7 +72,7 @@ class OrderController extends Controller
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('orderId'));
 						},
-						'roles' => ['admin', 'author', 'depot'],
+						'roles' => ['admin', 'author', 'depot', 'editor'],
 					],
 					[
 						'actions' => ['statistics'],

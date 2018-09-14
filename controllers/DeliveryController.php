@@ -55,14 +55,14 @@ class DeliveryController extends Controller
 				],
 				'rules' => [
 					[
-						'actions' => ['edit'],
+						'actions' => ['edit-tracking-number'],
 						'model' => function() {
-							return $this->findModel(Yii::$app->request->getBodyParam('editableKey'));
+							return $this->findModel(Yii::$app->request->getQueryParam('id'));
 						},
-						'roles' => ['admin', 'author'],
+						'roles' => ['admin', 'author', 'editor'],
 					],
 					[
-						'actions' => ['edit-status', 'edit-transport', 'edit-tracking-number', 'delete'],
+						'actions' => ['edit-status', 'edit-transport', 'delete'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('id'));
 						},
