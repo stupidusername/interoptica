@@ -113,9 +113,13 @@ $statusLabels = DeliveryStatus::statusLabels();
 		[
 			'class' => EditableColumn::className(),
 			'attribute' => 'tracking_number',
-			'editableOptions'=> [
-				'formOptions' => ['action' => ['edit']],
-			],
+      'editableOptions' => function ($model) use ($transports) {
+				return [
+					'formOptions' => [
+						'action' => ['edit-tracking-number', 'id' => $model->id],
+					],
+				];
+			},
 		],
 		[
       'attribute' => 'fromDate',
