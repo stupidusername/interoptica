@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\DeletedQuery;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
@@ -25,8 +26,8 @@ class Transport extends \yii\db\ActiveRecord
 		return 'transport';
 	}
 
-	/** 
-	* @inheritdoc 
+	/**
+	* @inheritdoc
 	*/
 	public function behaviors() {
 		return [
@@ -40,12 +41,11 @@ class Transport extends \yii\db\ActiveRecord
 		];
 	}
 
-	/** 
-	* @inheritdoc 
+	/**
+	* @inheritdoc
 	*/
-	public static function find()
-	{
-		return parent::find()->where(['or', ['deleted' => null], ['deleted' => 0]]);
+	public static function find() {
+		return new DeletedQuery(get_called_class());
 	}
 
 	/**

@@ -51,7 +51,7 @@ class TransportController extends Controller
 	public function actionIndex()
 	{
 		$dataProvider = new ActiveDataProvider([
-			'query' => Transport::find(),
+			'query' => Transport::find()->active(),
 		]);
 
 		return $this->render('index', [
