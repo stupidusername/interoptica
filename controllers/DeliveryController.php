@@ -173,7 +173,14 @@ class DeliveryController extends Controller
 		$model = $this->findModel($id);
 		$model->scenario = Delivery::SCENARIO_EDIT_TRACKING_NUMBER;
 		$out = Json::encode(['output' => '', 'message' => '']);
-		if ($model->load(Yii::$app->request->post())) {
+		$editableIndex = Yii::$app->request->post('editableIndex', null);
+		if ($editableIndex !== null) {
+			$postModel = Yii::$app->request->post("Delivery")[$editableIndex];
+		} else {
+			$postModel = Yii::$app->request->post('Delivery');
+		}
+		if ($postModel) {
+			$model->setAttributes($postModel);
 			if ($model->save()) {
 				$model->sendEmail();
 			}

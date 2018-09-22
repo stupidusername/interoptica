@@ -265,6 +265,9 @@ class Delivery extends \yii\db\ActiveRecord
 		if ($this->status >= DeliveryStatus::STATUS_DELIVERED) {
 			$this->addError($attribute, 'No se puede editar un envio que esta en estado ' . DeliveryStatus::statusLabels()[DeliveryStatus::STATUS_DELIVERED]);
 		}
+		if (!$this->transport_id) {
+			$this->addError($attribute, 'Transporte no puede estar vacío.');
+		}
 	}
 
 	public function getCustomerNames() {
