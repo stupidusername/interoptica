@@ -9,7 +9,7 @@ use Yii;
 
 /**
  * This rule only allows to edit entries of orders that are
- * in a OrderStatus::STATUS_ENTERED state
+ * in a OrderStatus::STATUS_LOADING state
  */
 class OrderStatusRule extends ActionFilter
 {
@@ -21,7 +21,7 @@ class OrderStatusRule extends ActionFilter
      */
     public function beforeAction($action)
     {
-        if (Yii::$app->controller->model->status != OrderStatus::STATUS_ENTERED) {
+        if (Yii::$app->controller->model->status != OrderStatus::STATUS_LOADING) {
 			$this->denyAccess();
 		}
 		return true;
@@ -33,6 +33,6 @@ class OrderStatusRule extends ActionFilter
      */
     protected function denyAccess()
     {
-        throw new ForbiddenHttpException('No se puede editar un pedido que no esta en estado ' . OrderStatus::statusLabels()[OrderStatus::STATUS_ENTERED] . '.');
+        throw new ForbiddenHttpException('No se puede editar un pedido que no esta en estado ' . OrderStatus::statusLabels()[OrderStatus::STATUS_LOADING] . '.');
     }
 }

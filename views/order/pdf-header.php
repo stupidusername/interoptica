@@ -28,7 +28,13 @@ foreach ($commentLines as $k => $commentLine) {
 		<tr>
 			<td class="tr0 td0"><p class="p0">Fecha:</p></td>
 			<td class="tr0 td1"><p class="p0">&nbsp;</p></td>
-			<td class="tr0 td2"><p class="p0"><?= Yii::$app->formatter->asDate($model->enteredOrderStatus->create_datetime, 'dd/MM/yyyy') ?></p></td>
+			<?php
+			$date = '';
+			if ($model->enteredOrderStatus) {
+				Yii::$app->formatter->asDate($model->enteredOrderStatus->create_datetime, 'dd/MM/yyyy');
+			}
+			?>
+			<td class="tr0 td2"><p class="p0"><?= $date ?></p></td>
 			<td class="tr0 td3"><p class="p0"><?= $commentLines[0] ?></p></td>
 		</tr>
 		<tr>

@@ -17,18 +17,19 @@ use Yii;
  */
 class OrderStatus extends \yii\db\ActiveRecord
 {
-	const STATUS_ENTERED = 0;
-	const STATUS_COLLECT = 1;
-	const STATUS_COLLECT_REVISION = 2;
-	const STATUS_ADMINISTRATION = 3;
-	const STATUS_PENDING_PUT_TOGETHER = 4;
-	const STATUS_PUT_TOGETHER = 5;
-	const STATUS_PUT_TOGETHER_PRINTED = 6;
-	const STATUS_BILLING = 7;
-	const STATUS_PACKAGING = 8;
-	const STATUS_WAITING_FOR_TRANSPORT = 9;
-	const STATUS_SENT = 10;
-	const STATUS_DELIVERED = 11;
+	const STATUS_LOADING = 0;
+	const STATUS_ENTERED = 1;
+	const STATUS_COLLECT = 2;
+	const STATUS_COLLECT_REVISION = 3;
+	const STATUS_ADMINISTRATION = 4;
+	const STATUS_PENDING_PUT_TOGETHER = 5;
+	const STATUS_PUT_TOGETHER = 6;
+	const STATUS_PUT_TOGETHER_PRINTED = 7;
+	const STATUS_BILLING = 8;
+	const STATUS_PACKAGING = 9;
+	const STATUS_WAITING_FOR_TRANSPORT = 10;
+	const STATUS_SENT = 11;
+	const STATUS_DELIVERED = 12;
 
 	/**
 	 * @inheritdoc
@@ -70,6 +71,7 @@ class OrderStatus extends \yii\db\ActiveRecord
 	 */
 	public static function statusLabels() {
 		return [
+			self::STATUS_LOADING => 'Cargando',
 			self::STATUS_ENTERED => 'Ingresado',
 			self::STATUS_COLLECT => 'Crédito',
 			self::STATUS_COLLECT_REVISION => 'Revisión crédito',

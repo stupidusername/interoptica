@@ -130,6 +130,7 @@ HighlightAsset::register($this);
             "type": "string",
             "enum": [
               "deleted",
+              "loading",
               "entered",
               "collect",
               "collect_revision",

@@ -58,7 +58,9 @@ OrderAsset::register($this);
 
 <div class="order-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+  <h1>
+		<?= Html::encode($this->title) ?>
+	</h1>
 
 	<?php Pjax::begin(['id' => 'orderSummary']) ?>
 	<?php if (count($clientPendingOrders) || count($clientPendingIssues)): ?>
@@ -74,6 +76,9 @@ OrderAsset::register($this);
 	<?php Pjax::end() ?>
 
     <p>
+		<?php if ($model->status == OrderStatus::STATUS_LOADING): ?>
+			<?= Html::a('Ingresar Pedido', ['enter', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
+		<?php endif; ?>
 		<?= Html::button('Mostrar/Ocultar Detalle', ['class' => 'btn btn-primary', 'onclick' => '$("#orderDetail").toggle()']) ?>
         <?= Html::a('Editar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Borrar', ['delete', 'id' => $model->id], [

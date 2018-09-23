@@ -98,7 +98,7 @@ class Order extends \yii\db\ActiveRecord
 	 */
 	public function afterSave($insert, $changedAttributes) {
 		if ($insert) {
-			$this->status = OrderStatus::STATUS_ENTERED;
+			$this->status = OrderStatus::STATUS_LOADING;
 		}
 		$oldStatus = $this->orderStatus;
 		// Save order status if there was a change
@@ -237,7 +237,7 @@ class Order extends \yii\db\ActiveRecord
 	 */
 	public function getEnteredOrderStatus()
 	{
-		$subquery = OrderStatus::find()->select('MIN(id)')->groupBy('order_id');
+		$subquery = OrderStatus::find()->select('MIN(id)')->andWhere(['status' => OrderStatus::STATUS_ENTERED])->groupBy('order_id');
 		return $this->hasOne(OrderStatus::className(), ['order_id' => 'id'])->andWhere([OrderStatus::tableName() . '.status' => OrderStatus::STATUS_ENTERED, OrderStatus::tableName() . '.id' => $subquery]);
 	}
 
@@ -305,7 +305,10 @@ class Order extends \yii\db\ActiveRecord
 	 */
 	public function getTxt() {
 		$output = '';
-		$date = Yii::$app->formatter->asDatetime($this->enteredOrderStatus->create_datetime, 'ddMMyy');
+		$date = '';
+		if ($this->enteredOrderStatus) {
+			$date = Yii::$app->formatter->asDatetime($this->enteredOrderStatus->create_datetime, 'ddMMyy');
+		}
 		$customerGecomId = $this->customer->gecom_id;
 		$userGecomId = $this->user->gecom_id;
 		$orderProducts = $this->getOrderProducts()->with(['product'])->all();

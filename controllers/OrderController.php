@@ -54,7 +54,7 @@ class OrderController extends Controller
 				],
 				'rules' => [
 					[
-						'actions' => ['update', 'delete'],
+						'actions' => ['update', 'delete', 'enter'],
 						'model' => function() {
 							return $this->findOrderFormModel(Yii::$app->request->getQueryParam('id'));
 						},
@@ -86,7 +86,7 @@ class OrderController extends Controller
 			],
 			'status' => [
 				'class' => OrderStatusRule::className(),
-				'only' => ['delete', 'add-entry', 'update-entry', 'delete-entry'],
+				'only' => ['delete', 'add-entry', 'update-entry', 'delete-entry', 'enter'],
 			],
 		];
 	}
@@ -143,6 +143,18 @@ class OrderController extends Controller
 		return $this->render('view', [
 			'model' => $model,
 		]);
+	}
+
+	/**
+	 * Sets the status of a model to OrderStatus::STATUS_ENTERED
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionEnter($id) {
+		$model = $this->findModel($id);
+		$model->status = OrderStatus::STATUS_ENTERED;
+		$model->save();
+		$this->redirect(['view', 'id' => $id]);
 	}
 
 	/**

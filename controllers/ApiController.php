@@ -80,6 +80,7 @@ class ApiController extends \yii\rest\Controller {
       $orders[] = [
         'id' => (int) $model['id'],
         'status' => $model['deleted'] ? 'deleted' : [
+          OrderStatus::STATUS_LOADING => 'loading',
           OrderStatus::STATUS_ENTERED => 'entered',
           OrderStatus::STATUS_COLLECT => 'collect',
           OrderStatus::STATUS_COLLECT_REVISION => 'collect_revision',
