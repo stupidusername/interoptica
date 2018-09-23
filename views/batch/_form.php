@@ -38,6 +38,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'dispatch_number')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'shipment_number')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'initial_stamp_numer')->textInput() ?>
 
     <?= $form->field($model, 'quantity')->textInput() ?>

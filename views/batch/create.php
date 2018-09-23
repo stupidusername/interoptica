@@ -75,6 +75,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'title' => 'Numero de depacho',
           ],
           [
+            'name' => 'shipment_number',
+            'title' => 'Número de remito',
+          ],
+          [
             'name' => 'initial_stamp_number',
             'title' => 'Número de estampilla inicial',
           ],

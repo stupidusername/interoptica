@@ -19,7 +19,7 @@ class BatchSearch extends Batch
     {
         return [
             [['id', 'product_id'], 'integer'],
-            [['entered_date', 'dispatch_number'], 'safe'],
+            [['entered_date', 'dispatch_number', 'shipment_number'], 'safe'],
         ];
     }
 
@@ -63,6 +63,7 @@ class BatchSearch extends Batch
         ]);
 
         $query->andFilterWhere(['like', 'dispatch_number', $this->dispatch_number]);
+        $query->andFilterWhere(['like', 'shipment_number', $this->shipment_number]);
 
         return $dataProvider;
     }

@@ -28,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'format' => 'date',
             ],
             'dispatch_number',
+            'shipment_number',
             'initial_stamp_numer',
             'quantity',
             'stock',

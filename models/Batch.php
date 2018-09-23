@@ -11,6 +11,7 @@ use Yii;
  * @property int $product_id
  * @property string $entered_date
  * @property string $dispatch_number
+ * @property string $shipment_number
  * @property int $initial_stamp_numer
  * @property int $quantity
  * @property int $stock
@@ -41,7 +42,7 @@ class Batch extends \yii\db\ActiveRecord
             [['product_id', 'initial_stamp_numer', 'stock'], 'integer'],
             [['quantity'], 'integer', 'min' => 1],
             [['entered_date'], 'date', 'format' => 'Y-m-d'],
-            [['dispatch_number'], 'string', 'max' => 255],
+            [['dispatch_number', 'shipment_number'], 'string', 'max' => 255],
             [['product_id', 'entered_date', 'quantity', 'stock'], 'required'],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
             [['stock'], 'compare', 'compareAttribute' => 'quantity', 'operator' => '<=', 'type' => 'number'],
@@ -77,6 +78,7 @@ class Batch extends \yii\db\ActiveRecord
             'product_id' => 'ID Producto',
             'entered_date' => 'Fecha de Ingreso',
             'dispatch_number' => 'Número de Despacho',
+            'shipment_number' => 'Número de Remito',
             'initial_stamp_numer' => 'Número de Estampilla Inicial',
             'quantity' => 'Cantidad',
             'stock' => 'Stock',
