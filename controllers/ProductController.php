@@ -40,7 +40,7 @@ class ProductController extends Controller
 				],
 				'rules' => [
 					[
-						'actions' => ['index', 'view', 'list', 'list-colors'],
+						'actions' => ['index', 'view', 'list', 'list-available', 'list-colors'],
 						'allow' => true,
 						'roles' => ['@'],
 					],
@@ -113,6 +113,10 @@ class ProductController extends Controller
 				$model->save();
 				if ($modelId == $id) {
 					$output = '';
+					$attribute = Yii::$app->request->post('editableAttribute');
+					if ($attribute == 'available') {
+						$output = $model->available ? 'Sí' : 'No';
+					}
 					if (count($model->getErrors())) {
 						$errors = '<div><ul>';
 						foreach ($model->getErrors() as $fieldErrors) {
@@ -151,7 +155,7 @@ class ProductController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model = new Product();
+		$model = new Product(['available' => true]);
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->id]);
@@ -196,19 +200,31 @@ class ProductController extends Controller
     }
 	}
 
+	public function actionList($q = '') {
+		return $this->list($q, false);
+	}
+
+	public function actionListAvailable($q = '') {
+		return $this->list($q, true);
+	}
+
 	/**
 	 * Builds a response for Select2 product widgets
 	 * @param string $q
+	 * @param boolean $availableOnly
 	 * @return JSON
 	 */
-	public function actionList($q = '') {
+	private function list($q, $availableOnly) {
 		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-		$productsArray = Product::find()
+		$query = Product::find()
 			->active()
 			->andWhere(['like', 'code', $q])
 			->orderBy(['code' => SORT_ASC])
-			->asArray()
-			->all();
+			->asArray();
+		if ($availableOnly) {
+			$query->andWhere(['available' => true]);
+		}
+		$productsArray = $query->all();
 		$results = array_map(function ($productArray) {
 			return ['id' => $productArray['id'], 'text' => $productArray['code'] . ' (' . $productArray['stock']. ')'];
 		}, $productsArray);

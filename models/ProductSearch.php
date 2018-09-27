@@ -33,7 +33,7 @@ class ProductSearch extends Product
     public function rules()
     {
         return [
-            [['id', 'running_low', 'brandId', 'modelType'], 'integer'],
+            [['id', 'running_low', 'brandId', 'modelType', 'available'], 'integer'],
             [['modelName', 'code'], 'safe'],
             [['price'], 'number'],
         ];
@@ -85,6 +85,12 @@ class ProductSearch extends Product
           $query->andWhere(['running_low' => true]);
         } elseif ($this->running_low === '0') {
           $query->andWhere(['or', ['running_low' => false], ['running_low' => null]]);
+        }
+        
+        if ($this->available === '1') {
+          $query->andWhere(['available' => true]);
+        } elseif ($this->available === '0') {
+          $query->andWhere(['or', ['available' => false], ['available' => null]]);
         }
 
         $query->andFilterWhere(['like', 'code', $this->code]);

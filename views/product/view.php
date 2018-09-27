@@ -66,6 +66,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'attribute' => 'update_date',
         'format' => 'date',
       ],
+      [
+        'attribute' => 'available',
+        'value' => $model->available ? 'Sí' : 'No',
+      ],
     ],
   ]) ?>
 

@@ -22,6 +22,7 @@ use zxbodya\yii2\galleryManager\GalleryBehavior;
  * @property string $running_low_date
  * @property string $create_date
  * @property string $update_date
+ * @property boolean $available
  * @property boolean $deleted
  *
  * @property OrderProduct[] $orderProducts
@@ -91,7 +92,7 @@ class Product extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['model_id', 'polarized', 'mirrored'], 'integer'],
+			[['model_id', 'polarized', 'mirrored', 'available'], 'integer'],
 			[['price'], 'number'],
 			[['code'], 'string', 'max' => 255],
 			[['code'], 'unique'],
@@ -122,6 +123,7 @@ class Product extends \yii\db\ActiveRecord
 			'running_low_date' => 'Agotándose desde',
 			'create_date' => 'Fecha de alta',
 			'update_date' => 'Fecha de modificación',
+			'available' => 'Disponible',
 		];
 	}
 

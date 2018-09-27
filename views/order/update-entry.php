@@ -39,7 +39,7 @@ $this->title = 'Editar Producto: ' . $model->product->code;
 				'pluginOptions' => [
 					'minimumInputLength' => 3,
 					'ajax' => [
-						'url' => Url::to('/product/list'),
+						'url' => Url::to('/product/list-available'),
 					],
 				],
 			])

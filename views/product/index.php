@@ -3,6 +3,7 @@
 use app\assets\ProductIndexAsset;
 use app\models\Brand;
 use app\models\Model;
+use kartik\editable\Editable;
 use kartik\export\ExportMenu;
 use kartik\grid\EditableColumn;
 use kartik\grid\GridView;
@@ -65,6 +66,20 @@ ProductIndexAsset::register($this);
 				return $model->running_low ? 'Sí' : 'No';
 			},
       'filter' => Html::activeDropDownList($searchModel, 'running_low', [0 => 'No', 1 => 'Sí'], ['class' => 'form-control', 'prompt' => 'Elegir estado']),
+		],
+    [
+			'class' => EditableColumn::className(),
+			'attribute' => 'available',
+      'value' => function($model) {
+				return $model->available ? 'Sí' : 'No';
+			},
+			'editableOptions'=> [
+        'inputType' => Editable::INPUT_DROPDOWN_LIST,
+				'formOptions' => ['action' => ['edit']],
+        'data' => [0 => 'No', 1 => 'Sí'],
+			],
+      'refreshGrid' => true,
+      'filter' => Html::activeDropDownList($searchModel, 'available', [0 => 'No', 1 => 'Sí'], ['class' => 'form-control', 'prompt' => 'Elegir estado']),
 		],
     [
 			'attribute' => 'running_low_date',

@@ -41,7 +41,7 @@ $this->title = 'Agregar Productos';
 					'multiple' => true,
 					'minimumInputLength' => 3,
 					'ajax' => [
-						'url' => Url::to('/product/list'),
+						'url' => Url::to('/product/list-available'),
 					],
 				],
 			])
