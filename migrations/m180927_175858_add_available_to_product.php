@@ -12,7 +12,7 @@ class m180927_175858_add_available_to_product extends Migration
      */
     public function safeUp()
     {
-      $this->addColumn('{{%product}}', 'available', $this->boolean());
+      $this->addColumn('{{%product}}', 'available', $this->boolean() . ' AFTER update_date');
     }
 
     /**
