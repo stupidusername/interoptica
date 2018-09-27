@@ -29,6 +29,7 @@ ProductIndexAsset::register($this);
 		<?= Html::a('Administrar Marcas', ['brand/index'], ['class' => 'btn btn-primary']) ?>
     <?= Html::a('Administrar Modelos', ['model/index'], ['class' => 'btn btn-primary']) ?>
     <?= Html::a('Administrar Colecciones', ['collection/index'], ['class' => 'btn btn-primary']) ?>
+    <?= Html::a('Estadísticas', ['statistics'], ['class' => 'btn btn-primary']) ?>
     </p>
 
 	<?php

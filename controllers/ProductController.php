@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Color;
 use app\models\Product;
 use app\models\ProductSearch;
+use app\models\ProductStatistics;
 use dektrium\user\filters\AccessRule;
 use Yii;
 use yii\filters\AccessControl;
@@ -43,6 +44,11 @@ class ProductController extends Controller
 						'actions' => ['index', 'view', 'list', 'list-available', 'list-colors'],
 						'allow' => true,
 						'roles' => ['@'],
+					],
+					[
+						'actions' => ['statistics'],
+						'roles' => ['admin', 'management'],
+						'allow' => true,
 					],
 					[
 						'allow' => true,
@@ -198,6 +204,22 @@ class ProductController extends Controller
 		if (!Yii::$app->request->isAjax) {
       return $this->redirect(['index']);
     }
+	}
+
+	public function actionStatistics() {
+		$model = new ProductStatistics();
+
+		$searchModel = new ProductStatistics();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+		if (Yii::$app->request->isPost) {
+			$exportDataProvider->pagination->pageSize = 0;
+		}
+
+		return $this->render('statistics', [
+			'searchModel' => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);
 	}
 
 	public function actionList($q = '') {
