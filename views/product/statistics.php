@@ -52,6 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
   <?php
   $columns = [
+    'id',
     [
       'attribute' => 'model.brand.name',
       'label' => 'Marca',
@@ -68,6 +69,8 @@ $this->params['breadcrumbs'][] = $this->title;
       'filter' => Html::activeTextInput($searchModel, 'modelName', ['class' => 'form-control']),
     ],
     'code',
+    'totalQuantity',
+    'averagePrice:currency',
   ];
   ?>
 

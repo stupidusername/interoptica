@@ -213,7 +213,7 @@ class ProductController extends Controller
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
 		if (Yii::$app->request->isPost) {
-			$exportDataProvider->pagination->pageSize = 0;
+			$dataProvider->pagination->pageSize = 0;
 		}
 
 		return $this->render('statistics', [
