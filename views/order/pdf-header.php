@@ -31,7 +31,7 @@ foreach ($commentLines as $k => $commentLine) {
 			<?php
 			$date = '';
 			if ($model->enteredOrderStatus) {
-				Yii::$app->formatter->asDate($model->enteredOrderStatus->create_datetime, 'dd/MM/yyyy');
+				$date = Yii::$app->formatter->asDate($model->enteredOrderStatus->create_datetime, 'dd/MM/yyyy');
 			}
 			?>
 			<td class="tr0 td2"><p class="p0"><?= $date ?></p></td>
