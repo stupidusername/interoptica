@@ -138,7 +138,6 @@ class Order extends \yii\db\ActiveRecord
 			[['transport_id'], 'exist', 'skipOnError' => true, 'targetClass' => Transport::className(), 'targetAttribute' => ['transport_id' => 'id']],
 			[['customer_id', 'transport_id'], 'required'],
 			[['status'], 'required', 'on' => self::SCENARIO_UPDATE],
-			[['status'], 'requireInvoice'],
 		];
 		// Allow to edit user_id if user is admin
 		if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAdmin) {
@@ -337,18 +336,6 @@ class Order extends \yii\db\ActiveRecord
 	private function restoreStock() {
 		foreach ($this->orderProducts as $orderProduct) {
 			$orderProduct->restoreStock();
-		}
-	}
-
-	/**
-	 * Require order invoices for packaging
-	 * @param string $attribute the attribute currently being validated
-	 * @param mixed $params the value of the "params" given in the rule
-	 * @param \yii\validators\InlineValidator related InlineValidator instance.
-	 */
-	public function requireInvoice($attribute, $params, $validator) {
-		if ($this->status > OrderStatus::STATUS_BILLING && !$this->getOrderInvoices()->count()) {
-			$this->addError($attribute, 'No se encuentran facturas registradas a este pedido.');
 		}
 	}
 

@@ -87,7 +87,7 @@ class Model extends \yii\db\ActiveRecord
             [['name'], 'string', 'max' => 255],
             [['brand_id'], 'exist', 'skipOnError' => true, 'targetClass' => Brand::className(), 'targetAttribute' => ['brand_id' => 'id']],
             [['type', 'origin', 'brand_id', 'name'], 'required'],
-            [['front_size', 'lens_width', 'bridge_size', 'temple_length', 'base', 'flex'], 'required', 'when' => function ($model) { return in_array($this->type, [self::TYPE_SUN, self::TYPE_RX]); }],
+            [['front_size', 'lens_width', 'bridge_size', 'temple_length', 'base', 'flex'], 'required', 'enableClientValidation' => false, 'when' => function ($model) { return in_array($this->type, [self::TYPE_SUN, self::TYPE_RX]); }],
             [['materialNames'], 'safe'],
         ];
     }
