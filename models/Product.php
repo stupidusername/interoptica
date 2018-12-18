@@ -35,8 +35,6 @@ class Product extends \yii\db\ActiveRecord
 	const STOCK_MIN = 10;
 	const STOCK_ALERT = 15;
 
-	public $stock;
-
 	/**
 	 * @inheritdoc
 	 */
@@ -44,6 +42,18 @@ class Product extends \yii\db\ActiveRecord
 	{
 		return 'product';
 	}
+
+	public function attributes() {
+		$attributes = parent::attributes();
+		return array_merge($attributes, ['stock']);
+	}
+
+	public function getDirtyAttributes($names = null)
+  {
+      $attributes = parent::getDirtyAttributes($names);
+			unset($attributes['stock']);
+			return $attributes;
+  }
 
 	/** @inheritdoc */
 	public function behaviors() {
@@ -94,6 +104,7 @@ class Product extends \yii\db\ActiveRecord
 		return [
 			[['model_id', 'polarized', 'mirrored', 'available'], 'integer'],
 			[['price'], 'number'],
+			[['stock'], 'integer', 'min' => 0],
 			[['code'], 'string', 'max' => 255],
 			[['code'], 'unique'],
 			[['model_id'], 'exist', 'skipOnError' => true, 'targetClass' => Model::className(), 'targetAttribute' => ['model_id' => 'id']],
@@ -137,9 +148,31 @@ class Product extends \yii\db\ActiveRecord
 		if ($insert) {
 			$this->create_date = gmdate('Y-m-d');
 		} else {
+			// Update stock
+			if ($this->isAttributeChanged('stock', false)) {
+				$oldStock = $this->getOldAttribute('stock');
+				if ($oldStock > $this->stock) {
+					$diff = $oldStock - $this->stock;
+					$egress = new Egress();
+					$egress->reason = Egress::REASON_STOCK_ADJUST;
+					$egress->save();
+					$egressProduct = new EgressProduct();
+					$egressProduct->egress_id = $egress->id;
+					$egressProduct->product_id = $this->id;
+					$egressProduct->quantity = $diff;
+					$egressProduct->save();
+				} else if ($oldStock < $this->stock) {
+					$diff = $this->stock - $oldStock;
+					$batch = new Batch(['scenario' => Batch::SCENARIO_CREATE]);
+					$batch->product_id = $this->id;
+					$batch->entered_date = gmdate('Y-m-d');
+					$batch->quantity = $diff;
+					$batch->save();
+				}
+			}
 			// Changing the stock should not affect update_date
 			$attrs = $this->attributes;
-			unset($attrs['running_low'], $attrs['running_low_date']);
+			unset($attrs['stock'], $attrs['running_low'], $attrs['running_low_date']);
 			foreach (array_keys($attrs) as $attrName) {
 				if ($this->isAttributeChanged($attrName, false)) {
 					$this->update_date = gmdate('Y-m-d');
