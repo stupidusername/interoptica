@@ -61,7 +61,7 @@ class OrderProductsForm extends Model {
         $model = new OrderProduct();
         $model->order_id = $this->orderId;
         $model->product_id = $productId;
-        $model->quantity = $this->quantity;
+        $model->quantity = (int) $this->quantity;
         $model->ignore_stock = $this->ignoreStock;
         if (!$model->validate()) {
           if ($error) {
