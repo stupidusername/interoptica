@@ -16,11 +16,12 @@ $orderProducts = $model->getOrderProducts()->joinWith(['product.model.brand', 'o
 			<?php foreach ($orderProducts as $orderProduct): ?>
 				<?php $imported = $orderProduct->product->model->origin == Model::ORIGIN_IMPORTED; ?>
 				<?php foreach (($imported ? $orderProduct->orderProductBatches : [null]) as $orderProductBatch): ?>
+					<?php $decoration = $orderProduct->ignore_stock ? 'style="text-decoration: line-through"' : '' ?>
 					<tr>
-							<td class="tr14 td11"><p class="p0"><?= $imported ? $orderProductBatch->quantity : $orderProduct->quantity ?></p></td>
-							<td class="tr14 td30"><p class="p0"><?= $orderProduct->product->model->brand->name ?></p></td>
-							<td class="tr14 td29"><p class="p0"><?= $orderProduct->product->model->typeLabel ?></p></td>
-							<td class="tr14 td32"><p class="p0"><?= $orderProduct->product->code ?></p></td>
+							<td class="tr14 td11"><p class="p0" <?= $decoration ?>><?= $imported ? $orderProductBatch->quantity : $orderProduct->quantity ?></p></td>
+							<td class="tr14 td30"><p class="p0" <?= $decoration ?>><?= $orderProduct->product->model->brand->name ?></p></td>
+							<td class="tr14 td29"><p class="p0" <?= $decoration ?>><?= $orderProduct->product->model->typeLabel ?></p></td>
+							<td class="tr14 td32"><p class="p0" <?= $decoration ?>><?= $orderProduct->product->code ?></p></td>
 							<td class="tr14 td28"><p class="p0"><?= $imported ? $orderProductBatch->batch->dispatch_number : '' ?></p></td>
 							<td class="tr14 td28"><p class="p0"><?= $orderProduct->ignore_stock ? 'Dejó de valija' : '' ?></p></td>
 							<td class="tr14 td23"><p class="p0"><?= Yii::$app->formatter->asCurrency($orderProduct->price) ?></p></td>
