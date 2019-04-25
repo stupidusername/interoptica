@@ -102,6 +102,8 @@ class ProductController extends Controller
 	* @return JSON
 	*/
 	public function actionEdit() {
+		$attribute = Yii::$app->request->post('editableAttribute');
+
 		$ids = Yii::$app->request->post('ids', []);
 		$id = Yii::$app->request->post('editableKey');
 		ArrayHelper::removeValue($ids, $id);
@@ -116,10 +118,12 @@ class ProductController extends Controller
 			$post['Product'] = $posted;
 
 			if ($model->load($post)) {
+				if ($attribute == 'stock') {
+					$model->scenario = Product::SCENARIO_UPDATE_STOCK;
+				}
 				$model->save();
 				if ($modelId == $id) {
 					$output = '';
-					$attribute = Yii::$app->request->post('editableAttribute');
 					if ($attribute == 'available') {
 						$output = $model->available ? 'Sí' : 'No';
 					}

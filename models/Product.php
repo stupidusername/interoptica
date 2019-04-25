@@ -32,6 +32,8 @@ use zxbodya\yii2\galleryManager\GalleryBehavior;
  */
 class Product extends \yii\db\ActiveRecord
 {
+	const SCENARIO_UPDATE_STOCK = 'update_stock';
+
 	const STOCK_MIN = 10;
 	const STOCK_ALERT = 15;
 
@@ -104,7 +106,8 @@ class Product extends \yii\db\ActiveRecord
 		return [
 			[['model_id', 'polarized', 'mirrored', 'available'], 'integer'],
 			[['price'], 'number'],
-			[['stock'], 'integer', 'min' => 0],
+			[['stock'], 'integer', 'min' => 0, 'on' => self::SCENARIO_UPDATE_STOCK],
+			[['stock'], 'integer'],
 			[['code'], 'string', 'max' => 255],
 			[['code'], 'unique'],
 			[['model_id'], 'exist', 'skipOnError' => true, 'targetClass' => Model::className(), 'targetAttribute' => ['model_id' => 'id']],
