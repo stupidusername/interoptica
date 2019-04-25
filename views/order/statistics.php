@@ -9,8 +9,6 @@ use yii\web\JsExpression;
 
 /* @var $orderModel app\models\OrderSummary */
 /* @var $ordersBySalesman app\models\OrderSummary */
-/* @var $billingModel app\models\BillingSummary */
-/* @var $billingBySalesman app\models\BillingSummary */
 /* @var $this yii\web\View */
 
 $this->title = 'Estadísticas';
@@ -100,52 +98,6 @@ Highcharts::widget([
 			],
 		],
 		'series' => array_values($series),
-	],
-]);
-?>
-
-<h2>Facturación Mensual</h2>
-
-<?php echo $this->render('_billing-summary-search', ['model' => $billingModel]); ?>
-
-<?php
-$periods = [];
-$period = $billingModel->queryFromDate;
-while ($period < $billingModel->queryToDate) {
-	$periods[] = $period;
-	$period = gmdate('Y-m-d', strtotime('+1 month ' . $period));
-}
-$series = [];
-foreach ($users as $k => $user) {
-	$series[$k] = ['name' => $user->username, 'data' => [], 'key' => $user->id];
-	foreach ($periods as $period) {
-		$series[$k]['data'][] = isset($billingBySalesman[$user->id . '-' . $period]) ? (int) $billingBySalesman[$user->id . '-' . $period]->invoiced : 0;
-	}
-}
-?>
-
-<?=
-Highcharts::widget([
-	'setupOptions' => [
-		'lang' => [
-			'decimalPoint' => ',',
-			'thousandsSep' => '.',
-		],
-	],
-	'options' => [
-		'chart' => ['type' => 'column'],
-		'title' => ['text' => 'Total facturado'],
-		'xAxis' => ['categories' => $periods],
-		'yAxis' => ['title' => ['text' => '$']],
-		'plotOptions' => [
-			'column' => [
-				'dataLabels' => ['enabled' => true, 'format' => '$ {point.y:,.2f}'],
-			],
-		],
-		'tooltip' => [
-			'pointFormat' => '<span style="color:{point.color}">●</span> {series.name}: <b>$ {point.y:,.2f}</b><br/>',
-		],
-		'series' => $series,
 	],
 ]);
 ?>

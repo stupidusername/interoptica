@@ -8,7 +8,6 @@ use app\models\OrderStatus;
 use kartik\editable\Editable;
 use kartik\grid\EditableColumn;
 use kartik\grid\GridView;
-use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\Pjax;

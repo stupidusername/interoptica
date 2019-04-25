@@ -21,7 +21,7 @@ use kartik\select2\Select2;
 
 	<?=
 	$form->field($model, 'customer_id')->label('Cliente')->widget(Select2::classname(), [
-		'initValueText' => $model->customer_id ? Customer::findOne($model->customer_id)->name : null,
+		'initValueText' => $model->customer_id ? Customer::findOne($model->customer_id)->displayName : null,
 		'options' => ['placeholder' => 'Elegir cliente'],
 		'pluginOptions' => [
 			'minimumInputLength' => 3,

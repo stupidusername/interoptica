@@ -4,7 +4,6 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Customer;
-use app\models\BillingSummary;
 use app\models\Order;
 use app\models\OrderForm;
 use app\models\OrderInvoice;
@@ -334,14 +333,9 @@ class OrderController extends Controller
 		$orderModel = new OrderSummary();
 		$ordersBySalesman = $orderModel->search(Yii::$app->request->queryParams)->query->all();
 
-		$billingModel = new BillingSummary();
-		$billingBySalesman = $billingModel->search(Yii::$app->request->queryParams)->query->all();
-
 		return $this->render('statistics', [
 			'orderModel' => $orderModel,
 			'ordersBySalesman' => $ordersBySalesman,
-			'billingModel' => $billingModel,
-			'billingBySalesman' => $billingBySalesman,
 		]);
 	}
 

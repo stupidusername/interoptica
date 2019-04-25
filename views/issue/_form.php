@@ -17,7 +17,7 @@ use app\models\IssueType;
 
     <?=
 	$form->field($model, 'customer_id')->label('Cliente')->widget(Select2::classname(), [
-		'initValueText' => $model->customer_id ? $model->customer->name : null,
+		'initValueText' => $model->customer_id ? $model->customer->displayName : null,
 		'options' => ['placeholder' => 'Elegir cliente'],
 		'pluginOptions' => [
 			'allowClear' => true,

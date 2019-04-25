@@ -167,7 +167,8 @@ class CustomerController extends Controller
       ->asArray()
       ->all();
 		$results = array_map(function ($customerArray) {
-					return ['id' => $customerArray['id'], 'text' => $customerArray['name'], 'email' => $customerArray['email'], 'discount_percentage' => $customerArray['discount_percentage']];
+                    $text = $customerArray['gecom_id'] . ' - ' . $customerArray['name'] . ' - ' . $customerArray['locality']; 
+					return ['id' => $customerArray['id'], 'text' => $text, 'email' => $customerArray['email'], 'discount_percentage' => $customerArray['discount_percentage']];
 				}, $customersArray);
 		$out = ['results' => $results];
 		return $out;
