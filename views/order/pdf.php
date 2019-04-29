@@ -16,7 +16,7 @@ $orderProducts = $model->getOrderProducts()->joinWith(['product.model.brand', 'o
 			<?php foreach ($orderProducts as $orderProduct): ?>
 				<?php $imported = $orderProduct->product->model->origin == Model::ORIGIN_IMPORTED; ?>
 				<?php foreach (($imported ? $orderProduct->orderProductBatches : [null]) as $orderProductBatch): ?>
-					<?php $decoration = $orderProduct->ignore_stock ? 'style="text-decoration: line-through"' : '' ?>
+					<?php $decoration = $orderProduct->ignore_stock ? 'style="text-decoration: underline"' : '' ?>
 					<tr>
 							<td class="tr14 td11"><p class="p0" <?= $decoration ?>><?= $imported ? $orderProductBatch->quantity : $orderProduct->quantity ?></p></td>
 							<td class="tr14 td30"><p class="p0" <?= $decoration ?>><?= $orderProduct->product->model->brand->name ?></p></td>
