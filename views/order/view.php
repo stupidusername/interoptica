@@ -139,6 +139,17 @@ OrderAsset::register($this);
 						return $model->discount_percentage / 100;
 					},
 				],
+				[
+					'label' => 'Condición de Venta',
+					'attribute' => 'orderCondition.title',
+				],
+				[
+					'attribute' => 'interest_rate_percentage',
+					'format' => 'percent',
+					'value' => function ($model) {
+						return $model->interest_rate_percentage / 100;
+					},
+				],
 				'comment:ntext',
 			],
 		]) ?>

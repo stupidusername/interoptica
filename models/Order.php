@@ -17,6 +17,8 @@ use yii\helpers\ArrayHelper;
  * @property integer $transport_id
  * @property string $iva
  * @property string $discount_percentage
+ * @property integer $order_condition_id
+ * @property string $interest_rate_percentage
  * @property string $comment
  * @property integer $deleted
  * @property string $delete_datetime
@@ -30,6 +32,7 @@ use yii\helpers\ArrayHelper;
  * @property OrderStatus $orderStatus
  * @property OrderStatus $enteredOrderStatus
  * @property OrderInvoice[] $orderInvoices
+ * @property OrderCondition $orderCondition
  * @property string $invoiceNumbers
  */
 class Order extends \yii\db\ActiveRecord
@@ -133,10 +136,12 @@ class Order extends \yii\db\ActiveRecord
 		$rules = [
 			[['customer_id', 'transport_id'], 'integer'],
 			[['discount_percentage'], 'number', 'min' => 0, 'max' => 100],
+			[['interest_rate_percentage'], 'number', 'min' => -100, 'max' => 100],
 			[['comment'], 'string'],
 			[['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
 			[['transport_id'], 'exist', 'skipOnError' => true, 'targetClass' => Transport::className(), 'targetAttribute' => ['transport_id' => 'id']],
-			[['customer_id', 'transport_id'], 'required'],
+			[['order_condition_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrderCondition::className(), 'targetAttribute' => ['order_condition_id' => 'id']],
+			[['customer_id', 'transport_id', 'order_condition_id', 'interest_rate_percentage'], 'required'],
 			[['status'], 'required', 'on' => self::SCENARIO_UPDATE],
 		];
 		// Allow to edit user_id if user is admin
@@ -169,6 +174,8 @@ class Order extends \yii\db\ActiveRecord
 			'transport_id' => 'ID Transporte',
 			'iva' => 'IVA',
 			'discount_percentage' => 'Porcentaje de Descuento',
+			'order_condition_id' => 'ID Condición de Venta',
+			'interest_rate_percentage' => 'Porcentaje de Interés',
 			'comment' => 'Comentario',
 			'status' => 'Estado',
 			'invoiceNumbers' => 'Facturas',
@@ -246,6 +253,14 @@ class Order extends \yii\db\ActiveRecord
 	public function getOrderInvoices()
 	{
 		return $this->hasMany(OrderInvoice::className(), ['order_id' => 'id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getOrderCondition()
+	{
+		return $this->hasOne(OrderCondition::className(), ['id' => 'order_condition_id']);
 	}
 
 	/**

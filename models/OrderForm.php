@@ -26,7 +26,7 @@ class OrderForm extends Order {
 	 */
 	public function attributeLabels() {
 		return array_merge(parent::attributeLabels(), [
-			'customerEmail' => 'Email del cliente',
+			'customerEmail' => 'Email del Cliente',
 		]);
 	}
 
