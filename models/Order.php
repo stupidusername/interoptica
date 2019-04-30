@@ -291,26 +291,31 @@ class Order extends \yii\db\ActiveRecord
 		foreach ($this->orderProducts as $orderProduct) {
 			$subtotal += $orderProduct->price * $orderProduct->quantity;
 		}
+		if ($this->discount_percentage) {
+			$subtotal *= (1 - $this->discount_percentage / 100);
+		}
 		return $subtotal;
 	}
 
 	/**
 	 * @return float
 	 */
-	public function getDiscountedFromSubtotal() {
-		if ($this->discount_percentage) {
-			$value = $this->subtotal * ($this->discount_percentage / 100);
-		} else {
-			$value = 0;
-		}
-		return $value;
+	public function getSubtotalPlusIva() {
+		return $this->subtotal * (1 + $this->iva / 100);
+	}
+
+	/**
+	 * @return float
+	 */
+	public function getFinancing() {
+		return $this->subtotalPlusIva * ($this->interest_rate_percentage / 100);
 	}
 
 	/**
 	 * @return float
 	 */
 	public function getTotal() {
-		return ($this->subtotal - $this->discountedFromSubtotal) * (1 + (float) $this->iva / 100);
+		return $this->subtotalPlusIva + $this->financing;
 	}
 
 	/**
