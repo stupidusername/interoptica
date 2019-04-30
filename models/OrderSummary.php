@@ -18,6 +18,11 @@ class OrderSummary extends Order {
 	public $totalQuantity;
 
 	/**
+	 * @var float
+	 */
+	public $totalSubtotal;
+
+	/**
 	 * @var string
 	 */
 	public $fromDate;
@@ -111,8 +116,15 @@ class OrderSummary extends Order {
 			self::PERIOD_MONTH => 'SUBDATE(DATE(order_status.create_datetime), DAYOFMONTH(order_status.create_datetime) - 1)',
 			self::PERIOD_YEAR => 'SUBDATE(DATE(order_status.create_datetime), DAYOFYEAR(order_status.create_datetime) - 1)',
 		];
-		$query = self::find()->select(['order.user_id', 'totalQuantity' => 'SUM(order_product_batch.quantity)', 'period' => $sqlPeriodFunctions[$this->period]])
-			->andWhere(['order.user_id' => $userIds])->andWhere(['!=', 'type', Model::TYPE_EXTRA])->with(['orderStatus'])->groupBy(['order.user_id', 'period'])
+		$query = self::find()->select([
+				'order.user_id',
+				'totalQuantity' => 'SUM(order_product_batch.quantity)',
+				'totalSubtotal' => 'SUM(order_product.price * order_product_batch.quantity * (1 - COALESCE(order.discount_percentage, 0) / 100))',
+				'period' => $sqlPeriodFunctions[$this->period]
+			])->andWhere(['order.user_id' => $userIds])
+			->andWhere(['!=', 'type', Model::TYPE_EXTRA])
+			->with(['orderStatus'])
+			->groupBy(['order.user_id', 'period'])
 			->indexBy(function ($row) { return $row['user_id'] . '-' . $row['period']; });
 
 		// add conditions that should always apply here

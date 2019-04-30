@@ -16,7 +16,7 @@ $this->params['breadcrums'][] = ['label' => 'Pedidos', 'url' => ['index']];
 $this->params['breadcrums'][] = ['label' => $this->title];
 ?>
 
-<h2>Piezas Vendidas</h2>
+<h2>Vendedores</h2>
 
 <?php echo $this->render('_summary-search', ['model' => $orderModel]); ?>
 
@@ -45,9 +45,12 @@ if ($orderModel->period == OrderSummary::PERIOD_MONTH) {
 		->andWhere(['user_id' => $userIds])->asArray()->indexBy(function ($row) { return $row['user_id'] . '-' . $row['period']; })->all();
 }
 $series = [];
+$subtotalSeries = [];
 $totals = [];
+$subtotalTotals = [];
 foreach ($users as $k => $user) {
 	$series[$k * 2] = ['type' => 'column', 'name' => $user->username, 'data' => [], 'key' => $user->id];
+	$subtotalSeries[$k * 2] = ['type' => 'column', 'name' => $user->username, 'data' => [], 'key' => $user->id];
 	if ($orderModel->period == OrderSummary::PERIOD_MONTH) {
 		$series[$k * 2 + 1] = ['type' => 'errorbar', 'name' => 'Objetivo', 'data' => []];
 	}
@@ -57,14 +60,20 @@ foreach ($users as $k => $user) {
 		}
 		$idx = $user->id . '-' . $period;
 		$quantity = isset($ordersBySalesman[$idx]) ? (int) $ordersBySalesman[$idx]->totalQuantity : 0;
+		$subtotal = isset($ordersBySalesman[$idx]) ? (int) $ordersBySalesman[$idx]->totalSubtotal : 0;
 		$totals[$period] += $quantity;
+		$subtotalTotals[$period] += $subtotal;
 		$series[$k * 2]['data'][] = $quantity;
+		$subtotalSeries[$k * 2]['data'][] = ['y' => $subtotal];
 		if ($orderModel->period == OrderSummary::PERIOD_MONTH) {
 			$objective = isset($objectives[$idx]) ? (int) $objectives[$idx]['objective'] : 0;
 			$series[$k * 2 + 1]['data'][] = [$quantity, $objective];
 		}
 	}
 }
+?>
+
+<?php
 $xAxisLabels = array_map(function ($period) use ($totals) { return $period . ' | Total: ' . $totals[$period]; }, $periods);
 ?>
 
@@ -98,6 +107,44 @@ Highcharts::widget([
 			],
 		],
 		'series' => array_values($series),
+	],
+]);
+?>
+
+<?php
+$xAxisLabels = array_map(function ($period) use ($subtotalTotals) { return $period . ' | Total: ' . Yii::$app->formatter->asCurrency($subtotalTotals[$period]); }, $periods);
+?>
+
+<?=
+Highcharts::widget([
+	'scripts' => [
+		'highcharts-more',
+	],
+	'setupOptions' => [
+		'lang' => [
+			'decimalPoint' => ',',
+			'thousandsSep' => '.',
+		],
+	],
+	'options' => [
+		'chart' => ['type' => 'column'],
+		'title' => ['text' => 'Subtotales'],
+		'xAxis' => ['categories' => $xAxisLabels],
+		'yAxis' => ['title' => ['text' => 'Pesos']],
+		'plotOptions' => [
+			'column' => [
+				'dataLabels' => ['enabled' => true],
+			],
+			'series' => [
+				'cursor' => 'pointer',
+				'point' => [
+					'events' => [
+						'click' => new JsExpression('function () { location.href = "' . Url::to(['index', 'OrderSearch' => ['user_id' => '']]) . '" + this.series.userOptions.key; }'),
+					],
+				],
+			],
+		],
+		'series' => array_values($subtotalSeries),
 	],
 ]);
 ?>
