@@ -61,8 +61,16 @@ foreach ($users as $k => $user) {
 		$idx = $user->id . '-' . $period;
 		$quantity = isset($ordersBySalesman[$idx]) ? (int) $ordersBySalesman[$idx]->totalQuantity : 0;
 		$subtotal = isset($ordersBySalesman[$idx]) ? (int) $ordersBySalesman[$idx]->totalSubtotal : 0;
-		$totals[$period] += $quantity;
-		$subtotalTotals[$period] += $subtotal;
+		if (isset($totals[$period])) {
+			$totals[$period] += $quantity;
+		} else {
+			$totals[$period] = 0;
+		}
+		if (isset($subtotalTotals[$period])) {
+			$subtotalTotals[$period] += $subtotal;
+		} else {
+			$subtotalTotals[$period] = 0;
+		}
 		$series[$k * 2]['data'][] = $quantity;
 		$subtotalSeries[$k * 2]['data'][] = ['y' => $subtotal];
 		if ($orderModel->period == OrderSummary::PERIOD_MONTH) {
