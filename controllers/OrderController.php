@@ -332,10 +332,11 @@ class OrderController extends Controller
 
 		$orderModel = new OrderSummary();
 		$ordersBySalesman = $orderModel->search(Yii::$app->request->queryParams)->query->all();
-
+		$ordersByBrand = $orderModel->searchByBrand(Yii::$app->request->queryParams)->query->all();
 		return $this->render('statistics', [
 			'orderModel' => $orderModel,
 			'ordersBySalesman' => $ordersBySalesman,
+			'ordersByBrand' => $ordersByBrand,
 		]);
 	}
 
