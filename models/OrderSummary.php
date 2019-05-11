@@ -132,7 +132,7 @@ class OrderSummary extends Order {
 				'totalSubtotal' => 'SUM(order_product.price * order_product_batch.quantity * (1 - COALESCE(order.discount_percentage, 0) / 100))',
 				'period' => $sqlPeriodFunctions[$this->period]
 			])->andWhere(['order.user_id' => $userIds])
-			->andWhere(['!=', 'type', Model::TYPE_EXTRA])
+			->andWhere(['type' => [Model::TYPE_SUN, Model::TYPE_RX]])
 			->with(['orderStatus'])
 			->groupBy(['order.user_id', 'period'])
 			->indexBy(function ($row) { return $row['user_id'] . '-' . $row['period']; });
@@ -210,7 +210,7 @@ class OrderSummary extends Order {
 				'brandId' => 'brand.id',
 				'type' => 'model.type',
 			])
-			->andWhere(['type' => [Model::TYPE_EXTRA, Model::TYPE_RX]])
+			->andWhere(['type' => [Model::TYPE_SUN, Model::TYPE_RX]])
 			->with(['orderStatus'])
 			->groupBy(['brand.id', 'model.type', 'period'])
 			->indexBy(function ($row) {
