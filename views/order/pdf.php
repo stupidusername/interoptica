@@ -45,7 +45,7 @@ $orderProducts = $model->getOrderProducts()->joinWith(['product.model.brand', 'o
 			<td class="tr5 td23" style="text-align: right"><p class="p0"><?= Yii::$app->formatter->asCurrency($model->subtotalPlusIva) ?></p></td>
 			<td class="tr5 td11"><p class="p0">&nbsp;</p></td>
 			<td class="tr5"><p class="p0">Financiación:</p></td>
-			<td class="tr5 td23" style="text-align: right"><p class="p0"><?= Yii::$app->formatter->asCurrency($model->total - $model->financing) ?></p></td>
+			<td class="tr5 td23" style="text-align: right"><p class="p0"><?= Yii::$app->formatter->asCurrency($model->financing) ?></p></td>
 			<td class="tr5 td11"><p class="p0">&nbsp;</p></td>
 			<td class="tr5"><p class="p0">Total:</p></td>
 			<td class="tr5 td23" style="text-align: right"><p class="p0"><?= Yii::$app->formatter->asCurrency($model->total) ?></p></td>
