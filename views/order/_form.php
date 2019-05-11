@@ -53,9 +53,6 @@ $conditionOptions = ArrayHelper::map($conditions, 'id', 'title');
     <?= $form->field($model, 'interest_rate_percentage')->textInput(['readonly' => 'readonly']) ?>
 
     <div id="interest_rate_percentage_buttons_div" class="form-group">
-        <?= Html::button('-15%', ['value' => -15, 'class' => 'interest_rate_percentage_button']) ?>
-        <?= Html::button('-10%', ['value' => -10, 'class' => 'interest_rate_percentage_button']) ?>
-        <?= Html::button('-5%', ['value' => -5, 'class' => 'interest_rate_percentage_button']) ?>
         <?= Html::button('0%', ['value' => 0, 'class' => 'interest_rate_percentage_button']) ?>
         <?= Html::button('5%', ['value' => 5, 'class' => 'interest_rate_percentage_button']) ?>
         <?= Html::button('10%', ['value' => 10, 'class' => 'interest_rate_percentage_button']) ?>
