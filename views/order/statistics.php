@@ -161,58 +161,33 @@ Highcharts::widget([
 ?>
 
 <?php
-$brandSeries = [];
-$brandTotals = [];
+$brandData = [];
 $brands = Brand::find()->active()->all();
 $types = [Model::TYPE_SUN, Model::TYPE_RX];
 foreach ($brands as $brand) {
 	foreach ($types as $type) {
 		$colName = $brand->name . ' - ' . Model::typeLabels()[$type];
 		$data = [];
-		foreach ($periods as $period) {
-			if (!isset($brandTotals[$period])) {
-				$brandTotals[$period] = 0;
-			}
-			$idx = $brand->id . '-' . $type . '-' . $period;
-			$quantity = isset($ordersByBrand[$idx]) ? (int) $ordersByBrand[$idx]->totalQuantity : 0;
-			if (isset($brandTotals[$period])) {
-				$brandTotals[$period] += $quantity;
-			} else {
-				$brandTotals[$period] = 0;
-			}
-			$data[] = $quantity;
-		}
-		$brandSeries[] = ['type' => 'column', 'name' => $colName, 'data' => $data];
+		$idx = $brand->id . '-' . $type;
+		$quantity = isset($ordersByBrand[$idx]) ? (int) $ordersByBrand[$idx]->totalQuantity : 0;
+		$brandData[] = ['name' => $colName, 'y' => $quantity];
 	}
 }
-$xAxisLabels = array_map(function ($period) use ($brandTotals) { return $period . ' | Total: ' . $brandTotals[$period]; }, $periods);
 ?>
 
 <?=
 Highcharts::widget([
-	'scripts' => [
-		'highcharts-more',
-	],
-	'setupOptions' => [
-		'lang' => [
-			'decimalPoint' => ',',
-			'thousandsSep' => '.',
-		],
-	],
 	'options' => [
-		'chart' => ['type' => 'column'],
+		'chart' => ['type' => 'pie'],
 		'title' => ['text' => 'Ventas por Marca'],
-		'xAxis' => ['categories' => $xAxisLabels],
-		'yAxis' => ['title' => ['text' => 'Piezas']],
 		'plotOptions' => [
 			'column' => [
 				'dataLabels' => ['enabled' => true],
 			],
-			'series' => [
-				'cursor' => 'pointer',
-			],
 		],
-		'series' => array_values($brandSeries),
+		'series' => [
+				['name' => 'Piezas', 'data' => $brandData],
+		],
 	],
 ]);
 ?>

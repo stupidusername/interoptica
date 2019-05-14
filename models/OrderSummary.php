@@ -198,25 +198,16 @@ class OrderSummary extends Order {
 	{
 		$this->load($params);
 
-		$sqlPeriodFunctions = [
-			self::PERIOD_WEEK => 'SUBDATE(DATE(order_status.create_datetime), WEEKDAY(order_status.create_datetime))',
-			self::PERIOD_MONTH => 'SUBDATE(DATE(order_status.create_datetime), DAYOFMONTH(order_status.create_datetime) - 1)',
-			self::PERIOD_YEAR => 'SUBDATE(DATE(order_status.create_datetime), DAYOFYEAR(order_status.create_datetime) - 1)',
-		];
-
 		$query = self::find()->select([
 				'totalQuantity' => 'SUM(order_product_batch.quantity)',
-				'period' => $sqlPeriodFunctions[$this->period],
 				'brandId' => 'brand.id',
 				'type' => 'model.type',
 			])
 			->andWhere(['type' => [Model::TYPE_SUN, Model::TYPE_RX]])
 			->with(['orderStatus'])
-			->groupBy(['brand.id', 'model.type', 'period'])
+			->groupBy(['brand.id', 'model.type'])
 			->indexBy(function ($row) {
-				return $row['brandId'] . '-' .
-					$row['type'] . '-' .
-					$row['period'];
+				return $row['brandId'] . '-' . $row['type'];
 			});
 
 		// add conditions that should always apply here
@@ -235,32 +226,10 @@ class OrderSummary extends Order {
 			'user',
 			'enteredOrderStatus' => function ($query) {
 				if ($this->fromDate) {
-					switch ($this->period) {
-					case self::PERIOD_WEEK:
-						$this->queryFromDate = DateHelper::currentWeek($this->fromDate);
-						break;
-					case self::PERIOD_MONTH:
-						$this->queryFromDate = DateHelper::currentMonth($this->fromDate);
-						break;
-					case self::PERIOD_YEAR:
-						$this->queryFromDate = DateHelper::currentYear($this->fromDate);
-						break;
-					}
-					$query->andWhere(['>=', 'create_datetime', $this->queryFromDate]);
+					$query->andWhere(['>=', 'create_datetime', $this->fromDate]);
 				}
 				if ($this->toDate) {
-					switch ($this->period) {
-					case self::PERIOD_WEEK:
-						$this->queryToDate = DateHelper::nextWeek($this->toDate);
-						break;
-					case self::PERIOD_MONTH:
-						$this->queryToDate = DateHelper::nextMonth($this->toDate);
-						break;
-					case self::PERIOD_YEAR:
-						$this->queryToDate = DateHelper::nextYear($this->toDate);
-						break;
-					}
-					$query->andWhere(['<', 'create_datetime', $this->queryToDate]);
+					$query->andWhere(['<', 'create_datetime', $this->toDate]);
 				}
 			},
 			'orderProducts.product.model.brand',
