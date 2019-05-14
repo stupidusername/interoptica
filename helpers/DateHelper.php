@@ -37,6 +37,14 @@ class DateHelper {
 	 * @param string $date
 	 * @return string
 	 */
+	public static function nextDay($date) {
+		return gmdate('Y-m-d', strtotime('+1 day ' . $date));
+	}
+
+	/**
+	 * @param string $date
+	 * @return string
+	 */
 	public static function nextWeek($date) {
 		return gmdate('Y-m-d', strtotime('monday next week ' . $date));
 	}
@@ -55,5 +63,13 @@ class DateHelper {
 	 */
 	public static function nextYear($date) {
 		return gmdate('Y-01-01', strtotime('+1 year ' . $date));
+	}
+
+	/**
+	 * @param string $date
+	 * @return string
+	 */
+	public static function endOfWeek($date) {
+		return gmdate('Y-m-d', strtotime('this week +6 days ' . $date));
 	}
 }

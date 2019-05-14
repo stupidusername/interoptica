@@ -62,8 +62,8 @@ class OrderSummary extends Order {
 	 */
 	public function init() {
 		parent::init();
-		$this->fromDate = Yii::$app->formatter->asDate(time(), 'yyyy-MM-dd');
-		$this->toDate = Yii::$app->formatter->asDate(time(), 'yyyy-MM-dd');
+		$this->fromDate = DateHelper::currentWeek(Yii::$app->formatter->asDate(time(), 'yyyy-MM-dd'));
+		$this->toDate = DateHelper::endOfWeek(Yii::$app->formatter->asDate(time(), 'yyyy-MM-dd'));
 		$this->period = self::PERIOD_WEEK;
 	}
 
@@ -229,7 +229,7 @@ class OrderSummary extends Order {
 					$query->andWhere(['>=', 'create_datetime', $this->fromDate]);
 				}
 				if ($this->toDate) {
-					$query->andWhere(['<', 'create_datetime', $this->toDate]);
+					$query->andWhere(['<', 'create_datetime', DateHelper::nextDay($this->toDate)]);
 				}
 			},
 			'orderProducts.product.model.brand',
