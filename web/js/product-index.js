@@ -1,4 +1,5 @@
 var editProductIds = [];
+var stockEditable = false;
 
 $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
     if (options.data && options.data.indexOf('hasEditable') != -1) {
@@ -48,6 +49,26 @@ var uncheckAll = function () {
 	});
 };
 
+var updateStockButtons = function() {
+    $('.stock-editable').each(function() {
+        $(this).prop('disabled', !stockEditable);
+    });
+};
+
+$('#enable-stock-edition').click(function() {
+    $(this).css('display', 'none');
+    $('#disable-stock-edition').css('display', 'inline-block');
+    stockEditable = true;
+    updateStockButtons();
+});
+
+$('#disable-stock-edition').click(function() {
+    $(this).css('display', 'none');
+    $('#enable-stock-edition').css('display', 'inline-block');
+    stockEditable = false;
+    updateStockButtons();
+});
+
 var initializeMassEdit = function () {
 	$('.edit_check').click(function () {
 		editCheck(getProductId(this));
@@ -61,7 +82,10 @@ var initializeMassEdit = function () {
 	$('#edit_clear').click(function () {
 		uncheckAll();
 	});
+
 	showSelected();
+
+    updateStockButtons();
 };
 
 $('#productsGridview').on('pjax:end', function () {

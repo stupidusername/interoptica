@@ -27,9 +27,11 @@ ProductIndexAsset::register($this);
     <p>
 		<?= Html::a('Crear Producto', ['create'], ['class' => 'btn btn-success']) ?>
 		<?= Html::a('Administrar Marcas', ['brand/index'], ['class' => 'btn btn-primary']) ?>
-    <?= Html::a('Administrar Modelos', ['model/index'], ['class' => 'btn btn-primary']) ?>
-    <?= Html::a('Administrar Colecciones', ['collection/index'], ['class' => 'btn btn-primary']) ?>
-    <?= Html::a('Estadísticas', ['statistics'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Administrar Modelos', ['model/index'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Administrar Colecciones', ['collection/index'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Estadísticas', ['statistics'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::button('Habilitar Edición de Stock', ['id' => 'enable-stock-edition', 'class' => 'btn btn-primary']) ?>
+        <?= Html::button('Deshabilitar Edición de Stock', ['id' => 'disable-stock-edition', 'class' => 'btn btn-danger', 'style' => 'display: none;']) ?>
     </p>
 
 	<?php
@@ -59,15 +61,16 @@ ProductIndexAsset::register($this);
 				'formOptions' => ['action' => ['edit']],
 				'inputType' => '\kartik\money\MaskMoney',
 			],
-      'refreshGrid' => true,
+            'refreshGrid' => true,
 		],
     [
 			'class' => EditableColumn::className(),
 			'attribute' => 'stock',
 			'editableOptions'=> [
 				'formOptions' => ['action' => ['edit']],
+                'editableValueOptions' => ['class' => 'stock-editable kv-editable-value kv-editable-link'],
 			],
-      'refreshGrid' => true,
+            'refreshGrid' => true,
 		],
     [
 			'attribute' => 'running_low',
