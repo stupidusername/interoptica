@@ -35,6 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'label' => 'Modelo',
       ],
       'code',
+      'barcode',
       [
         'attribute' => 'polarized',
         'value' => $model->polarized ? 'Sí' : 'No',

@@ -31,6 +31,8 @@ use kartik\money\MaskMoney;
 
     <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'barcode')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'polarized')->checkbox() ?>
 
     <?= $form->field($model, 'mirrored')->checkbox() ?>

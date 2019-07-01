@@ -15,6 +15,7 @@ use zxbodya\yii2\galleryManager\GalleryBehavior;
  * @property integer $id
  * @property integer $model_id
  * @property string $code
+ * @property string $barcode
  * @property boolean $polarized
  * @property boolean $mirrored
  * @property string $price
@@ -105,6 +106,7 @@ class Product extends \yii\db\ActiveRecord
 	{
 		return [
 			[['model_id', 'polarized', 'mirrored', 'available'], 'integer'],
+			[['barcode'], 'match', 'pattern' => '/^\d{13}$/', 'message' => 'El código de barras debe contener 13 numeros sin espacios ni guiones.'],
 			[['price'], 'number'],
 			[['stock'], 'integer', 'min' => 0, 'on' => self::SCENARIO_UPDATE_STOCK],
 			[['stock'], 'integer'],
@@ -125,6 +127,7 @@ class Product extends \yii\db\ActiveRecord
 			'id' => 'ID',
 			'model_id' => 'ID Modelo',
 			'code' => 'Código',
+			'barcode' => 'Código de barras',
 			'polarized' => 'Polarizado',
 			'mirrored' => 'Espejado',
 			'colors' => 'Colores',

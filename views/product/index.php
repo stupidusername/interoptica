@@ -50,6 +50,7 @@ ProductIndexAsset::register($this);
       'filter' => Html::activeTextInput($searchModel, 'modelName', ['class' => 'form-control']),
     ],
 		'code',
+        'barcode',
 		[
 			'class' => EditableColumn::className(),
 			'attribute' => 'price',
@@ -107,7 +108,7 @@ ProductIndexAsset::register($this);
 		'dataProvider' => $dataProvider,
 		'filterModel' => $searchModel,
 		'columns' => array_merge(
-      $columns,
+      array_diff($columns, ['barcode']),
       [
         [
     			'label' => 'Editar ' . Html::a('<span id="edit_clear" class="glyphicon glyphicon-remove"></span>'),
