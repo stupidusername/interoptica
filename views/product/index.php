@@ -98,6 +98,9 @@ ProductIndexAsset::register($this);
 			'format' => 'date',
 		],
 	];
+
+    $viewColumns = $columns;
+    unset($viewColumns[array_search('barcode', $viewColumns, true)]);
 	?>
 
 	<?=
@@ -111,7 +114,7 @@ ProductIndexAsset::register($this);
 		'dataProvider' => $dataProvider,
 		'filterModel' => $searchModel,
 		'columns' => array_merge(
-      array_diff($columns, ['barcode']),
+        $viewColumns,
       [
         [
     			'label' => 'Editar ' . Html::a('<span id="edit_clear" class="glyphicon glyphicon-remove"></span>'),
