@@ -161,32 +161,74 @@ Highcharts::widget([
 ?>
 
 <?php
-$brandData = [];
+$sunData = [];
+$rxData = [];
 $brands = Brand::find()->active()->all();
+$brandNames = [];
 $types = [Model::TYPE_SUN, Model::TYPE_RX];
 foreach ($brands as $brand) {
+	$brandNames[] = $brand->name;
 	foreach ($types as $type) {
-		$colName = $brand->name . ' - ' . Model::typeLabels()[$type];
-		$data = [];
 		$idx = $brand->id . '-' . $type;
 		$quantity = isset($ordersByBrand[$idx]) ? (int) $ordersByBrand[$idx]->totalQuantity : 0;
-		$brandData[] = ['name' => $colName, 'y' => $quantity];
+		if ($type == MODEL::TYPE_SUN) {
+			$sunData[] = -$quantity;
+		} else if ($type == MODEL::TYPE_RX) {
+			$rxData[] = $quantity;
+		}
 	}
 }
+?>
+
+<?php
+$subtitle = Yii::$app->formatter->asDate($orderModel->fromDate, 'dd/MM/YYYY') .' - ' . Yii::$app->formatter->asDate($orderModel->toDate , 'dd/MM/YYYY');
 ?>
 
 <?=
 Highcharts::widget([
 	'options' => [
-		'chart' => ['type' => 'pie'],
-		'title' => ['text' => 'Ventas por Marca'],
-		'plotOptions' => [
-			'column' => [
-				'dataLabels' => ['enabled' => true],
+		'chart' => ['type' => 'bar'],
+		'title' => ['text' => 'Ventas por marca'],
+		'subtitle' => ['text' => $subtitle],
+		'xAxis' => [
+			[
+				'categories' => $brandNames,
+				'reversed' => false,
+				'labels' => ['step' => 1],
+			],
+			[
+				'opposite' => true,
+				'categories' => $brandNames,
+				'reversed' => false,
+				'linkedTo' => 0,
+				'labels' => ['step' => 1],
 			],
 		],
+		'yAxis' => [
+			'title' => [
+				'text' => 'Ventas',
+			],
+			'labels' => [
+				'formatter' => new JsExpression('function () { return Math.abs(this.value); }'),
+			],
+		],
+		'plotOptions' => [
+			'series' => [
+				'stacking' => 'normal',
+			],
+		],
+		'tooltip' => [
+			'formatter' => new JsExpression('function () { return "<b>" + this.point.category + " - " + this.series.name + ": </b>" + Math.abs(this.point.y); }'),
+		],
 		'series' => [
-				['name' => 'Piezas', 'data' => $brandData],
+			[
+				'name' => Model::typeLabels()[Model::TYPE_SUN],
+				'data' => $sunData,
+			],
+			[
+				'name' => Model::typeLabels()[Model::TYPE_RX],
+				'data' => $rxData,
+			],
 		],
 	],
 ]);
