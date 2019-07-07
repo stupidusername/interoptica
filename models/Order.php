@@ -300,6 +300,13 @@ class Order extends \yii\db\ActiveRecord
 	/**
 	 * @return float
 	 */
+	public function getDiscount() {
+		return $this->subtotal / (1 - $this->discount_percentage / 100);
+	}
+
+	/**
+	 * @return float
+	 */
 	public function getSubtotalPlusIva() {
 		return $this->subtotal * (1 + $this->iva / 100);
 	}
