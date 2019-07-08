@@ -2,6 +2,8 @@
 
 $local = require(__DIR__ . '/local.php');
 $params = require(__DIR__ . '/params.php');
+$aliases = require(__DIR__ . '/aliases.php');
+$mailer = require(__DIR__ . '/mailer.php');
 
 $config = [
 	'id' => 'basic-console',
@@ -23,9 +25,13 @@ $config = [
 			],
 		],
 		'db' => $local['db'],
+		'mailer' => $mailer,
 	],
 	'params' => $params,
 	'modules' => [
+		'user' => [
+            'class' => 'dektrium\user\Module',
+        ],
 		'rbac' => 'dektrium\rbac\RbacConsoleModule',
 	],
 ];

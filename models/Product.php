@@ -60,7 +60,7 @@ class Product extends \yii\db\ActiveRecord
 
 	/** @inheritdoc */
 	public function behaviors() {
-		return [
+		$behaviors = [
 			'softDeleteBehavior' => [
 				'class' => SoftDeleteBehavior::className(),
 				'softDeleteAttributeValues' => [
@@ -78,15 +78,21 @@ class Product extends \yii\db\ActiveRecord
 				'attribute' => 'lensColorNames',
 				'relation' => 'lensColors',
 			],
-			'galleryBehavior' => [
+		];
+
+		// Avoid adding gallery behavior in console apps.
+		if (Yii::$app instanceof \yii\web\Application) {
+			$behaviors['galleryBehavior'] = [
 				'class' => GalleryBehavior::className(),
 				'tableName' => 'product_image',
 				'type' => 'product',
 				'extension' => 'png',
 				'directory' => Yii::getAlias('@webroot') . '/images/product',
 				'url' => Yii::getAlias('@web') . '/images/product',
-			],
-		];
+			];
+		}
+
+		return $behaviors;
 	}
 
 	/**

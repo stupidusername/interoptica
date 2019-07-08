@@ -2,6 +2,8 @@
 
 $local = require(__DIR__ . '/local.php');
 $params = require(__DIR__ . '/params.php');
+$aliases = require(__DIR__ . '/aliases.php');
+$mailer = require(__DIR__ . '/mailer.php');
 
 $config = [
 	'id' => 'basic',
@@ -21,13 +23,7 @@ $config = [
 		'errorHandler' => [
 			'errorAction' => 'site/error',
 		],
-		'mailer' => [
-			'class' => 'yii\swiftmailer\Mailer',
-			// send all mails to a file by default. You have to set
-			// 'useFileTransport' to false and configure a transport
-			// for the mailer to send real emails.
-			'useFileTransport' => YII_ENV != 'prod',
-		],
+		'mailer' => $mailer,
 		'log' => [
 			'traceLevel' => YII_DEBUG ? 3 : 0,
 			'targets' => [
@@ -95,11 +91,7 @@ $config = [
 		],
 	],
 	'params' => $params,
-	'aliases' => [
-		'@images' => '@app/web/images',
-		'@bower' => '@vendor/bower-asset',
-		'@npm'   => '@vendor/npm-asset',
-	],
+	'aliases' => $aliases,
 ];
 
 if (YII_ENV_DEV) {
