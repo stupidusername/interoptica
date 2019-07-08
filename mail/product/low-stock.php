@@ -9,7 +9,7 @@ use app\models\Product;
     No se registró un estado stock bajo para ningún producto durante la última semana.
 <?php else: ?>
     <p>
-        Para los siguientes productos se registró un estado de stock bajo durante la última semana
+        Para los siguientes productos se registró un estado de stock bajo durante la última semana:
     </p>
 
     <ul>
