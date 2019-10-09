@@ -276,7 +276,7 @@ class Product extends \yii\db\ActiveRecord
 	public function checkStock($oldStock, $stock) {
 		$oldStock = $oldStock ?? 0;
 		$stock = $stock ?? 0;
-		if ($stock <= self::STOCK_ALERT && $oldStock > $stock) {
+		if (!$this->running_low && $stock <= self::STOCK_ALERT && $oldStock > $stock) {
 			$this->running_low = true;
 			$this->running_low_date = gmdate('Y-m-d');
 			$this->save(false);
