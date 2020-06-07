@@ -92,6 +92,10 @@ $this->params['breadcrumbs'][] = $this->title;
   			'value' => 'enteredOrderStatus.create_datetime',
   			'format' => 'datetime'
   		],
+        [
+            'attribute' => 'orderCondition.title',
+            'label' => 'Condición Venta',
+        ],
 			[
 				'attribute' => 'comment',
 				'contentOptions' => ['style' => 'width: 400px; max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'],
