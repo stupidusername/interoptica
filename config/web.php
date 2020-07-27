@@ -40,6 +40,7 @@ $config = [
 			'rules' => [
 				'image/thumb/<path:.*>' => 'image/thumb',
 				'docs/<view>' => 'docs/view',
+				['class' => 'yii\rest\UrlRule', 'controller' =>  ['api/v1/products' => 'api/product']],
 			],
 		],
 		'assetManager' => [
