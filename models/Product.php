@@ -19,6 +19,8 @@ use zxbodya\yii2\galleryManager\GalleryBehavior;
  * @property boolean $polarized
  * @property boolean $mirrored
  * @property string $price
+ * @property integer $stock
+ * @property integer $stockAvailable
  * @property boolean $running_low
  * @property string $running_low_date
  * @property string $create_date
@@ -142,6 +144,7 @@ class Product extends \yii\db\ActiveRecord
 			'lensColorNames' => 'Colores lente',
 			'price' => 'Precio',
 			'stock' => 'Stock',
+			'stock_available' => 'Stock disponible',
 			'running_low' => 'Agotándose',
 			'running_low_date' => 'Agotándose desde',
 			'create_date' => 'Fecha de alta',
@@ -193,6 +196,13 @@ class Product extends \yii\db\ActiveRecord
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * @return integer
+	 */
+	public function getStockAvailable() {
+		return $this->stock - self::STOCK_MIN;
 	}
 
 	/**
