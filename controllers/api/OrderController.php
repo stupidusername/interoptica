@@ -24,6 +24,7 @@ class OrderController extends Controller {
     }
     $query = Order::find()->where($where)->joinWith([
       'orderStatus',
+      'orderCondition',
     ])->with([
       'customer' => function ($query) {
         // Retrieve deleted records
@@ -59,11 +60,14 @@ class OrderController extends Controller {
           'unit_price' => (float) $orderProduct['price'],
           'quantity' => (float) $orderProduct['quantity'],
           'imported' => $orderProduct['product']['model']['origin'] == Model::ORIGIN_IMPORTED,
-          'relationships' => [
-            'batches' => $batches,
-          ],
+          'batches' => $batches,
         ];
       }
+      $subtotal *= (1 - (float) $model['discount_percentage'] / 100);
+      $discount = $subtotal / (1 - (float) $model['discount_percentage'] / 100) - $subtotal;
+      $subtotalPlusIva = $subtotal * (1 + (float) $model['iva'] / 100);
+      $financing = $subtotalPlusIva * ((float) $model['interest_rate_percentage'] / 100);
+      $total = $subtotalPlusIva + $financing;
       $orders[] = [
         'id' => (int) $model['id'],
         'status' => $model['deleted'] ? 'deleted' : [
@@ -82,11 +86,15 @@ class OrderController extends Controller {
           OrderStatus::STATUS_DELIVERED => 'delivered',
         ][$model['orderStatus']['status']],
         'status_update_datetime' => str_replace(' ', 'T', $model['deleted'] ? $model['delete_datetime'] : $model['orderStatus']['create_datetime']) . 'Z',
+        'iva' => (float) $model['iva'],
         'discount_percentage' => (float) $model['discount_percentage'],
+        'condition' => $model['orderCondition']['title'],
+        'interest_rate_percentage' => (float) $model['interest_rate_percentage'],
         'subtotal' => $subtotal,
-        'total' => $subtotal * (1 - $model['discount_percentage'] / 100),
-        'include_iva' => (bool) $model['iva'],
-        'relationships' => [
+        'discount' => $discount,
+        'subtotal_plus_iva' => $subtotalPlusIva,
+        'financing' => $financing,
+        'total' => $total,
           'customer' => [
             'id' => (int) $model['customer']['id'],
             'gecom_id' => (int) $model['customer']['gecom_id'],
@@ -98,7 +106,6 @@ class OrderController extends Controller {
             'phone_number' => $model['customer']['phone_number'],
           ],
           'items' => $items,
-        ],
       ];
     }
     $response = [
