@@ -2,21 +2,31 @@
 
 namespace app\controllers\api;
 
+use app\models\api\Pagination;
+use app\models\api\PaginatedItems;
 use app\models\ApiKey;
 use app\models\Model;
 use app\models\Order;
 use app\models\OrderStatus;
 use Yii;
+use yii\helpers\Url;
 use yii\rest\Controller;
 use yii\web\BadRequestHttpException;
 
 class OrderController extends Controller {
 
-  public function actionList($updated_since = null, $username = null, $page = 0) {
+  public function actionList($updated_since = null, $user = null, int $page = 1, int $pagelen = 100) {
+      // Validate params.
+      if ($page < 1) {
+          throw new BadRequestHttpException('Page cannot be lower than 1.');
+      }
+      if ($pagelen < 1 || $pagelen > 100) {
+          throw new BadRequestHttpException('The specified pagelen must take a value between 1 and 100.');
+      }
+      // Validate date format.
     if ($updated_since && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $updated_since)) {
       throw new BadRequestHttpException('updated_since must be of the format yyyy-mm-dd');
     }
-    $pageSize = 100;
     // Retrieved deleted records
     $where = [];
     if ($updated_since) {
@@ -25,8 +35,8 @@ class OrderController extends Controller {
     $query = Order::find()->where($where)->joinWith([
       'orderStatus',
       'orderCondition',
-      'user' => function ($query) use ($username) {
-          $query->andFilterWhere(['username' => $username]);
+      'user' => function ($query) use ($user) {
+          $query->andFilterWhere(['username' => $user]);
       },
     ])->with([
       'customer' => function ($query) {
@@ -40,8 +50,7 @@ class OrderController extends Controller {
       'orderProducts.product.model',
       'orderProducts.orderProductBatches.batch',
     ]);
-    $pages = ceil($query->count() / $pageSize);
-    $models = $query->asArray()->limit($pageSize)->offset($page * $pageSize)->all();
+    $models = $query->asArray()->limit($pagelen)->offset(($page - 1) * $pagelen)->all();
     $orders = [];
     foreach ($models as $model) {
       $subtotal = 0;
@@ -112,13 +121,24 @@ class OrderController extends Controller {
           'items' => $items,
       ];
     }
-    $response = [
-      'meta' => [
-        'total-pages' => $pages,
-      ],
-      'data' => $orders,
-    ];
-    return $response;
+    // Build pagination.
+    $totalItems = (integer) $query->count();
+    $totalPages = ceil($totalItems / $pagelen);
+    $nextPage = $page < $totalPages ? Url::to(['list', 'page' => $page + 1, 'pagelen' => $pagelen], true) : null;
+    $prevPage = $page > 1 ? Url::to(['list', 'page' => $page - 1, 'pagelen' => $pagelen], true) : null;
+    $pagination = new Pagination([
+        'next' => $nextPage,
+        'prev' => $prevPage,
+        'pagelen' => $pagelen,
+        'page' => $page,
+        'totalItems' => $totalItems,
+        'totalPages' => $totalPages,
+    ]);
+    $paginatedItems = new PaginatedItems([
+        'pagination' => $pagination,
+        'items' => $orders,
+    ]);
+    return $paginatedItems;
   }
 
 }
