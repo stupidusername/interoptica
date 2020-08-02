@@ -30,7 +30,7 @@ class OrderController extends Controller {
     // Retrieved deleted records
     $where = [];
     if ($updated_since) {
-      $where = ['or', ['and', ['not', ['or', ['deleted' => null], ['deleted' => 0]]], ['>=', 'delete_datetime', $updated_since]], ['>=', 'create_datetime', $updated_since]];
+      $where = ['or', ['and', ['not', ['or', ['order.deleted' => null], ['order.deleted' => 0]]], ['>=', 'delete_datetime', $updated_since]], ['>=', 'create_datetime', $updated_since]];
     }
     $query = Order::find()->where($where)->joinWith([
       'orderStatus',
