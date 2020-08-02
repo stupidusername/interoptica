@@ -124,8 +124,8 @@ class OrderController extends Controller {
     // Build pagination.
     $totalItems = (integer) $query->count();
     $totalPages = ceil($totalItems / $pagelen);
-    $nextPage = $page < $totalPages ? Url::to(['list', 'page' => $page + 1, 'pagelen' => $pagelen], true) : null;
-    $prevPage = $page > 1 ? Url::to(['list', 'page' => $page - 1, 'pagelen' => $pagelen], true) : null;
+    $nextPage = $page < $totalPages ? Url::to(['list', 'updated_since' => $updated_since, 'user' => $user, 'page' => $page + 1, 'pagelen' => $pagelen], true) : null;
+    $prevPage = $page > 1 ? Url::to(['list', 'updated_since' => $updated_since, 'user' => $user, 'page' => $page - 1, 'pagelen' => $pagelen], true) : null;
     $pagination = new Pagination([
         'next' => $nextPage,
         'prev' => $prevPage,
