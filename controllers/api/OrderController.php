@@ -12,7 +12,7 @@ use yii\web\BadRequestHttpException;
 
 class OrderController extends Controller {
 
-  public function actionList($updated_since = null, $page = 0) {
+  public function actionList($updated_since = null, $username = null, $page = 0) {
     if ($updated_since && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $updated_since)) {
       throw new BadRequestHttpException('updated_since must be of the format yyyy-mm-dd');
     }
@@ -25,6 +25,9 @@ class OrderController extends Controller {
     $query = Order::find()->where($where)->joinWith([
       'orderStatus',
       'orderCondition',
+      'user' => function ($query) use ($username) {
+          $query->andFilterWhere(['username' => $username]);
+      },
     ])->with([
       'customer' => function ($query) {
         // Retrieve deleted records
@@ -70,6 +73,7 @@ class OrderController extends Controller {
       $total = $subtotalPlusIva + $financing;
       $orders[] = [
         'id' => (int) $model['id'],
+        'user' => $model['user']['username'],
         'status' => $model['deleted'] ? 'deleted' : [
           OrderStatus::STATUS_LOADING => 'loading',
           OrderStatus::STATUS_ENTERED => 'entered',
