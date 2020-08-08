@@ -61,6 +61,13 @@ $config = [
 						'GET' => 'list',
 					],
 				],
+				[
+					'class' => 'yii\rest\UrlRule',
+					'controller' =>  ['api/v1/order-conditions' => 'api/order-condition'],
+					'patterns' => [
+						'GET' => 'list',
+					],
+				],
 			],
 		],
 		'assetManager' => [
