@@ -8,12 +8,32 @@ use app\models\ApiKey;
 use app\models\Model;
 use app\models\Order;
 use app\models\OrderStatus;
+use dektrium\user\filters\AccessRule;
 use Yii;
+use yii\filters\AccessControl;
 use yii\helpers\Url;
-use yii\rest\Controller;
 use yii\web\BadRequestHttpException;
 
-class OrderController extends Controller {
+class OrderController extends BaseController {
+
+    public function behaviors()
+    {
+        $behaviors = [
+            'access' => [
+                'class' => AccessControl::className(),
+                'ruleConfig' => [
+                    'class' => AccessRule::className(),
+                ],
+                'rules' => [
+                    [
+                        'roles' => ['admin', 'api_client'],
+                        'allow' => true,
+                    ],
+                ],
+            ],
+        ];
+        return array_merge(parent::behaviors(), $behaviors);
+    }
 
   public function actionList($updated_since = null, $user = null, int $page = 1, int $pagelen = 100) {
       // Validate params.

@@ -5,10 +5,30 @@ namespace app\controllers\api;
 use app\models\api\Pagination;
 use app\models\api\PaginatedItems;
 use app\models\Transport;
+use dektrium\user\filters\AccessRule;
+use yii\filters\AccessControl;
 use yii\helpers\Url;
-use yii\rest\Controller;
 
-class TransportController extends Controller {
+class TransportController extends BaseController {
+
+    public function behaviors()
+    {
+        $behaviors = [
+            'access' => [
+                'class' => AccessControl::className(),
+                'ruleConfig' => [
+                    'class' => AccessRule::className(),
+                ],
+                'rules' => [
+                    [
+                        'roles' => ['admin', 'api_client'],
+                        'allow' => true,
+                    ],
+                ],
+            ],
+        ];
+        return array_merge(parent::behaviors(), $behaviors);
+    }
 
     public function actionList(int $page = 1, int $pagelen = 100) {
         // Validate params.
