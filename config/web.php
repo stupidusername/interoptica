@@ -54,6 +54,13 @@ $config = [
 						'GET' => 'list',
 					],
 				],
+				[
+					'class' => 'yii\rest\UrlRule',
+					'controller' =>  ['api/v1/transports' => 'api/transport'],
+					'patterns' => [
+						'GET' => 'list',
+					],
+				],
 			],
 		],
 		'assetManager' => [
