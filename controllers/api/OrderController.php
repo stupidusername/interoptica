@@ -140,7 +140,7 @@ class OrderController extends BaseController {
   }
 
   public function actionDeleteInvoice($orderId, $invoiceId) {
-      $orderInvoice = $this->findOrderInvoiceModel($invoiceId);
+      $orderInvoice = $this->findOrderInvoiceModel($orderId, $invoiceId);
       $orderInvoice->delete();
   }
 
@@ -185,8 +185,8 @@ class OrderController extends BaseController {
       return $orderProduct;
   }
 
-  private function findOrderInvoiceModel($id) {
-      $orderInvoice = OrderInvoice::findOne($id);
+  private function findOrderInvoiceModel($orderId, $orderInvoiceId) {
+      $orderInvoice = OrderInvoice::findOne(['id' => $orderInvoiceId, 'order_id' => $orderId]);
       if (!$orderInvoice) {
           throw new NotFoundHttpException('The requested order invoice does not exist.');
       }
