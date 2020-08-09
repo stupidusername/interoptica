@@ -2,6 +2,8 @@
 
 namespace app\controllers\api;
 
+use app\filters\AuthorRule;
+use app\filters\OrderStatusRule;
 use app\models\api\Pagination;
 use app\models\api\PaginatedItems;
 use app\models\ApiKey;
@@ -17,21 +19,37 @@ use yii\web\NotFoundHttpException;
 
 class OrderController extends BaseController {
 
+    public $model = null;
+
     public function behaviors()
     {
         $behaviors = [
             'access' => [
-                'class' => AccessControl::className(),
-                'ruleConfig' => [
-                    'class' => AccessRule::className(),
-                ],
-                'rules' => [
+				'class' => AccessControl::className(),
+				'ruleConfig' => [
+					'class' => AuthorRule::className(),
+					'modelField' => 'model',
+					'authorIdAttribute' => 'user_id',
+					'allow' => true,
+				],
+				'rules' => [
                     [
-                        'roles' => ['admin', 'api_client'],
-                        'allow' => true,
-                    ],
-                ],
-            ],
+						'actions' => ['list', 'get'],
+						'roles' => ['admin', 'api_client'],
+					],
+                    [
+						'actions' => ['delete'],
+						'model' => function() {
+							return $this->findModel(Yii::$app->request->getQueryParam('id'));
+						},
+						'roles' => ['admin', 'author'],
+					],
+				],
+			],
+			'status' => [
+				'class' => OrderStatusRule::className(),
+				'only' => ['delete'],
+			],
         ];
         return array_merge(parent::behaviors(), $behaviors);
     }
@@ -101,6 +119,11 @@ class OrderController extends BaseController {
       return $this->serialize($order);
   }
 
+  public function actionDelete($id) {
+      $order = $this->findModel($id);
+      $order->delete();
+  }
+
   /**
    * Finds the Order model based on its primary key value.
    * If the model is not found, a 404 HTTP exception will be thrown.
@@ -109,26 +132,28 @@ class OrderController extends BaseController {
    * @throws NotFoundHttpException if the model cannot be found
    */
   private function findModel($id) {
-      $order = Order::find()->where(['order.id' => $id])->joinWith([
-        'orderStatus',
-        'orderCondition',
-        'user',
-      ])->with([
-        'customer' => function ($query) {
-          // Retrieve deleted records
-          $query->where([]);
-        },
+      if (!$this->model) {
+          $this->model = Order::find()->where(['order.id' => $id])->joinWith([
+            'orderStatus',
+            'orderCondition',
+            'user',
+          ])->with([
+            'customer' => function ($query) {
+              // Retrieve deleted records
+              $query->where([]);
+            },
 
-        'orderProducts' => function ($query) {
-        },
-        'orderProducts.product',
-        'orderProducts.product.model',
-        'orderProducts.orderProductBatches.batch',
-      ])->one();
-      if (!$order) {
+            'orderProducts' => function ($query) {
+            },
+            'orderProducts.product',
+            'orderProducts.product.model',
+            'orderProducts.orderProductBatches.batch',
+          ])->one();
+      }
+      if (!$this->model) {
           throw new NotFoundHttpException('The requested order does not exist.');
       }
-      return $order;
+      return $this->model;
   }
 
   private function serialize($model) {

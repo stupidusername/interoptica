@@ -124,6 +124,15 @@ class Order extends \yii\db\ActiveRecord
 		parent::afterFind();
 	}
 
+	public function beforeSoftDelete()
+    {
+		// Don't delete the same order twice.
+		if ($this->deleted) {
+			return false;
+		}
+        return true;
+    }
+
 	public function afterSoftDelete() {
 		$this->restoreStock();
 	}

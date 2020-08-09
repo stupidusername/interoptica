@@ -53,6 +53,7 @@ $config = [
 					'patterns' => [
 						'GET' => 'list',
 						'GET <id>' => 'get',
+						'DELETE <id>' => 'delete',
 					],
 				],
 				[
