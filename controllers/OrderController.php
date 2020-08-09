@@ -60,11 +60,11 @@ class OrderController extends Controller
 						'roles' => ['admin', 'author', 'editor'],
 					],
 					[
-						'actions' => ['add-entry', 'update-entry', 'delete-entry', 'editor'],
+						'actions' => ['add-entry', 'update-entry', 'delete-entry'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('orderId'));
 						},
-						'roles' => ['admin', 'author'],
+						'roles' => ['admin', 'author', 'editor'],
 					],
 					[
 						'actions' => ['add-invoice', 'delete-invoice'],
