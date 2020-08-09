@@ -47,7 +47,7 @@ class OrderController extends BaseController {
 						'roles' => ['admin', 'author'],
 					],
                     [
-						'actions' => ['delete-item', 'delete-invoice'],
+						'actions' => ['delete-item', 'add-invoice', 'delete-invoice'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('orderId'));
 						},
@@ -137,6 +137,19 @@ class OrderController extends BaseController {
   public function actionDeleteItem($orderId, $itemId) {
       $orderProduct = $this->findOrderProductModel($orderId, $itemId);
       $orderProduct->delete();
+  }
+
+  public function actionAddInvoice($orderId) {
+    $model = new OrderInvoice();
+    $model->order_id = $orderId;
+    $model->load(Yii::$app->getRequest()->getBodyParams(), '');
+    if ($model->save()) {
+        $response = Yii::$app->getResponse();
+        $response->setStatusCode(201);
+    } elseif (!$model->hasErrors()) {
+        throw new ServerErrorHttpException('Failed to create the object for unknown reason.');
+    }
+    return $model;
   }
 
   public function actionDeleteInvoice($orderId, $invoiceId) {

@@ -16,6 +16,9 @@ $config = [
 		'request' => [
 			// !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
 			'cookieValidationKey' => 'vhAlxUomdeaZU3IhHoMiWUOsNETOBg3F',
+			'parsers' => [
+				'application/json' => 'yii\web\JsonParser',
+			]
 		],
 		'cache' => [
 			'class' => YII_ENV == 'dev' ? 'yii\caching\DummyCache' : 'yii\caching\MemCache',
@@ -55,6 +58,7 @@ $config = [
 						'GET <id>' => 'get',
 						'DELETE <id>' => 'delete',
 						'DELETE <orderId>/items/<itemId>' => 'delete-item',
+						'POST <orderId>/invoices' => 'add-invoice',
 						'DELETE <orderId>/invoices/<invoiceId>' => 'delete-invoice',
 					],
 				],
