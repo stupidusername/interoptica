@@ -10,6 +10,7 @@ use app\models\ApiKey;
 use app\models\Model;
 use app\models\Order;
 use app\models\OrderInvoice;
+use app\models\OrderProduct;
 use app\models\OrderStatus;
 use dektrium\user\filters\AccessRule;
 use Yii;
@@ -46,7 +47,7 @@ class OrderController extends BaseController {
 						'roles' => ['admin', 'author'],
 					],
                     [
-						'actions' => ['delete-invoice'],
+						'actions' => ['delete-item', 'delete-invoice'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('orderId'));
 						},
@@ -56,7 +57,7 @@ class OrderController extends BaseController {
 			],
 			'status' => [
 				'class' => OrderStatusRule::className(),
-				'only' => ['delete'],
+				'only' => ['delete', 'delete-item'],
 			],
         ];
         return array_merge(parent::behaviors(), $behaviors);
@@ -133,6 +134,11 @@ class OrderController extends BaseController {
       $order->delete();
   }
 
+  public function actionDeleteItem($orderId, $itemId) {
+      $orderProduct = $this->findOrderProductModel($orderId, $itemId);
+      $orderProduct->delete();
+  }
+
   public function actionDeleteInvoice($orderId, $invoiceId) {
       $orderInvoice = $this->findOrderInvoiceModel($invoiceId);
       $orderInvoice->delete();
@@ -171,6 +177,14 @@ class OrderController extends BaseController {
       return $this->model;
   }
 
+  private function findOrderProductModel($orderId, $orderProductId) {
+      $orderProduct = OrderProduct::findOne(['id' => $orderProductId, 'order_id' => $orderId]);
+      if (!$orderProduct) {
+          throw new NotFoundHttpException('The requested order item does not exist.');
+      }
+      return $orderProduct;
+  }
+
   private function findOrderInvoiceModel($id) {
       $orderInvoice = OrderInvoice::findOne($id);
       if (!$orderInvoice) {
@@ -201,7 +215,7 @@ class OrderController extends BaseController {
           ];
         }
         $items[] = [
-          'id' => (int) $orderProduct['product']['id'],
+          'id' => (int) $orderProduct['id'],
           'code' => $orderProduct['product']['code'],
           'title' => $orderProduct['product']['model']['name'],
           'unit_price' => (float) $orderProduct['price'],

@@ -54,7 +54,8 @@ $config = [
 						'GET' => 'list',
 						'GET <id>' => 'get',
 						'DELETE <id>' => 'delete',
-						'DELETE <orderId>/invoice/<invoiceId>' => 'delete-invoice',
+						'DELETE <orderId>/items/<itemId>' => 'delete-item',
+						'DELETE <orderId>/invoices/<invoiceId>' => 'delete-invoice',
 					],
 				],
 				[
