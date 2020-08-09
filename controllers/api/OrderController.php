@@ -13,6 +13,7 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
+use yii\web\NotFoundHttpException;
 
 class OrderController extends BaseController {
 
@@ -73,6 +74,64 @@ class OrderController extends BaseController {
     $models = $query->asArray()->limit($pagelen)->offset(($page - 1) * $pagelen)->all();
     $orders = [];
     foreach ($models as $model) {
+      $orders[] = $this->serialize($model);
+    }
+    // Build pagination.
+    $totalItems = (integer) $query->count();
+    $totalPages = ceil($totalItems / $pagelen);
+    $nextPage = $page < $totalPages ? Url::to(['list', 'updated_since' => $updated_since, 'user' => $user, 'page' => $page + 1, 'pagelen' => $pagelen], true) : null;
+    $prevPage = $page > 1 ? Url::to(['list', 'updated_since' => $updated_since, 'user' => $user, 'page' => $page - 1, 'pagelen' => $pagelen], true) : null;
+    $pagination = new Pagination([
+        'next' => $nextPage,
+        'prev' => $prevPage,
+        'pagelen' => $pagelen,
+        'page' => $page,
+        'totalItems' => $totalItems,
+        'totalPages' => $totalPages,
+    ]);
+    $paginatedItems = new PaginatedItems([
+        'pagination' => $pagination,
+        'items' => $orders,
+    ]);
+    return $paginatedItems;
+  }
+
+  public function actionGet($id) {
+      $order = $this->findModel($id);
+      return $this->serialize($order);
+  }
+
+  /**
+   * Finds the Order model based on its primary key value.
+   * If the model is not found, a 404 HTTP exception will be thrown.
+   * @param integer $id
+   * @return Order the loaded model
+   * @throws NotFoundHttpException if the model cannot be found
+   */
+  private function findModel($id) {
+      $order = Order::find()->where(['order.id' => $id])->joinWith([
+        'orderStatus',
+        'orderCondition',
+        'user',
+      ])->with([
+        'customer' => function ($query) {
+          // Retrieve deleted records
+          $query->where([]);
+        },
+
+        'orderProducts' => function ($query) {
+        },
+        'orderProducts.product',
+        'orderProducts.product.model',
+        'orderProducts.orderProductBatches.batch',
+      ])->one();
+      if (!$order) {
+          throw new NotFoundHttpException('The requested order does not exist.');
+      }
+      return $order;
+  }
+
+  private function serialize($model) {
       $subtotal = 0;
       $items = [];
       foreach ($model['orderProducts'] as $orderProduct) {
@@ -100,7 +159,7 @@ class OrderController extends BaseController {
       $subtotalPlusIva = $subtotal * (1 + (float) $model['iva'] / 100);
       $financing = $subtotalPlusIva * ((float) $model['interest_rate_percentage'] / 100);
       $total = $subtotalPlusIva + $financing;
-      $orders[] = [
+      $order = [
         'id' => (int) $model['id'],
         'user' => $model['user']['username'],
         'status' => $model['deleted'] ? 'deleted' : [
@@ -140,25 +199,7 @@ class OrderController extends BaseController {
           ],
           'items' => $items,
       ];
-    }
-    // Build pagination.
-    $totalItems = (integer) $query->count();
-    $totalPages = ceil($totalItems / $pagelen);
-    $nextPage = $page < $totalPages ? Url::to(['list', 'updated_since' => $updated_since, 'user' => $user, 'page' => $page + 1, 'pagelen' => $pagelen], true) : null;
-    $prevPage = $page > 1 ? Url::to(['list', 'updated_since' => $updated_since, 'user' => $user, 'page' => $page - 1, 'pagelen' => $pagelen], true) : null;
-    $pagination = new Pagination([
-        'next' => $nextPage,
-        'prev' => $prevPage,
-        'pagelen' => $pagelen,
-        'page' => $page,
-        'totalItems' => $totalItems,
-        'totalPages' => $totalPages,
-    ]);
-    $paginatedItems = new PaginatedItems([
-        'pagination' => $pagination,
-        'items' => $orders,
-    ]);
-    return $paginatedItems;
+      return $order;
   }
 
 }

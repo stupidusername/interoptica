@@ -52,6 +52,7 @@ $config = [
 					'controller' =>  ['api/v1/orders' => 'api/order'],
 					'patterns' => [
 						'GET' => 'list',
+						'GET <id>' => 'get',
 					],
 				],
 				[
