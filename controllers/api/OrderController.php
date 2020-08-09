@@ -9,6 +9,7 @@ use app\models\api\PaginatedItems;
 use app\models\ApiKey;
 use app\models\Model;
 use app\models\Order;
+use app\models\OrderInvoice;
 use app\models\OrderStatus;
 use dektrium\user\filters\AccessRule;
 use Yii;
@@ -41,6 +42,13 @@ class OrderController extends BaseController {
 						'actions' => ['delete'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('id'));
+						},
+						'roles' => ['admin', 'author'],
+					],
+                    [
+						'actions' => ['delete-invoice'],
+						'model' => function() {
+							return $this->findModel(Yii::$app->request->getQueryParam('orderId'));
 						},
 						'roles' => ['admin', 'author'],
 					],
@@ -125,6 +133,11 @@ class OrderController extends BaseController {
       $order->delete();
   }
 
+  public function actionDeleteInvoice($orderId, $invoiceId) {
+      $orderInvoice = $this->findOrderInvoiceModel($invoiceId);
+      $orderInvoice->delete();
+  }
+
   /**
    * Finds the Order model based on its primary key value.
    * If the model is not found, a 404 HTTP exception will be thrown.
@@ -156,6 +169,14 @@ class OrderController extends BaseController {
           throw new NotFoundHttpException('The requested order does not exist.');
       }
       return $this->model;
+  }
+
+  private function findOrderInvoiceModel($id) {
+      $orderInvoice = OrderInvoice::findOne($id);
+      if (!$orderInvoice) {
+          throw new NotFoundHttpException('The requested order invoice does not exist.');
+      }
+      return $orderInvoice;
   }
 
   private function serialize($model) {
