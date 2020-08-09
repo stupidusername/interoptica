@@ -88,6 +88,7 @@ class OrderController extends BaseController {
       'orderProducts.product',
       'orderProducts.product.model',
       'orderProducts.orderProductBatches.batch',
+      'orderInvoices',
     ]);
     $models = $query->asArray()->limit($pagelen)->offset(($page - 1) * $pagelen)->all();
     $orders = [];
@@ -148,6 +149,7 @@ class OrderController extends BaseController {
             'orderProducts.product',
             'orderProducts.product.model',
             'orderProducts.orderProductBatches.batch',
+            'orderInvoices',
           ])->one();
       }
       if (!$this->model) {
@@ -158,6 +160,14 @@ class OrderController extends BaseController {
 
   private function serialize($model) {
       $subtotal = 0;
+      $invoices = [];
+      foreach ($model['orderInvoices'] as $orderInvoice) {
+        $invoices[] = [
+          'id' => (int) $orderInvoice['id'],
+          'number' => $orderInvoice['number'],
+          'comment' => $orderInvoice['comment'],
+        ];
+      }
       $items = [];
       foreach ($model['orderProducts'] as $orderProduct) {
         $subtotal += $orderProduct['quantity'] * $orderProduct['price'];
@@ -222,6 +232,7 @@ class OrderController extends BaseController {
             'tax_situation_category' => $model['customer']['tax_situation_category'],
             'phone_number' => $model['customer']['phone_number'],
           ],
+          'invoices' => $invoices,
           'items' => $items,
       ];
       return $order;
