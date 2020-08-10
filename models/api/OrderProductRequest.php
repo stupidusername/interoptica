@@ -9,6 +9,20 @@ class OrderProductRequest extends OrderProduct {
 
     public $code;
 
+    /**
+	* @inheritdoc
+	*/
+	public static function find() {
+		return parent::find()->with(['product']);
+	}
+
+    public function afterFind() {
+        parent::afterFind();
+        if (!$this->code) {
+            $this->code = $this->product->code;
+        }
+    }
+
     public function rules() {
         $rules = [
             [['code'], 'required'],

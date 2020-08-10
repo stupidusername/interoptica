@@ -11,7 +11,6 @@ use app\models\ApiKey;
 use app\models\Model;
 use app\models\Order;
 use app\models\OrderInvoice;
-use app\models\OrderProduct;
 use app\models\OrderStatus;
 use dektrium\user\filters\AccessRule;
 use Yii;
@@ -48,7 +47,7 @@ class OrderController extends BaseController {
 						'roles' => ['admin', 'author'],
 					],
                     [
-						'actions' => ['add-item', 'delete-item', 'add-invoice', 'delete-invoice'],
+						'actions' => ['add-item', 'update-item', 'delete-item', 'add-invoice', 'delete-invoice'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('orderId'));
 						},
@@ -58,7 +57,7 @@ class OrderController extends BaseController {
 			],
 			'status' => [
 				'class' => OrderStatusRule::className(),
-				'only' => ['delete', 'add-item', 'delete-item'],
+				'only' => ['delete', 'add-item', 'update-item', 'delete-item'],
 			],
         ];
         return array_merge(parent::behaviors(), $behaviors);
@@ -148,8 +147,17 @@ class OrderController extends BaseController {
       return $model;
   }
 
+  public function actionUpdateItem($orderId, $itemId) {
+      $model = $this->findOrderProductRequestModel($orderId, $itemId);
+      $model->load(Yii::$app->getRequest()->getBodyParams(), '');
+        if ($model->save() === false && !$model->hasErrors()) {
+            throw new ServerErrorHttpException('Failed to update the object for unknown reason.');
+        }
+      return $model;
+  }
+
   public function actionDeleteItem($orderId, $itemId) {
-      $orderProduct = $this->findOrderProductModel($orderId, $itemId);
+      $orderProduct = $this->findOrderProductRequestModel($orderId, $itemId);
       $orderProduct->delete();
   }
 
@@ -204,8 +212,8 @@ class OrderController extends BaseController {
       return $this->model;
   }
 
-  private function findOrderProductModel($orderId, $orderProductId) {
-      $orderProduct = OrderProduct::findOne(['id' => $orderProductId, 'order_id' => $orderId]);
+  private function findOrderProductRequestModel($orderId, $orderProductId) {
+      $orderProduct = OrderProductRequest::findOne(['id' => $orderProductId, 'order_id' => $orderId]);
       if (!$orderProduct) {
           throw new NotFoundHttpException('The requested order item does not exist.');
       }

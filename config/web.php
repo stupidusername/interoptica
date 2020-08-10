@@ -58,6 +58,7 @@ $config = [
 						'GET <id>' => 'get',
 						'DELETE <id>' => 'delete',
 						'POST <orderId>/items' => 'add-item',
+						'PATCH <orderId>/items/<itemId>' => 'update-item',
 						'DELETE <orderId>/items/<itemId>' => 'delete-item',
 						'POST <orderId>/invoices' => 'add-invoice',
 						'DELETE <orderId>/invoices/<invoiceId>' => 'delete-invoice',
