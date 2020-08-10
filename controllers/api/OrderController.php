@@ -4,6 +4,7 @@ namespace app\controllers\api;
 
 use app\filters\AuthorRule;
 use app\filters\OrderStatusRule;
+use app\models\api\OrderProductRequest;
 use app\models\api\Pagination;
 use app\models\api\PaginatedItems;
 use app\models\ApiKey;
@@ -47,7 +48,7 @@ class OrderController extends BaseController {
 						'roles' => ['admin', 'author'],
 					],
                     [
-						'actions' => ['delete-item', 'add-invoice', 'delete-invoice'],
+						'actions' => ['add-item', 'delete-item', 'add-invoice', 'delete-invoice'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('orderId'));
 						},
@@ -57,7 +58,7 @@ class OrderController extends BaseController {
 			],
 			'status' => [
 				'class' => OrderStatusRule::className(),
-				'only' => ['delete', 'delete-item'],
+				'only' => ['delete', 'add-item', 'delete-item'],
 			],
         ];
         return array_merge(parent::behaviors(), $behaviors);
@@ -132,6 +133,19 @@ class OrderController extends BaseController {
   public function actionDelete($id) {
       $order = $this->findModel($id);
       $order->delete();
+  }
+
+  public function actionAddItem($orderId) {
+      $model = new OrderProductRequest();
+      $model->order_id = $orderId;
+      $model->load(Yii::$app->getRequest()->getBodyParams(), '');
+      if ($model->save()) {
+          $response = Yii::$app->getResponse();
+          $response->setStatusCode(201);
+      } elseif (!$model->hasErrors()) {
+          throw new ServerErrorHttpException('Failed to create the object for unknown reason.');
+      }
+      return $model;
   }
 
   public function actionDeleteItem($orderId, $itemId) {
