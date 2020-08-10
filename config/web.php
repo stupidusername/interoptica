@@ -55,9 +55,9 @@ $config = [
 					'controller' =>  ['api/v1/orders' => 'api/order'],
 					'patterns' => [
 						'GET' => 'list',
+						'GET <id>' => 'get',
 						'POST' => 'create',
 						'PATCH <id>' => 'update',
-						'GET <id>' => 'get',
 						'DELETE <id>' => 'delete',
 						'POST <orderId>/items' => 'add-item',
 						'PATCH <orderId>/items/<itemId>' => 'update-item',
