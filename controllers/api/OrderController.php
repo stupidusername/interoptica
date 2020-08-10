@@ -5,6 +5,7 @@ namespace app\controllers\api;
 use app\filters\AuthorRule;
 use app\filters\OrderStatusRule;
 use app\models\api\OrderProductRequest;
+use app\models\api\OrderRequest;
 use app\models\api\Pagination;
 use app\models\api\PaginatedItems;
 use app\models\ApiKey;
@@ -36,11 +37,11 @@ class OrderController extends BaseController {
 				],
 				'rules' => [
                     [
-						'actions' => ['list', 'get'],
+						'actions' => ['list', 'get', 'create'],
 						'roles' => ['admin', 'api_client'],
 					],
                     [
-						'actions' => ['delete'],
+						'actions' => ['update', 'delete'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('id'));
 						},
@@ -129,6 +130,47 @@ class OrderController extends BaseController {
       return $this->serialize($order);
   }
 
+  public function actionCreate() {
+      $model = new OrderRequest();
+      $model->load(Yii::$app->getRequest()->getBodyParams(), '');
+      if ($model->save()) {
+          $response = Yii::$app->getResponse();
+          $response->setStatusCode(201);
+          $response->getHeaders()->set('Location', Url::toRoute(['get', 'id' => $model->id], true));
+      } elseif (!$model->hasErrors()) {
+          throw new ServerErrorHttpException('Failed to create the object for unknown reason.');
+      }
+      return $model;
+  }
+
+  public function actionUpdate($id) {
+      $model = $this->findOrderRequestModel($id);
+      $model->scenario = OrderRequest::SCENARIO_UPDATE;
+      $params = Yii::$app->getRequest()->getBodyParams();
+      if (isset($params['status'])) {
+          $params['status'] = [
+              'loading' => OrderStatus::STATUS_LOADING,
+              'entered' => OrderStatus::STATUS_ENTERED,
+              'collect' => OrderStatus::STATUS_COLLECT,
+              'collect_revision' => OrderStatus::STATUS_COLLECT_REVISION,
+              'administration' => OrderStatus::STATUS_ADMINISTRATION,
+              'pending_put_together' => OrderStatus::STATUS_PENDING_PUT_TOGETHER,
+              'put_together' => OrderStatus::STATUS_PUT_TOGETHER,
+              'put_together_printed' => OrderStatus::STATUS_PUT_TOGETHER_PRINTED,
+              'billing' => OrderStatus::STATUS_BILLING,
+              'packaging' => OrderStatus::STATUS_PACKAGING,
+              'waiting_for_transport' => OrderStatus::STATUS_WAITING_FOR_TRANSPORT,
+              'sent' => OrderStatus::STATUS_SENT,
+              'delivered' => OrderStatus::STATUS_DELIVERED,
+          ][$params['status']];
+      }
+      $model->load($params, '');
+        if ($model->save() === false && !$model->hasErrors()) {
+            throw new ServerErrorHttpException('Failed to update the object for unknown reason.');
+        }
+      return $model;
+  }
+
   public function actionDelete($id) {
       $order = $this->findModel($id);
       $order->delete();
@@ -210,6 +252,15 @@ class OrderController extends BaseController {
           throw new NotFoundHttpException('The requested order does not exist.');
       }
       return $this->model;
+  }
+
+  private function findOrderRequestModel($id)
+  {
+      if ($this->model || ($this->model = OrderRequest::findOne($id)) !== null) {
+          return $this->model;
+      } else {
+          throw new NotFoundHttpException('The requested page does not exist.');
+      }
   }
 
   private function findOrderProductRequestModel($orderId, $orderProductId) {
