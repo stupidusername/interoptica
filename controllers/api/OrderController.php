@@ -99,6 +99,7 @@ class OrderController extends BaseController {
       'orderProducts.product.model',
       'orderProducts.orderProductBatches.batch',
       'orderInvoices',
+      'transport',
     ]);
     $models = $query->asArray()->limit($pagelen)->offset(($page - 1) * $pagelen)->all();
     $orders = [];
@@ -246,6 +247,7 @@ class OrderController extends BaseController {
             'orderProducts.product.model',
             'orderProducts.orderProductBatches.batch',
             'orderInvoices',
+            'transport',
           ])->one();
       }
       if (!$this->model) {
@@ -336,7 +338,10 @@ class OrderController extends BaseController {
         'status_update_datetime' => str_replace(' ', 'T', $model['deleted'] ? $model['delete_datetime'] : $model['orderStatus']['create_datetime']) . 'Z',
         'iva' => (float) $model['iva'],
         'discount_percentage' => (float) $model['discount_percentage'],
-        'condition' => $model['orderCondition']['title'],
+        'condition' => [
+                'id' => $model['orderCondition']['id'],
+                'title' => $model['orderCondition']['title'],
+        ],
         'interest_rate_percentage' => (float) $model['interest_rate_percentage'],
         'subtotal' => $subtotal,
         'discount' => $discount,
@@ -352,6 +357,10 @@ class OrderController extends BaseController {
             'tax_situation' => $model['customer']['tax_situation'],
             'tax_situation_category' => $model['customer']['tax_situation_category'],
             'phone_number' => $model['customer']['phone_number'],
+          ],
+          'transport' => [
+              'id' => $model['transport']['id'],
+              'name' => $model['transport']['name'],
           ],
           'invoices' => $invoices,
           'items' => $items,
