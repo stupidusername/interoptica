@@ -15,7 +15,9 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'gecom_id')->textInput() ?>
+    <?php if ($model->isNewRecord): ?>
+        <?= $form->field($model, 'gecom_id')->textInput() ?>
+    <?php endif; ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 

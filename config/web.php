@@ -45,6 +45,13 @@ $config = [
 				'docs/<view>' => 'docs/view',
 				[
 					'class' => 'yii\rest\UrlRule',
+					'controller' =>  ['api/v1/customers' => 'api/customer'],
+					'patterns' => [
+						'GET' => 'list',
+					],
+				],
+				[
+					'class' => 'yii\rest\UrlRule',
 					'controller' =>  ['api/v1/products' => 'api/product'],
 					'patterns' => [
 						'GET' => 'list',
