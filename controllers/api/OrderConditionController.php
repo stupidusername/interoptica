@@ -44,8 +44,9 @@ class OrderConditionController extends BaseController {
         // Get items.
         $orderConditions = $query->asArray()->all();
         array_walk($orderConditions, function(&$row) {
+            $row['id'] = (int) $row['id'];
             if ($row['interest_rate_percentage']) {
-                $row['interest_rate_percentage'] = (float) $value['interest_rate_percentage'];
+                $row['interest_rate_percentage'] = (float) $row['interest_rate_percentage'];
             }
         });
         // Build pagination.
