@@ -42,7 +42,14 @@ class TransportController extends BaseController {
         $query = Transport::find()->active()->select(['id', 'name'])
             ->limit($pagelen)->offset(($page - 1) * $pagelen);
         // Get items.
-        $transports = $query->asArray()->all();
+        $models = $query->asArray()->all();
+        $transports = [];
+        foreach ($models as $model) {
+          $transports[] = [
+              'id' => (int) $model['id'],
+              'name' => $model['name'],
+            ];
+        }
         // Build pagination.
         $totalItems = (integer) $query->count();
         $totalPages = ceil($totalItems / $pagelen);
