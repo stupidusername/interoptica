@@ -30,7 +30,7 @@ class CustomerController extends BaseController {
         return array_merge(parent::behaviors(), $behaviors);
     }
 
-    public function actionList(int $page = 1, int $pagelen = 100) {
+    public function actionList($updated_since = null, int $page = 1, int $pagelen = 100) {
         // Validate params.
         if ($page < 1) {
             throw new BadRequestHttpException('Page cannot be lower than 1.');
@@ -38,8 +38,16 @@ class CustomerController extends BaseController {
         if ($pagelen < 1 || $pagelen > 100) {
             throw new BadRequestHttpException('The specified pagelen must take a value between 1 and 100.');
         }
+        // Validate date format.
+      if ($updated_since && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $updated_since)) {
+        throw new BadRequestHttpException('updated_since must be of the format yyyy-mm-dd');
+    }
         // Build query.
-        $query = Customer::find()->limit($pagelen)->offset(($page - 1) * $pagelen);
+        $where = [];
+        if ($updated_since) {
+          $where = ['or', ['>=', 'create_datetime', $updated_since], ['>=', 'update_datetime', $updated_since]];
+        }
+        $query = Customer::find()->where($where)->limit($pagelen)->offset(($page - 1) * $pagelen);
         // Get items.
         $customers = [];
         $models = $query->asArray()->all();
@@ -53,13 +61,14 @@ class CustomerController extends BaseController {
               'tax_situation' => $model['tax_situation'],
               'tax_situation_category' => $model['tax_situation_category'],
               'phone_number' => $model['phone_number'],
+              'deleted' => (bool) $model['deleted'],
             ];
         }
         // Build pagination.
         $totalItems = (integer) $query->count();
         $totalPages = ceil($totalItems / $pagelen);
-        $nextPage = $page < $totalPages ? Url::to(['list', 'page' => $page + 1, 'pagelen' => $pagelen], true) : null;
-        $prevPage = $page > 1 ? Url::to(['list', 'page' => $page - 1, 'pagelen' => $pagelen], true) : null;
+        $nextPage = $page < $totalPages ? Url::to(['list', 'updated_since' => $updated_since, 'page' => $page + 1, 'pagelen' => $pagelen], true) : null;
+        $prevPage = $page > 1 ? Url::to(['list', 'updated_since' => $updated_since, 'page' => $page - 1, 'pagelen' => $pagelen], true) : null;
         $pagination = new Pagination([
             'next' => $nextPage,
             'prev' => $prevPage,

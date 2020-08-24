@@ -25,6 +25,8 @@ use yii\helpers\ArrayHelper;
  * @property string $locality
  * @property string $phone_number
  * @property string $cuit
+ * @property string $create_datetime
+ * @property string $update_datetime
  * @property boolean $deleted
  */
 class Customer extends \yii\db\ActiveRecord
@@ -57,6 +59,22 @@ class Customer extends \yii\db\ActiveRecord
 	public static function find()
 	{
 		return parent::find()->where(['or', [self::tableName() . '.deleted' => null], [self::tableName() . '.deleted' => 0]]);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function beforeSave($insert) {
+		if (parent::beforeSave($insert)) {
+			if ($insert) {
+				$this->create_datetime = gmdate('Y-m-d H:i:s');
+			} else {
+				$this->update_datetime = gmdate('Y-m-d H:i:s');
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
