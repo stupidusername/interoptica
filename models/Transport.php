@@ -76,7 +76,7 @@ class Transport extends \yii\db\ActiveRecord
 	 * return string[]
 	 */
 	public static function getIdNameArray() {
-		$transports = ArrayHelper::map(self::find()->select(['id', 'name'])->asArray()->all(), 'id', 'name');
+		$transports = ArrayHelper::map(self::find()->select(['id', 'name'])->orderBy(['name' => SORT_ASC])->asArray()->all(), 'id', 'name');
 		return $transports;
 	}
 
