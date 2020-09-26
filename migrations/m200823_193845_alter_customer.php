@@ -17,7 +17,8 @@ class m200823_193845_alter_customer extends Migration
       $this->addColumn('{{%customer}}', 'update_datetime', $this->datetime() . ' AFTER create_datetime');
       // Pupulate deleted time
       foreach(Customer::find()->where([])->each() as $customer) {
-        $customer->create_datetime = '2017-04-01 00:00:0';
+        $customer->create_datetime = '2017-04-01 00:00:00';
+        $customer->update_datetime = '2017-04-01 00:00:00';
         $customer->save(false);
       }
     }
