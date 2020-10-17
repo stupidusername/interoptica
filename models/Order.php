@@ -19,6 +19,10 @@ use yii\helpers\ArrayHelper;
  * @property string $discount_percentage
  * @property integer $order_condition_id
  * @property string $interest_rate_percentage
+ * @property string $delivery_address
+ * @property string $delivery_city
+ * @property string $delivery_state
+ * @property string $delivery_zip_code
  * @property string $comment
  * @property integer $deleted
  * @property string $delete_datetime
@@ -146,6 +150,7 @@ class Order extends \yii\db\ActiveRecord
 			[['customer_id', 'transport_id'], 'integer'],
 			[['discount_percentage'], 'number', 'min' => 0, 'max' => 100],
 			[['interest_rate_percentage'], 'number', 'min' => -100, 'max' => 100],
+			[['delivery_address', 'delivery_city', 'delivery_state', 'delivery_zip_code'], 'string', 'max' => 255],
 			[['comment'], 'string'],
 			[['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
 			[['transport_id'], 'exist', 'skipOnError' => true, 'targetClass' => Transport::className(), 'targetAttribute' => ['transport_id' => 'id']],
@@ -185,6 +190,10 @@ class Order extends \yii\db\ActiveRecord
 			'discount_percentage' => 'Porcentaje de Descuento',
 			'order_condition_id' => 'ID Condición de Venta',
 			'interest_rate_percentage' => 'Porcentaje de Interés',
+			'delivery_address' => 'Dirección de Entrega',
+			'delivery_city' => 'Ciudad',
+			'delivery_state' => 'Provincia',
+			'delivery_zip_code' => 'Código Postal',
 			'comment' => 'Comentario',
 			'status' => 'Estado',
 			'invoiceNumbers' => 'Facturas',

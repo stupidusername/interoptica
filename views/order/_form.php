@@ -112,6 +112,16 @@ $conditionOptions = ArrayHelper::map($conditions, 'id', 'title');
 
     <?= $form->field($model, 'comment')->textarea(['rows' => 6]) ?>
 
+    <h3>Dirección de Entrega (Opcional)</h3>
+
+    <?= $form->field($model, 'delivery_address')->label('Calle, Altura, Departamento') ?>
+
+    <?= $form->field($model, 'delivery_city') ?>
+
+    <?= $form->field($model, 'delivery_state') ?>
+
+    <?= $form->field($model, 'delivery_zip_code') ?>
+
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

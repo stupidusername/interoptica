@@ -154,6 +154,27 @@ OrderAsset::register($this);
 			],
 		]) ?>
 
+		<h3>Dirección de Entrega</h3>
+
+		<?= DetailView::widget([
+			'model' => $model,
+			'attributes' => [
+				[
+					'attribute' => 'delivery_address',
+					'label' => 'Calle, Altura, Departamento',
+				],
+				[
+					'attribute' => 'delivery_city',
+				],
+				[
+					'attribute' => 'delivery_state',
+				],
+				[
+					'attribute' => 'delivery_zip_code',
+				],
+			],
+		]) ?>
+
 		<h3>Facturas</h3>
 		<p>
 			<?= Html::button('Agregar Factura', ['id' => 'addInvoiceButton', 'class' => 'btn btn-success']) ?>
