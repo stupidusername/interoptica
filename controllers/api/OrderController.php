@@ -336,6 +336,10 @@ class OrderController extends BaseController {
           OrderStatus::STATUS_DELIVERED => 'delivered',
         ][$model['orderStatus']['status']],
         'status_update_datetime' => str_replace(' ', 'T', $model['deleted'] ? $model['delete_datetime'] : $model['orderStatus']['create_datetime']) . 'Z',
+        'delivery_address' => $model['delivery_address'],
+        'delivery_city' => $model['delivery_city'],
+        'delivery_state' => $model['delivery_state'],
+        'delivery_zip_code' => $model['delivery_zip_code'],
         'iva' => (float) $model['iva'],
         'discount_percentage' => (float) $model['discount_percentage'],
         'condition' => [
