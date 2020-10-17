@@ -100,6 +100,15 @@ foreach ($commentLines as $k => $commentLine) {
 	</tbody>
 </table>
 
+<table cellpadding="0" cellspacing="0" class="t0" style="margin-top: 15px">
+	<tbody>
+		<tr>
+			<td class="tr0 td0"><p class="p0">Entrega:</p></td>
+			<td class="tr0 td33"><p class="p0"><?= $model->delivery_address . ' - ' . $model->delivery_city . ' - ' . $model->delivery_state . ' - ' . $model->delivery_zip_code; ?></p></td>
+		</tr>
+	</tbody>
+</table>
+
 <table cellpadding="0" cellspacing="0" class="t1">
 	<tbody>
 		<tr>
