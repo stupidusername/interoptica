@@ -60,6 +60,10 @@ class CustomerController extends BaseController {
               'cuit' => $model['cuit'],
               'tax_situation' => $model['tax_situation'],
               'tax_situation_category' => $model['tax_situation_category'],
+              'address' => $model['address'],
+              'zip_code' => $model['zip_code'],
+              'province' => $model['province'],
+              'locality' => $model['locality'],
               'phone_number' => $model['phone_number'],
               'deleted' => (bool) $model['deleted'],
             ];

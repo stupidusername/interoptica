@@ -356,6 +356,10 @@ class OrderController extends BaseController {
             'cuit' => $model['customer']['cuit'],
             'tax_situation' => $model['customer']['tax_situation'],
             'tax_situation_category' => $model['customer']['tax_situation_category'],
+            'address' => $model['customer']['address'],
+            'zip_code' => $model['customer']['zip_code'],
+            'province' => $model['customer']['province'],
+            'locality' => $model['customer']['locality'],
             'phone_number' => $model['customer']['phone_number'],
           ],
           'transport' => [
