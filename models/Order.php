@@ -25,6 +25,7 @@ use yii\helpers\ArrayHelper;
  * @property string $delivery_zip_code
  * @property string $comment
  * @property integer $deleted
+ * @property string $delete_reason
  * @property string $delete_datetime
  *
  * @property Customer $customer
@@ -46,6 +47,12 @@ class Order extends \yii\db\ActiveRecord
 	 */
 	const SCENARIO_VIEW = 'view';
 	const SCENARIO_UPDATE = 'update';
+
+	/**
+	 * Deletion reasons.
+	 */
+	const DELETE_REASON_CANCELED = 'canceled';
+	const DELETE_REASON_FAILED = 'failed';
 
 	/**
 	 * The last order status saved

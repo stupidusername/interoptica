@@ -41,7 +41,7 @@ class OrderController extends BaseController {
 						'roles' => ['admin', 'api_client'],
 					],
                     [
-						'actions' => ['update', 'delete'],
+						'actions' => ['update', 'delete', 'cancel', 'fail'],
 						'model' => function() {
 							return $this->findModel(Yii::$app->request->getQueryParam('id'));
 						},
@@ -76,7 +76,7 @@ class OrderController extends BaseController {
     if ($updated_since && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $updated_since)) {
       throw new BadRequestHttpException('updated_since must be of the format yyyy-mm-dd');
     }
-    // Retrieved deleted records
+    // Retrieve deleted records
     $where = [];
     if ($updated_since) {
       $where = ['or', ['and', ['not', ['or', ['order.deleted' => null], ['order.deleted' => 0]]], ['>=', 'delete_datetime', $updated_since]], ['>=', 'create_datetime', $updated_since]];
@@ -174,6 +174,20 @@ class OrderController extends BaseController {
 
   public function actionDelete($id) {
       $order = $this->findModel($id);
+      $order->delete();
+  }
+
+  public function actionCancel($id) {
+      $order = $this->findModel($id);
+      $order->delete_reason = Order::DELETE_REASON_CANCELED;
+      $order->save();
+      $order->delete();
+  }
+
+  public function actionFail($id) {
+      $order = $this->findModel($id);
+      $order->delete_reason = Order::DELETE_REASON_FAILED;
+      $order->save();
       $order->delete();
   }
 
@@ -320,7 +334,7 @@ class OrderController extends BaseController {
       $order = [
         'id' => (int) $model['id'],
         'user' => $model['user']['username'],
-        'status' => $model['deleted'] ? 'deleted' : [
+        'status' => $model['deleted'] ? ($model['delete_reason'] ? $model['delete_reason'] : 'deleted') : [
           OrderStatus::STATUS_LOADING => 'loading',
           OrderStatus::STATUS_ENTERED => 'entered',
           OrderStatus::STATUS_COLLECT => 'collect',
