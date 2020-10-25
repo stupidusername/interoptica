@@ -59,6 +59,13 @@ $config = [
 				],
 				[
 					'class' => 'yii\rest\UrlRule',
+					'controller' =>  ['api/v1/suitcases' => 'api/suitcase'],
+					'patterns' => [
+						'GET' => 'list',
+					],
+				],
+				[
+					'class' => 'yii\rest\UrlRule',
 					'controller' =>  ['api/v1/orders' => 'api/order'],
 					'patterns' => [
 						'GET' => 'list',
