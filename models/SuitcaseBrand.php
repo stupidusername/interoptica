@@ -32,7 +32,7 @@ class SuitcaseBrand extends \yii\db\ActiveRecord
         return [
             [['suitcase_id', 'brand_id'], 'integer'],
             [['suitcase_id', 'brand_id'], 'required'],
-            [['suitcase_id', 'brand_id'], 'unique', 'targetAttribute' => ['brand_id'], 'message' => 'Esta marca ya ha sido agregada a la valija.'],
+            [['brand_id'], 'unique', 'targetAttribute' => ['suitcase_id', 'brand_id'], 'message' => 'Esta marca ya ha sido agregada a la valija.'],
             [['brand_id'], 'exist', 'skipOnError' => true, 'targetClass' => Brand::className(), 'targetAttribute' => ['brand_id' => 'id']],
             [['suitcase_id'], 'exist', 'skipOnError' => true, 'targetClass' => Suitcase::className(), 'targetAttribute' => ['suitcase_id' => 'id']],
         ];
