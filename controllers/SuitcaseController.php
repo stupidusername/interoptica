@@ -37,7 +37,7 @@ class SuitcaseController extends Controller
 				],
 				'rules' => [
 					[
-						'actions' => ['index', 'view', 'list'],
+						'actions' => ['index', 'view'],
 						'allow' => true,
 						'roles' => ['@'],
 					],
