@@ -5,20 +5,20 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\OrderInvoice|app\models\IssueInvoice */
+/* @var $model app\models\OrderInvoice|app\models\SuitcaseBrand */
 /* @var $form yii\widgets\ActiveForm */
 
 $this->title = 'Añadir Factura';
 ?>
 
-<div class="invoice-create">
+<div class="brand-create">
 
 	<div id="modal-header">
 		<h3><?= Html::encode($this->title) ?></h3>
 	</div>
 
 	<div id="modal-body">
-		<div class="invoice-form">
+		<div class="brand-form">
 
 		    <?php $form = ActiveForm::begin([
 				'enableClientValidation' => false,

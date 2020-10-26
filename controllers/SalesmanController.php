@@ -41,7 +41,7 @@ class SalesmanController extends Controller {
         return $this->render('view', ['model' => $model]);
     }
 
-    public function addSuitcase($id) {
+    public function actionAddSuitcase($id) {
         $user = $this->findModel($id);
 		$model = new SalesmanSuitcase();
 		$model->user_id = $user->id;
@@ -56,7 +56,7 @@ class SalesmanController extends Controller {
 		}
     }
 
-    public function removeSuitcase($id) {
+    public function actionRemoveSuitcase($id) {
         SalesmanSuitcase::deleteAll(['id' => $id]);
 		Yii::$app->response->format = Response::FORMAT_JSON;
 		return ['success' => true];

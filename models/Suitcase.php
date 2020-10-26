@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\components\DeletedQuery;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
@@ -73,4 +74,13 @@ class Suitcase extends \yii\db\ActiveRecord
     {
         return $this->hasMany(SuitcaseBrand::className(), ['suitcase_id' => 'id']);
     }
+
+    /**
+	 * Gets an id => name array.
+	 * @return string[]
+	 */
+	public static function getIdNameArray() {
+		$suitcases = ArrayHelper::map(self::find()->active()->select(['id', 'name'])->orderBy(['name' => SORT_ASC])->asArray()->all(), 'id', 'name');
+		return $suitcases;
+	}
 }

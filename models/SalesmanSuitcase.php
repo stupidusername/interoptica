@@ -34,7 +34,7 @@ class SalesmanSuitcase extends \yii\db\ActiveRecord
         return [
             [['user_id', 'customer_id', 'suitcase_id'], 'integer'],
             [['user_id', 'customer_id', 'suitcase_id'], 'required'],
-            [['suitcase_id'], 'targetAttribute' => ['customer_id', 'suitcase_id'], 'message' => 'Esta combinación ya ha sido asignada.'],
+            [['customer_id', 'suitcase_id'], 'unique', 'targetAttribute' => ['customer_id', 'suitcase_id'], 'message' => 'Esta combinación ya ha sido asignada.'],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['suitcase_id'], 'exist', 'skipOnError' => true, 'targetClass' => Suitcase::className(), 'targetAttribute' => ['suitcase_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
