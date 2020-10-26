@@ -46,7 +46,7 @@ class ProductController extends BaseController
             throw new BadRequestHttpException('The specified pagelen must take a value between 1 and 100.');
         }
         // Get products.
-        $query = Product::find()->offset(($page - 1) * $pagelen)->limit($pagelen)->active();
+        $query = Product::find()->with(['model.brand.suitcases'])->offset(($page - 1) * $pagelen)->limit($pagelen)->active();
         $products = $query->all();
         $productsArray = ArrayHelper::toArray(
             $products,
@@ -62,6 +62,9 @@ class ProductController extends BaseController
                     'stock_available' => 'stockAvailable',
                     'available' => function ($product) {
                         return (boolean) $product->available;
+                    },
+                    'in_suitcases' => function ($product) {
+                        return ArrayHelper::getColumn($product->model->brand->suitcases, 'id');
                     },
                 ],
             ]

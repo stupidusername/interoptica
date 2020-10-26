@@ -114,6 +114,14 @@ class Brand extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSuitcases()
+    {
+        return $this->hasMany(Suitcase::className(), ['id' => 'suitcase_id'])->viaTable('suitcase_brand', ['brand_id' => 'id']);
+    }
+
+    /**
     * @return string|null
     */
     public function getLogoUrl() {

@@ -104,6 +104,10 @@ OrderAsset::register($this);
 					'value' => $model->user->username,
 				],
 				[
+		          'attribute' => 'from_api',
+		          'value' => $model->from_api ? 'Sí' : 'No',
+		        ],
+				[
 					'label' => 'Cliente',
 					'value' => $model->customer->displayName,
 				],

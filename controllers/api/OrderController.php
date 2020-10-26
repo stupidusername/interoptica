@@ -2,7 +2,6 @@
 
 namespace app\controllers\api;
 
-use app\filters\AuthorRule;
 use app\filters\OrderStatusRule;
 use app\models\api\OrderProductRequest;
 use app\models\api\OrderRequest;
@@ -30,31 +29,14 @@ class OrderController extends BaseController {
             'access' => [
 				'class' => AccessControl::className(),
 				'ruleConfig' => [
-					'class' => AuthorRule::className(),
-					'modelField' => 'model',
-					'authorIdAttribute' => 'user_id',
-					'allow' => true,
+					'class' => AccessRule::className(),
 				],
-				'rules' => [
+                'rules' => [
                     [
-						'actions' => ['list', 'get', 'create'],
-						'roles' => ['admin', 'api_client'],
-					],
-                    [
-						'actions' => ['update', 'delete', 'cancel', 'fail'],
-						'model' => function() {
-							return $this->findModel(Yii::$app->request->getQueryParam('id'));
-						},
-						'roles' => ['admin', 'author'],
-					],
-                    [
-						'actions' => ['add-item', 'update-item', 'delete-item', 'add-invoice', 'delete-invoice'],
-						'model' => function() {
-							return $this->findModel(Yii::$app->request->getQueryParam('orderId'));
-						},
-						'roles' => ['admin', 'author'],
-					],
-				],
+                        'roles' => ['admin', 'api_client'],
+                        'allow' => true,
+                    ],
+                ],
 			],
 			'status' => [
 				'class' => OrderStatusRule::className(),
@@ -133,6 +115,7 @@ class OrderController extends BaseController {
 
   public function actionCreate() {
       $model = new OrderRequest();
+      $model->scenario = OrderRequest::SCENARIO_CREATE;
       $model->load(Yii::$app->getRequest()->getBodyParams(), '');
       if ($model->save()) {
           $response = Yii::$app->getResponse();

@@ -13,6 +13,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property integer $id
  * @property integer $user_id
+ * @property integer $from_api
  * @property integer $customer_id
  * @property integer $transport_id
  * @property string $iva
@@ -98,7 +99,9 @@ class Order extends \yii\db\ActiveRecord
 	public function beforeSave($insert) {
 		if (parent::beforeSave($insert)) {
 			if ($insert) {
-				$this->user_id = Yii::$app->user->id;
+				if (!$this->user_id) {
+					$this->user_id = Yii::$app->user->id;
+				}
 				$this->iva = $this->customer->exclude_iva ? 0 : Yii::$app->params['iva'];
 			}
 			return true;
@@ -191,6 +194,7 @@ class Order extends \yii\db\ActiveRecord
 		return [
 			'id' => 'ID',
 			'user_id' => 'ID Usuario',
+			'from_api' => 'B2B',
 			'customer_id' => 'ID Cliente',
 			'transport_id' => 'ID Transporte',
 			'iva' => 'IVA',
