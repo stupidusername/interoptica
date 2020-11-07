@@ -175,6 +175,7 @@ class OrderController extends BaseController {
   }
 
   public function actionAddItem($orderId) {
+      $order = $this->findModel($orderId);
       $model = new OrderProductRequest();
       $model->order_id = $orderId;
       $model->load(Yii::$app->getRequest()->getBodyParams(), '');
