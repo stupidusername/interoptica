@@ -229,7 +229,7 @@ class OrderController extends BaseController {
    * @return Order the loaded model
    * @throws NotFoundHttpException if the model cannot be found
    */
-  private function findModel($id) {
+  public function findModel($id) {
       if (!$this->model) {
           $this->model = Order::find()->where(['order.id' => $id])->joinWith([
             'orderStatus',
