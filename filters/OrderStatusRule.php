@@ -21,6 +21,12 @@ class OrderStatusRule extends ActionFilter
      */
     public function beforeAction($action)
     {
+        if (!Yii::$app->controller->model) {
+            $orderId = Yii::$app->request->getQueryParam('orderId');
+            if ($orderId) {
+                Yii::$app->controller->model = Yii::$app->controller->findModel($orderId);
+            }
+        }
         if (Yii::$app->controller->model->status != OrderStatus::STATUS_LOADING) {
 			$this->denyAccess();
 		}
