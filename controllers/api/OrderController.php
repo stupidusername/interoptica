@@ -189,7 +189,7 @@ class OrderController extends BaseController {
   }
 
   public function actionUpdateItem($orderId, $itemId) {
-      $order = $this->findModel($id);
+      $order = $this->findModel($orderId);
       $model = $this->findOrderProductRequestModel($orderId, $itemId);
       $model->load(Yii::$app->getRequest()->getBodyParams(), '');
         if ($model->save() === false && !$model->hasErrors()) {
@@ -199,7 +199,7 @@ class OrderController extends BaseController {
   }
 
   public function actionDeleteItem($orderId, $itemId) {
-      $order = $this->findModel($id);
+      $order = $this->findModel($orderId);
       $orderProduct = $this->findOrderProductRequestModel($orderId, $itemId);
       $orderProduct->delete();
   }
